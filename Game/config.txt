@@ -1,0 +1,148 @@
+;directory "c:\projects\csb\csbwin\debug\"
+;
+;  key translations
+;
+; scan  mode  <PC scan code>    <ATARI key code>
+; key   mode  <PC ASCII code>   <ATARI key code>
+; mscan mode  <PC VirtualKey>   <mouseX> <mouseY> <R/L>
+;
+; *******   IMPORTANT  NOTE   *********
+;
+;  !!!  Every number in this file is hexadecimal !!!!!
+;
+; 
+; Scan codes are processed in OnKeyDown.
+;  Generally this is used to process non-ascii keys.
+; Key codes are processed by OnChar.
+;  ASCII codes are generally specified here.
+; mscan codes are used to translate keypresses to
+;  equivalent mouse clicks.  The x- and y-coordinates
+;  are relative to the entire 320 by 200 screen.  The
+;  R or L is used to designate which mouse button is
+;  pressed.
+;
+;
+; mode is the keyboard mode in effect.
+; mode 1 is used while adventuring
+; mode 2 is used during ReIncarnation.
+;
+;
+key  1 00001b 00001b  ;  escape = Freeze Game
+;
+key  1 00006b 480000  ; 'k' = move forward
+key  1 00004b 480000  ; 'K' = move forward
+scan 1 000048 480000  ; Keypad '8' = move forward
+key  1 000108 480000  ; SDL Keypad '8' = move forward
+;
+key  1 00006c 470000  ; 'l' = turn right
+key  1 00004c 470000  ; 'L' = turn right
+scan 1 000049 470000  ; Keypad '9' = turn right
+key  1 000109 470000  ; SDL Keypad '9'
+;
+key  1 00006a 520000  ; 'j' = turn left
+key  1 00004a 520000  ; 'J' = turn left
+scan 1 000047 520000  ; Keypad '7' = turn left
+key  1 000107 520000  ; SDL Keypad '7'
+;
+key  1 00002e 4d0000  ; '.' = move right
+scan 1 00004d 4d0000  ; Keypad '6' = move right
+key  1 000106 4d0000  ; SDL Keypad '6'
+;
+key  1 00006d 4b0000  ; 'm' = move left
+key  1 00004d 4b0000  ; 'M' = move left
+scan 1 00004b 4b0000  ; Keypad '4' = move left
+key  1 000104 4b0000  ; SDL Keypad '4'
+;
+key  1 00002c 500000  ; ',' = move backward
+scan 1 00004c 500000  ; Keypad '5' = move backward
+key  1 000105 500000  ; SDL Keypad '5'
+;
+mscan 1 0051  f0 5c L  ; 'Q' = character 1 weapon / first attack
+mscan 1 0057 104 5c L  ; 'W' = character 2 weapon / first attack
+mscan 1 0045 11c 5c L  ; 'E' = character 3 weapon / first attack
+mscan 1 0052 138 5c L  ; 'R' = character 4 weapon / first attack
+mscan 1 0041  f0 68 L  ; 'A' = character 1 weapon / second attack
+mscan 1 0053 104 68 L  ; 'S' = character 2 weapon / second attack
+mscan 1 0044 11c 68 L  ; 'D' = character 3 weapon / second attack
+mscan 1 0046 138 68 L  ; 'F' = character 4 weapon / second attack
+mscan 1 005a  f0 74 L  ; 'Z' = character 1 weapon / third attack
+mscan 1 0058 104 74 L  ; 'X' = character 2 weapon / third attack
+mscan 1 0043 11c 74 L  ; 'C' = character 3 weapon / third attack
+mscan 1 0056 138 74 L  ; 'V' = character 4 weapon / third attack
+mscan 1 0031  f0 37 L  ; '1' = first rune
+mscan 1 0032  fe 37 L  ; '2' = second rune
+mscan 1 0033 10a 37 L  ; '3' = third rune
+mscan 1 0034 11d 37 L  ; '4' = fourth rune
+mscan 1 0035 128 37 L  ; '5' = fifth rune
+mscan 1 0036 136 37 L  ; '6' = sixth rune
+mscan 1 00c0 136 43 L  ; '~' = backspace rune
+mscan 1 0020 10d 41 L  ; space = cast spell
+;mscan 1 0020 064 64 R  ; space = leader's inventory
+mscan 1 0070 200 2e L  ; F1  = first magic caster
+mscan 1 0071 201 2e L  ; F2  = second magic caster
+mscan 1 0072 202 2e L  ; F3  = third magic caster
+mscan 1 0073 203 2e L  ; F4  = forth magic caster
+mscan 1 0010 114 2f L  ; Shift = No operation
+mscan 1 0009 131 50 L  ; TAB = Pass (Cancel Attack)
+;
+key 2 000041 000041  ; 'A' -> 'A'
+key 2 000061 000061  ; 'a' -> 'a'
+key 2 000042 000042  ; 'B' -> 'B'
+key 2 000062 000062  ; 'b' -> 'b'
+key 2 000043 000043  ; 'C' -> 'C'
+key 2 000063 000063  ; 'c' -> 'c'
+key 2 000044 000044  ; 'D' -> 'D'
+key 2 000064 000064  ; 'd' -> 'd'
+key 2 000045 000045  ; 'E' -> 'E'
+key 2 000065 000065  ; 'e' -> 'e'
+key 2 000046 000046  ; 'F' -> 'F'
+key 2 000066 000066  ; 'f' -> 'f'
+key 2 000047 000047  ; 'G' -> 'G'
+key 2 000067 000067  ; 'g' -> 'g'
+key 2 000048 000048  ; 'H' -> 'H'
+key 2 000068 000068  ; 'h' -> 'h'
+key 2 000049 000049  ; 'I' -> 'I'
+key 2 000069 000069  ; 'i' -> 'i'
+key 2 00004a 00004a  ; 'J' -> 'J'
+key 2 00006a 00006a  ; 'j' -> 'j'
+key 2 00004b 00004b  ; 'K' -> 'K'
+key 2 00006b 00006b  ; 'k' -> 'k'
+key 2 00004c 00004c  ; 'L' -> 'L'
+key 2 00006c 00006c  ; 'l' -> 'l'
+key 2 00004d 00004d  ; 'M' -> 'M'
+key 2 00006d 00006d  ; 'm' -> 'm'
+key 2 00004e 00004e  ; 'N' -> 'N'
+key 2 00006e 00006e  ; 'n' -> 'n'
+key 2 00004f 00004f  ; 'O' -> 'O'
+key 2 00006f 00006f  ; 'o' -> 'o'
+key 2 000050 000050  ; 'P' -> 'P'
+key 2 000070 000070  ; 'p' -> 'p'
+key 2 000051 000051  ; 'Q' -> 'Q'
+key 2 000071 000071  ; 'q' -> 'q'
+key 2 000052 000052  ; 'R' -> 'R'
+key 2 000072 000072  ; 'r' -> 'r'
+key 2 000053 000053  ; 'S' -> 'S'
+key 2 000073 000073  ; 's' -> 's'
+key 2 000054 000054  ; 'T' -> 'T'
+key 2 000074 000074  ; 't' -> 't'
+key 2 000055 000055  ; 'U' -> 'U'
+key 2 000075 000075  ; 'u' -> 'u'
+key 2 000056 000056  ; 'V' -> 'V'
+key 2 000076 000076  ; 'v' -> 'v'
+key 2 000057 000057  ; 'W' -> 'W'
+key 2 000077 000077  ; 'w' -> 'w'
+key 2 000058 000058  ; 'X' -> 'X'
+key 2 000078 000078  ; 'x' -> 'x'
+key 2 000059 000059  ; 'Y' -> 'Y'
+key 2 000079 000079  ; 'y' -> 'y'
+key 2 00005a 00005a  ; 'Z' -> 'Z'
+key 2 00007a 00007a  ; 'z' -> 'z'
+key 2 000008 000008  ; backspace
+key 2 00002e 00002e  ; period
+key 2 00002c 00002c  ; comma
+key 2 00003b 00003b  ; semi-colon
+key 2 00003a 00003a  ; colon
+key 2 00000d 00000d  ; carriage return
+key 2 000020 000020  ; space
+;
+;

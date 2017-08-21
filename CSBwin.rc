@@ -1,0 +1,350 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_CSBWIN              ICON    DISCARDABLE     "CSBwin.ICO"
+IDI_SMALL               ICON    DISCARDABLE     "SMALL.ICO"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_CSBWIN MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       IDM_EXIT
+    END
+    POPUP "&Misc"
+    BEGIN
+        MENUITEM "Size x &1",                   IDC_Normal
+        MENUITEM "Size x &2",                   IDC_Double
+        MENUITEM "Size x &3",                   IDC_Triple
+        MENUITEM "Size x &4",                   IDC_Quadruple
+        MENUITEM "Size x &5",                   IDC_Quintuple
+        MENUITEM "Size x &6",                   IDC_Sextuple
+        MENUITEM SEPARATOR
+        MENUITEM "&Record",                     IDC_Record
+        MENUITEM "&Playback",                   IDC_Playback
+        MENUITEM "&QuickPlay",                  IDC_QuickPlay
+        MENUITEM "&Items Remaining (CSB Challenge)", IDC_ItemsRemaining
+        MENUITEM "&Non-CSB Items Remaining",    IDC_NonCSBItemsRemaining
+        MENUITEM "&DM Rules",                   IDM_DMRULES
+        MENUITEM "&Window Dump (Control-D)",    IDM_WindowDump
+        MENUITEM "&Statistics",                 IDM_Statistics
+    END
+    POPUP "&Speed"
+    BEGIN
+        MENUITEM "&Glacial",                    IDM_Glacial
+        MENUITEM "&Molasses",                   IDM_Molasses
+        MENUITEM "&Very Slow",                  IDM_VerySlow
+        MENUITEM "&Slow",                       IDM_Slow
+        MENUITEM "&Normal",                     IDM_Normal
+        MENUITEM "&Fast",                       IDM_Fast
+        MENUITEM "&Quick as a Bunny",           IDM_Quick
+        MENUITEM SEPARATOR
+        MENUITEM "&Extra Ticks",                IDM_ExtraTicks
+        MENUITEM "&Player Clock",               IDM_PlayerClock
+    END
+    POPUP "&Volume"
+    BEGIN
+        MENUITEM "&Full",                       IDM_VOLUME_FULL
+        MENUITEM "&Half",                       IDM_VOLUME_HALF
+        MENUITEM "&Quarter",                    IDM_VOLUME_QUARTER
+        MENUITEM "&Eighth",                     IDM_VOLUME_EIGHTH
+        MENUITEM "&Off",                        IDM_VOLUME_OFF
+        MENUITEM SEPARATOR
+        MENUITEM "&Attempt Using DirectX",      IDM_AttemptDirectX
+    END
+    POPUP "&Tracing"
+    BEGIN
+        MENUITEM "&TimerTrace",                 IDC_TimerTrace
+        MENUITEM "&AttackTrace",                IDC_AttackTrace
+        MENUITEM "&Function Trace",             IDC_DispatchTrace
+        MENUITEM "&Monster AI Trace",           IDC_AITrace
+        MENUITEM "&Graphic Trace",              IDM_GraphicTrace
+        MENUITEM "&DSA Trace",                  IDC_DSATrace
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About ...",                  IDM_ABOUT
+        MENUITEM "&Help",                       IDM_HELP
+        MENUITEM "&Game Version",               IDM_GameVersion
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_CSBWIN ACCELERATORS MOVEABLE PURE 
+BEGIN
+    "/",            IDM_ABOUT,              ASCII,  ALT, NOINVERT
+    "?",            IDM_ABOUT,              ASCII,  ALT, NOINVERT
+    "D",            IDM_WindowDump,         VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  22, 17, 264, 171
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "System"
+BEGIN
+    ICON            IDI_CSBWIN,IDC_MYICON,14,9,20,20
+    LTEXT           "Copyright (C) 2001",IDC_STATIC,49,20,119,8
+    DEFPUSHBUTTON   "OK",IDOK,205,75,30,11,WS_GROUP
+    LTEXT           "Translated from the Atari machine language.  All credit goes to\nthe original team that created this great game:\n\n",
+                    IDC_STATIC,3,32,219,21
+    LTEXT           "My C++ code is freely available and I welcome bug reports.\nI am not too keen on modifying or extending the game.  I rather\nlike it the way it is.\n\nprsteven@facstaff.wisc.edu   Paul Stevens",
+                    IDC_STATIC,4,116,221,51
+    LTEXT           "Director ~ ~ ~ ~ Doug Bell\nasst.director ~ Dennis Walker\n2nd unit director ~ Mike Newton\ngraphics ~ ~ Andy Jaros\ngraphics ~ ~ David Simon\nproducer ~ ~ Wayne Holder\n\n",
+                    IDC_STATIC,43,53,123,60
+    LTEXT           "CSB for Windows Version x.y",IDC_Version,49,9,191,8
+END
+
+IDD_GameInformation DIALOG DISCARDABLE  0, 0, 287, 197
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Game Information"
+FONT 8, "Fixedsys"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,75,175,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,175,175,50,14
+    EDITTEXT        IDC_GameInformationEdit,5,5,270,160,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | 
+                    WS_VSCROLL | WS_HSCROLL
+END
+
+IDD_DIALOG1 DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
+IDD_DIALOG2 DIALOG DISCARDABLE  0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "="
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
+IDD_TraceDSAList DIALOG DISCARDABLE  0, 0, 198, 204
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Enable Select DSA Traces"
+FONT 8, "Fixedsys"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,45,183,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,107,183,50,14
+    LISTBOX         IDC_DSAList,20,19,140,128,LBS_MULTIPLESEL | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+2 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+1 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "resource.h\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "home\0"
+            VALUE "FileDescription", "CSBwin\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "CSBwin\0"
+            VALUE "LegalCopyright", "Copyright © 2001\0"
+            VALUE "OriginalFilename", "CSBwin.exe\0"
+            VALUE "ProductName", "home CSBwin\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO MOVEABLE PURE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        RIGHTMARGIN, 230
+        BOTTOMMARGIN, 170
+    END
+
+    IDD_GameInformation, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 280
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 190
+    END
+
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_DIALOG2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_TraceDSAList, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 191
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 197
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSOR3             CURSOR  DISCARDABLE     "cursor3.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_APP_TITLE           "CSB for Windows"
+    IDS_HELLO               "Hello World!"
+    IDC_CSBWIN              "CSBWIN"
+    IDS_VERSION             "CSB for Windows/Linux Version 15.9"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_DMRULES             "Dungeon Master (versus Chaos Strikes Back) rules"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDM_GraphicTrace        "Trace Custom Graphics Calls"
+    IDM_DSATrace            "Trace Execution of DSAs ( but only if Timer Trace is active )"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

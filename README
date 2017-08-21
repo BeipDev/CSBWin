@@ -1,0 +1,31 @@
+Linux:
+	You will need to have Gnome and SDL properly
+	installed on your system. If your SDL has been
+	compiled with Hermes statically linked, you
+	will need Hermes installed as well. You need
+	esd for sound.
+
+	To compile CSB for linux, type
+	
+		chmod +x autogen.sh
+		./autogen.sh --enable-release
+		make
+
+	You also need the following files in your directory
+	in order to play the game:
+	
+	dungeon.dat hcsb.dat hcsb.hct mini.dat
+	graphics.dat config.txt
+	
+	Those files are not distributed with the source code. You can download
+	them separately from http://dmweb.free.fr.
+	
+	If you encounters some problem, feel free to contact me
+		Erik Svanberg <svanberg@acc.umu.se>
+
+	If autogen.sh complains about a bad interpreter or that some files
+	is missing, then it could be that those files have there end-of-line
+	in DOS-style ('\n\r'), rather than in Posix style ('\n').
+	If necessery check these files:
+	
+	autogen.sh configure.in Makefile.am macros/autogen.sh src/Makefile.am
