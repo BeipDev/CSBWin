@@ -105,7 +105,7 @@ bool screenAlreadyUnpacked;
 pnt logbase(void);
 bool screenInconsistent = true;
 
-RECT g_rcClient{}; // The rect that the DM screen is mapped to in the window
+RECT g_rcClient{0, 0, 1, 1}; // The rect that the DM screen is mapped to in the window
 
 
 bool IsTextScrollArea(i32, i32)

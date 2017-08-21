@@ -938,8 +938,8 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
           Y += 15 *line;
           TextOutA(hdc,X,Y,msg,strlen(msg));
         };
-         ::EndPaint(hWnd, &ps);
       };
+      ::EndPaint(hWnd, &ps);
       csbMessage.type=UIM_PAINT;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
