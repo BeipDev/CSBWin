@@ -277,7 +277,7 @@ VOLUMETABLE volumeTable[VOLUME_NUMVOLUME];
 VOLUMES gameVolume = VOLUME_FULL;
 bool playerClock = false;
 bool extraTicks = true;
-bool usingDirectX = false;
+bool usingDirectX = true;
 
 //Locations in Atari screen pixel units.
 // Viewport, Portraits, Spells&Commands, Text
@@ -2006,7 +2006,7 @@ void Cleanup(bool programTermination)
   {
     //FreeIfNonNULL((void **)&folderParentName);
     //FreeIfNonNULL((void **)&folderName);
-    //FreeIfNonNULL((void **)&root);
+    FreeIfNonNULL((void **)&root);
     FreeIfNonNULL((void **)&globalVariables); numGlobalVariables = 0;
     FreeIfNonNULL((void **)&finalEditText);
     CleanupTranslations();

@@ -11,6 +11,9 @@
 #include "CSB.h"
 #include "data.h"
 
+#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "D2D1.lib")
+
 bool GetVideoRectangle(i32, RECT *);
 void FreeIfNonNULL(void **pointer);
 void DumpImages(void);
@@ -42,6 +45,13 @@ extern i32 latestCharXlate;
 extern unsigned char *encipheredDataFile;
 extern bool simpleEncipher;
 extern ui32 dumpWindow;
+extern RECT g_rcClient;
+
+CntPtrTo<ID2D1Factory1> g_pID2D1Factory1;
+CntPtrTo<ID2D1HwndRenderTarget> g_pID2DRenderTarget;
+CntPtrTo<ID2D1Bitmap> g_pID2DBitmap;
+
+POINT g_aspectRatio{320, 240};
 
 char *parentFolder(char *folderName, char *endName);
 
@@ -63,8 +73,8 @@ char *helpMessage = "CSBWin looks in three places for files:\n"
                     "into the default directory unless none is specified, in which\n"
                     "case they will go into the CSBWin.exe directory";
 
-i32 WindowWidth = 652;
-i32 WindowHeight = 460;
+i32 WindowWidth = 960;
+i32 WindowHeight = 0;
 i32 WindowX = 0;
 i32 WindowY = 0;
 bool fullscreenRequested = false;
@@ -117,7 +127,7 @@ char *GetField(char *pCol, char *field, char term)
 char *ParseOption(char *pCol, char *key, char *value)
 {
   pCol = GetField(pCol, key, '=');
-  strupr(key);
+  _strupr(key);
   value[0] = 0;
   if (*pCol == '=') 
   {
@@ -133,25 +143,21 @@ char *ParseOption(char *pCol, char *key, char *value)
   return pCol+1;
 }
 
-
-#ifdef _DEBUG
-
-i32 WINAPI wWinMain(HINSTANCE hInstance,
-  HINSTANCE /*hPrevInstance*/,
-  PWSTR     /*lpCmdLine*/,
-  int       nCmdShow)
-{
-  return WinMain(hInstance, NULL, NULL, nCmdShow);
-};
-
-//#else
-#endif
 i32 WINAPI WinMain(HINSTANCE hInstance ,
 	HINSTANCE /*hPrevInstance*/,
 	LPSTR     /*lpCmdLine*/,
 	int       nCmdShow)
 //#endif
 {
+   D2D1_FACTORY_OPTIONS d2dOptions;
+#if defined(_DEBUG)
+   d2dOptions.debugLevel=D2D1_DEBUG_LEVEL_INFORMATION;
+#else
+   d2dOptions.debugLevel=D2D1_DEBUG_LEVEL_NONE;
+#endif
+
+   D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, d2dOptions, g_pID2D1Factory1.Address());
+
  	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
@@ -261,12 +267,10 @@ void ProcessCommandLine(void)
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-  LOGBRUSH background = {BS_SOLID, RGB(0,0,0), 0};
-  HBRUSH hBrush = CreateBrushIndirect(&background);
 	WNDCLASSEXA wcex;
 
   ProcessCommandLine();
-  if (!fullscreenRequested)
+//  if (!fullscreenRequested)
   {
 	  wcex.cbSize = sizeof(WNDCLASSEX); 
 
@@ -277,11 +281,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	  wcex.hInstance		= hInstance;
 	  wcex.hIcon			= LoadIcon(hInstance, (LPCTSTR)IDI_CSBWIN);
 	  wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	  wcex.hbrBackground	= hBrush;
+	  wcex.hbrBackground	= (HBRUSH)::GetStockObject(BLACK_BRUSH);
 	  wcex.lpszMenuName	= (LPCSTR)IDC_CSBWIN;
 	  wcex.lpszClassName	= szWindowClass;
 	  wcex.hIconSm		= LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
   }
+#if 0
   else
   {
 
@@ -299,6 +304,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
   	wcex.lpszClassName	= szWindowClass;
   	wcex.hIconSm		= LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
   };
+#endif
 	return RegisterClassExA(&wcex);
 }
 
@@ -318,28 +324,20 @@ BOOL InitInstance(HINSTANCE hInstance, i32 nCmdShow)
 
    hInst = hInstance; // Store instance handle in our global variable
 
-   if (!fullscreenRequested)
-   {
-      hWnd = CreateWindowA(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      WindowX, WindowY, 
-      WindowWidth, WindowHeight, 
-      NULL, NULL, hInstance, NULL);
-   }
-   else
-   {
-      hWnd = CreateWindowA(szWindowClass, "",WS_POPUP,
-      0, 0, 
-      GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN) , 
-      NULL, NULL, hInstance, NULL);
-   };
+   RECT rc{0, 0, WindowWidth, WindowWidth*240/320};
+   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, true);
+
+   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+      WindowX, WindowY, rc.right-rc.left, rc.bottom-rc.top, NULL, NULL, hInstance, NULL);
+
    if (!hWnd)
    {
       return FALSE;
    }
 
    ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-   SetTimer(hWnd, 1, 50, NULL);
+//   UpdateWindow(hWnd);
+   SetTimer(hWnd, 1, 10, NULL);
    return TRUE;
 }
 
@@ -362,28 +360,49 @@ extern ui32 CheckVBLCount;
 extern ui32 STBLTCount;
 extern i32 GameTime;
 
-bool cursorIsShowing = true;
+bool g_cursorIsShowing = true;
 
+// Converted from code that used rich vector types, so these are a little more cumbersome than they should be
+POINT TouchFromInside(POINT sizeContainer, POINT sizeObject)
+{
+   float minRatio=min(sizeContainer.x/float(sizeObject.x), sizeContainer.y/float(sizeObject.y));
+   return POINT{LONG(sizeObject.x*minRatio), LONG(sizeObject.y*minRatio)};
+}
 
-HDC hdc;
+RECT TouchFromInside(const RECT &rcArea, POINT size)
+{
+   POINT center{(rcArea.left+rcArea.right)/2, (rcArea.top+rcArea.bottom)/2};
+   POINT radius=TouchFromInside(POINT{rcArea.right-rcArea.left, rcArea.bottom-rcArea.top}, size);
+   radius.x/=2;
+   radius.y/=2;
+   return RECT{center.x-radius.x, center.y-radius.y, center.x+radius.x, center.y+radius.y};
+}
+
+// Translates a point relative to rcSource to one relative to rcDest
+POINT MapPoint(const RECT &rcDest, const RECT &rcSource, POINT point)
+{
+   return POINT{(point.x-rcSource.left)*(rcDest.right-rcDest.left)/(rcSource.right-rcSource.left)+rcDest.left,
+               (point.y-rcSource.top)*(rcDest.bottom-rcDest.top)/(rcSource.bottom-rcSource.top)+rcDest.top};
+}
+
 LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	i32 wmId, wmEvent;
-	PAINTSTRUCT ps;
-	//TCHAR szHello[MAX_LOADSTRING];
-  ASSERT( (hWnd==0) || (hWnd==_hWnd) , "hWnd");
-  hWnd = _hWnd;
-  char msg[100];
-	//LoadString(hInst, IDS_HELLO, szHello, MAX_LOADSTRING);
+   i32 wmId, wmEvent;
+   ASSERT( (hWnd==0) || (hWnd==_hWnd) , "hWnd");
+   hWnd = _hWnd;
+   char msg[100];
 
-  static i32 x,y;
-  static bool inWindow;
-
-  i32 size;
-  
   MTRACE("msg=");
-  switch (message) 
-	{
+   switch(message) 
+   {
+      case WM_SIZE:
+      {
+         RECT rcClient; ::GetClientRect(hWnd, &rcClient);
+
+         g_rcClient=TouchFromInside(rcClient, g_aspectRatio);
+         g_pID2DRenderTarget->Resize(D2D1_SIZE_U{uint32_t(rcClient.right-rcClient.left), uint32_t(rcClient.bottom-rcClient.top)});
+         break;
+      }
 		case WM_COMMAND:
       MTRACE("WM_COMMAND\n");
 			wmId    = LOWORD(wParam); 
@@ -402,6 +421,18 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             MTRACE("IDM_HELP\n");
             UI_MessageBox(helpMessage, "Help", MESSAGE_OK);
             break;
+       case ID_4X3ASPECTRATIO:
+         {
+            bool fChecked=(::GetMenuState(GetMenu(hWnd), ID_4X3ASPECTRATIO, MF_BYCOMMAND)&MF_CHECKED)!=0;
+            fChecked^=true;
+            ::CheckMenuItem(GetMenu(hWnd), ID_4X3ASPECTRATIO, MF_BYCOMMAND|(fChecked ? MF_CHECKED : 0));
+            
+            g_aspectRatio=fChecked ? POINT{320, 240} : POINT{320, 200};
+            RECT rcClient; ::GetClientRect(hWnd, &rcClient);
+            g_rcClient=TouchFromInside(rcClient, g_aspectRatio);
+            InvalidateRect(hWnd, nullptr, true);
+            break;
+         }
         case IDM_Statistics:
             MTRACE("IDM_Statistics\n");
             csbMessage.type = UIM_Statistics;
@@ -814,7 +845,9 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       break;
 		case WM_PAINT:
       MTRACE("WM_PAINT\n");
-		  hdc = BeginPaint(hWnd, &ps);
+      {
+         PAINTSTRUCT ps;
+         HDC hdc=BeginPaint(hWnd, &ps);
       if (  (!virtualFullscreen) && (screenSize == 1)
           ||(virtualFullscreen && (videoSegSize[4]!=0)) )
       {
@@ -905,6 +938,7 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
           Y += 15 *line;
           TextOutA(hdc,X,Y,msg,strlen(msg));
         };
+         ::EndPaint(hWnd, &ps);
       };
       csbMessage.type=UIM_PAINT;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -912,9 +946,30 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PostQuitMessage(0);
         break;
       };
-			EndPaint(hWnd, &ps);
-      hdc = 0;
 			break;
+      }
+      case WM_MOUSEMOVE:
+    {
+//      auto &move=message.Cast<Msg::MouseMove>();
+//      if(g_rcClient.IsInside(move.position()))
+      if(GameMode == 1)
+      {
+         if(g_cursorIsShowing)
+         {
+            ShowCursor(false);
+            g_cursorIsShowing=false;
+         }
+      }
+      else
+      {
+         if (!g_cursorIsShowing)
+         {
+            ShowCursor(true);
+            g_cursorIsShowing = true;
+         };
+      }
+      __fallthrough;
+    }
     case WM_TIMER:
       MTRACE("WM_TIMER\n");
       csbMessage.type=UIM_TIMER;
@@ -939,14 +994,47 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       MTRACE("WM_NCCALCSIZE\n"); 
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_CREATE:
+    {
       MTRACE("WM_CREATE\n"); 
       csbMessage.type=UIM_INITIALIZE;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
-      };
-			return DefWindowProc(hWnd, message, wParam, lParam);
+      }
+      {
+         D2D1_RENDER_TARGET_PROPERTIES properties;
+         properties.type=D2D1_RENDER_TARGET_TYPE_DEFAULT;
+         properties.pixelFormat.format=DXGI_FORMAT_B8G8R8A8_UNORM;
+         properties.pixelFormat.alphaMode=D2D1_ALPHA_MODE_IGNORE;
+         properties.dpiX=0;
+         properties.dpiY=0;
+         properties.usage=D2D1_RENDER_TARGET_USAGE_NONE;
+         properties.minLevel=D2D1_FEATURE_LEVEL_DEFAULT;
+
+         D2D1_HWND_RENDER_TARGET_PROPERTIES hwndProperties;
+         hwndProperties.hwnd=hWnd;
+         hwndProperties.pixelSize.width=1;
+         hwndProperties.pixelSize.height=1;
+         hwndProperties.presentOptions=D2D1_PRESENT_OPTIONS_IMMEDIATELY; // D2D1_PRESENT_OPTIONS_NONE;
+
+         g_pID2D1Factory1->CreateHwndRenderTarget(&properties, &hwndProperties, g_pID2DRenderTarget.Address());
+         g_pID2DRenderTarget->SetDpi(96, 96);
+      }
+      {
+         D2D1_SIZE_U size{uint32_t(g_rcAtari.right-g_rcAtari.left), uint32_t(g_rcAtari.bottom-g_rcAtari.top)};
+
+         D2D1_BITMAP_PROPERTIES properties;
+         properties.dpiX=0;
+         properties.dpiY=0;
+         properties.pixelFormat.format=DXGI_FORMAT_B8G8R8A8_UNORM;
+         properties.pixelFormat.alphaMode=D2D1_ALPHA_MODE_IGNORE;
+
+         g_pID2DRenderTarget->CreateBitmap(size, properties, g_pID2DBitmap.Address());
+      }
+
+		return DefWindowProc(hWnd, message, wParam, lParam);
+   }
     case WM_SHOWWINDOW:
       MTRACE("WM_SHOWWINDOW\n"); 
 			return DefWindowProc(hWnd, message, wParam, lParam);
@@ -988,9 +1076,6 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_WINDOWPOSCHANGED:
       MTRACE("WM_WINDOWPOSCHANGED\n"); 
 			return DefWindowProc(hWnd, message, wParam, lParam);
-    case WM_SIZE:
-      MTRACE("WM_SIZE\n"); 
-			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_MOVE:
       MTRACE("WM_MOVE\n"); 
 			return DefWindowProc(hWnd, message, wParam, lParam);
@@ -999,63 +1084,6 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_SETCURSOR:
       MTRACE("WM_SETCURSOR\n"); 
-			return DefWindowProc(hWnd, message, wParam, lParam);
-    case WM_MOUSEMOVE:
-      MTRACE("WM_MOUSEMOVE\n");
-      x=LOWORD(lParam);
-      y=HIWORD(lParam);
-      if (virtualFullscreen)
-      {
-        i32 x1=x, y1=y;
-        TranslateFullscreen(x1,y1,x,y);
-      }
-      else
-      {
-        x = (x+screenSize/2)/screenSize;
-        y = (y+screenSize/2)/screenSize;
-      };
-      inWindow = true;
-      size = screenSize;
-      if (y > 200) inWindow = false;
-      if (y < 1)   inWindow = false;
-      if (x > 320) inWindow = false;
-      if (x < 1)   inWindow = false;
-      if (GameMode == 1)
-      {
-        if (inWindow)
-        {
-          if (cursorIsShowing)
-          {
-            ShowCursor(false);
-            cursorIsShowing = false;
-          }
-          else
-          {
-          };
-        }
-        else
-        {
-          if (cursorIsShowing)
-          {
-          }
-          else
-          {
-            ShowCursor(true);
-            cursorIsShowing = true;
-          };
-        };
-      };
-      if (GameMode != 1)
-      {
-        if (cursorIsShowing)
-        {
-        }
-        else
-        {
-          ShowCursor(true);
-          cursorIsShowing = true;
-        };
-      };
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_KEYDOWN:
       MTRACE("WM_KEYDOWN\n"); 
@@ -1086,13 +1114,13 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_NCMOUSEMOVE:
       MTRACE("WM_NCMOUSEMOVE\n"); 
-      if (cursorIsShowing)
+      if (g_cursorIsShowing)
       {
       }
       else
       {
         ShowCursor(true);
-        cursorIsShowing = true;
+        g_cursorIsShowing = true;
       };
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_SYSKEYDOWN:
@@ -1414,49 +1442,53 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       MTRACE("WM_MOUSEACTIVATE\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_LBUTTONDOWN:
-      MTRACE("WM_LBUTTONDOWN\n");
+    {
+      POINT mouse{(short)LOWORD(lParam), (short)HIWORD(lParam)};
+      POINT point=MapPoint(g_rcAtari, g_rcClient, mouse);
+
       csbMessage.type=UIM_LEFT_BUTTON_DOWN;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = point.x;  // horizontal position of cursor 
+      csbMessage.p2 = point.y;  // vertical position of cursor 
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-      {
-        PostQuitMessage(0);
-        break;
-      };
-			return DefWindowProc(hWnd, message, wParam, lParam);
+         PostQuitMessage(0);
+      break;
+    }
     case WM_LBUTTONUP:
-      MTRACE("WM_LBUTTONUP\n");
+    {
+      POINT mouse{(short)LOWORD(lParam), (short)HIWORD(lParam)};
+      POINT point=MapPoint(g_rcAtari, g_rcClient, mouse);
+
       csbMessage.type=UIM_LEFT_BUTTON_UP;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = point.x;  // horizontal position of cursor 
+      csbMessage.p2 = point.y;  // vertical position of cursor 
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-      {
         PostQuitMessage(0);
-        break;
-      };
-			return DefWindowProc(hWnd, message, wParam, lParam);
+      break;
+    }
     case WM_RBUTTONDOWN:
-      MTRACE("WM_RBUTTONDOWN\n");
+    {
+      POINT mouse{(short)LOWORD(lParam), (short)HIWORD(lParam)};
+      POINT point=MapPoint(g_rcAtari, g_rcClient, mouse);
+
       csbMessage.type=UIM_RIGHT_BUTTON_DOWN;
       csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
       csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-      {
-        PostQuitMessage(0);
-        break;
-      };
-			return DefWindowProc(hWnd, message, wParam, lParam);
+         PostQuitMessage(0);
+      break;
+    }
     case WM_RBUTTONUP:
-      MTRACE("WM_RBUTTONUP\n");
+    {
+      POINT mouse{(short)LOWORD(lParam), (short)HIWORD(lParam)};
+      POINT point=MapPoint(g_rcAtari, g_rcClient, mouse);
+
       csbMessage.type=UIM_RIGHT_BUTTON_UP;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = point.x;  // horizontal position of cursor 
+      csbMessage.p2 = point.y;  // vertical position of cursor 
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-      {
         PostQuitMessage(0);
-        break;
-      };
-			return DefWindowProc(hWnd, message, wParam, lParam);
+      break;
+   }
     case WM_EXITSIZEMOVE:
       MTRACE("WM_EXITSIZEMOVE\n"); 
 			return DefWindowProc(hWnd, message, wParam, lParam);

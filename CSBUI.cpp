@@ -73,12 +73,12 @@ bool PlayfileIsOpen(void);
 bool GetVideoRectangle(i32, RECT *);
 ui32 dumpWindow = 0;
 bool annotationPlaced = false;
+extern RECT g_rcClient;
 
 #if defined(_MSC_VER) //003
 WINDOWPLACEMENT annotationPlacement;
 extern HINSTANCE hInst;
 extern HWND hWnd;
-extern HDC hdc;
 #endif //003
 
 
@@ -107,12 +107,11 @@ bool OpenTraceFile(void);
 void CloseTraceFile(void);
 bool OpenGraphicTraceFile(void);
 void CloseGraphicTraceFile(void);
-extern bool cursorIsShowing;
+extern bool g_cursorIsShowing;
 extern bool RecordCommandOption;
 extern bool NoRecordCommandOption;
 
 extern HWND hWnd;
-extern HDC hdc;
 
 #define maxMessageStack 20
 CSB_UI_MESSAGE msgStack[maxMessageStack];
@@ -355,8 +354,8 @@ i32 DSAListDialog::DoModal(void)
   i32 result;
   bool saveCursorShowing;
   //initialEditText = m_initialText;
-  saveCursorShowing = cursorIsShowing;
-  if (!cursorIsShowing) ShowCursor(true);
+  saveCursorShowing = g_cursorIsShowing;
+  if (!g_cursorIsShowing) ShowCursor(true);
   i32 mask = UI_DisableAllMessages();
   result = DialogBox(hInst, (LPCTSTR)IDD_TraceDSAList, hWnd, (DLGPROC)DSAListCallback);
 //  if (result < 0)
@@ -497,8 +496,8 @@ i32 EditDialog::DoModal(void)
   i32 result;
   bool saveCursorShowing;
   initialEditText = m_initialText;
-  saveCursorShowing = cursorIsShowing;
-  if (!cursorIsShowing) ShowCursor(true);
+  saveCursorShowing = g_cursorIsShowing;
+  if (!g_cursorIsShowing) ShowCursor(true);
   i32 mask = UI_DisableAllMessages();
   result = DialogBox(hInst, (LPCTSTR)IDD_GameInformation, hWnd, (DLGPROC)EditTextCallback);
   if (!saveCursorShowing) ShowCursor(false);
@@ -1195,8 +1194,8 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         }
         else
         {
-          EnqueMouseClick(X_TO_CSB(msg->p1,screenSize), Y_TO_CSB(msg->p2,screenSize),1);//Chaos
-          TAG001afe(X_TO_CSB(msg->p1,screenSize), Y_TO_CSB(msg->p2,screenSize), 1);//Hint
+          EnqueMouseClick(msg->p1, msg->p2,1);//Chaos
+          TAG001afe(msg->p1, msg->p2, 1);//Hint
         };
         UI_PushMessage(msg->type);
         break;
@@ -1216,8 +1215,8 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         }
         else
         {
-          EnqueMouseClick(X_TO_CSB(msg->p1,screenSize), Y_TO_CSB(msg->p2,screenSize),1);
-          TAG001afe(X_TO_CSB(msg->p2,screenSize), Y_TO_CSB(msg->p1,screenSize), 1); //[Erik]: Is this correct?
+          EnqueMouseClick(msg->p1, msg->p2,1);
+          TAG001afe(msg->p2, msg->p1, 1); //[Erik]: Is this correct?
         };
         UI_PushMessage(msg->type);
         break;
@@ -1354,8 +1353,8 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags)
   if (flags & MESSAGE_ICONERROR) MB_FLAGS |= MB_ICONERROR;
   if (flags & MESSAGE_ICONWARNING) MB_FLAGS |= MB_ICONWARNING;
   bool saveCursorShowing;
-  saveCursorShowing = cursorIsShowing;
-  if (!cursorIsShowing) ShowCursor(true);
+  saveCursorShowing = g_cursorIsShowing;
+  if (!g_cursorIsShowing) ShowCursor(true);
   i32 mask = UI_DisableAllMessages();
   if (title == NULL) title = "Error";
   i = MessageBoxA(hWnd, msg, title, MB_FLAGS);
@@ -1416,8 +1415,6 @@ bool Win32_SoundMixer_Init(HWND hWnd);
 void Win32_SoundMixer_Play(BYTE *pWave, DWORD dwBytes);
 void Win32_SoundMixer_Shutdown();
 #endif //019
-
-#pragma comment(lib, "winmm.lib")
 
 void UI_StopSound(void)
 {
@@ -1882,144 +1879,21 @@ void UI_ClearScreen(void)
 {
   RedrawWindow(hWnd,NULL,NULL,RDW_ERASE|RDW_INVALIDATE);
 }
-
-void UI_SetDIBitsToDevice(i32 dstX,
-                          i32 dstY,
-                          i32 srcWidth,
-                          i32 srcHeight,
-                          i32 srcX,
-                          i32 srcY,
-                          i32 firstScan,
-                          i32 numScan,
-                          char *bitmap,
-                          void *bInfo,//struct tagBITMAPINFO *bInfo,
-                          i32 flags)
-{
-  HDC newhdc;
-
-
-#ifdef _MOVIE //027
-  {
-    static int count = 0;
-    static int FH;
-    static ui16 buffer[200*320];
-    struct 
-    {
-      ui64 curTime;
-      i32 dstX, dstY;
-      i32 srcWidth, srcHeight;
-    } hdr;
-    hdr.curTime = UI_GetSystemTime();
-    hdr.dstX = dstX;
-    hdr.dstY = dstY;
-    hdr.srcWidth = srcWidth;
-    hdr.srcHeight = srcHeight;
-    if (dstX == -1)
-    {
-      if (count != 0)
-      {
-        _write(FH, &hdr,sizeof(hdr));
-      };
-      return;
-    };
-    if (count == 0)
-    {
-      FH = _open("movie.bin",_O_WRONLY|_O_CREAT|_O_TRUNC|O_SEQUENTIAL|_O_BINARY,_S_IWRITE);
-    };
-    count++;
-    {
-      if ((srcWidth <= 320)&&(srcHeight<=200))
-      {
-        int i,j;
-        for (i=0; i<srcWidth; i++)
-        {
-          for (j=0; j<srcHeight; j++)
-          {
-            buffer[j*srcWidth + i] = ((ui16 *)bitmap)[j*((tagBITMAPINFOHEADER *)bInfo)->biWidth + i];
-          };
-        };
-      };
-    };
-    _write(FH, &hdr,sizeof(hdr));
-    _write(FH, buffer,2*srcWidth*srcHeight);
-  };
-#endif //027
-  newhdc = 0;
-  if (hdc == 0)
-  {
-    newhdc = GetDC(hWnd);
-    hdc = newhdc;
-  };
-
-
-  SetDIBitsToDevice(hdc,
-                    dstX,
-                    dstY,
-                    srcWidth,
-                    srcHeight,
-                    srcX,
-                    srcY,
-                    firstScan,
-                    numScan,
-                    bitmap,
-                    (tagBITMAPINFO *)bInfo,
-                   flags);
-  if (newhdc != 0)
-  {
-    ReleaseDC(hWnd,newhdc);
-    hdc = 0;
-  };
-}
 #endif //026
+
+extern RECT g_rcClient;
+POINT MapPoint(const RECT &rcDest, const RECT &rcSource, POINT point);
 
 #ifndef TARGET_OS_MAC //028
 #ifndef _LINUX //029
 // The linux version of this function is defined in CSBlinux.cpp
 void UI_GetCursorPos(i32 *x, i32 *y)
 {
-  POINT point;
-  GetCursorPos(&point);
-  ScreenToClient(hWnd,&point);
-  if (virtualFullscreen)
-  {
-    i32 X=point.x, Y=point.y;
-    RECT rect;
-    i32 distance2 = 1<<30;
-    i32 d2, dx, dy;
-    i32 i;
-    POINT test, closestPoint = {0,0};
-    for (i=0; (distance2 != 0) && GetVideoRectangle(i, &rect); i++)
-    {
-      if (X < rect.left) test.x = rect.left;
-      else if (X >= rect.right) test.x = rect.right-1;
-      else test.x = X;
-      if (Y < rect.top) test.y = rect.top;
-      else if (Y >= rect.bottom) test.y = rect.bottom-1;
-      else test.y = Y;
-      dx = test.x - X;
-      dy = test.y - Y;
-      d2 = dx*dx + dy*dy;
-      if (d2 < distance2)
-      {
-        distance2 = d2;
-        closestPoint.x = test.x;
-        closestPoint.y = test.y;
-      };
-    };
-    //if (set) SetCursorPos(point.x, point.y);
-    TranslateFullscreen(closestPoint.x,closestPoint.y,X,Y);
-    point.x = X;
-    point.y = Y;
-  }
-  else
-  {
-    point.x = (point.x + screenSize/2)/screenSize;
-    point.y = (point.y + screenSize/2)/screenSize;
-  };
-  //if (point.x < 0) point.x = 0;
-  //if (point.y < 0) point.y = 0;
-  //if (point.x > 318) point.x = 318;
-  //if (point.y > 198) point.y = 198;
+   POINT point;
+   GetCursorPos(&point);
+   ScreenToClient(hWnd, &point);
+
+  point=MapPoint(g_rcAtari, g_rcClient, point);
   *x = point.x;
   *y = point.y;
 }
@@ -2091,7 +1965,7 @@ bool UI_ProcessOption(char *key, char *value)
   };
   if (strcmp(key,"SIZE") == 0)
   {
-    strupr(value);
+    _strupr(value);
     if (strcmp(value,"FULL") == 0)
     {
       fullscreenRequested = true;
@@ -2142,7 +2016,7 @@ bool UI_ProcessOption(char *key, char *value)
   if (strcmp(key,"SPEED") == 0)
   {
     CSB_UI_MESSAGE csbMessage;
-    strupr(value);
+    _strupr(value);
     csbMessage.type = UIM_SETOPTION;
     csbMessage.p1 = OPT_CLOCK;
     csbMessage.p2 = -1;

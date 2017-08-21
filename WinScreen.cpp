@@ -18,6 +18,14 @@
 #include <SYS\STAT.h>
 #endif
 
+extern CntPtrTo<ID2D1Factory1> g_pID2D1Factory1;
+extern CntPtrTo<ID2D1HwndRenderTarget> g_pID2DRenderTarget;
+extern CntPtrTo<ID2D1Bitmap> g_pID2DBitmap;
+
+//#define USE_DIBS
+
+HBITMAP g_bmpOffscreen;
+
 #ifdef _LINUX
 #pragma pack(1)
 
@@ -73,12 +81,13 @@ extern i32 xOverlayJitter;
 extern i32 yGraphicJitter;
 extern bool jitterChanged;
 extern ui32 dumpWindow;
+extern HWND hWnd;
 //extern CDC *OnDrawDC;
 ui32 STBLTCount=0;
 
 i32 screenSize=2;
 i16 palette16[16];
-i16 bitmap[320*6*200*6];
+i16 g_bitmap[320*200];
 i16 counter;
 i16 bitSkip;
 i32 dstLineLen;
@@ -95,6 +104,8 @@ bool screenAlreadyUnpacked;
 
 pnt logbase(void);
 bool screenInconsistent = true;
+
+RECT g_rcClient{}; // The rect that the DM screen is mapped to in the window
 
 
 bool IsTextScrollArea(i32, i32)
@@ -359,653 +370,11 @@ void BLT1(ui8  *src,     // Raw 8-bit pixels
   };
 }
 
-
-//void BLT2(unsigned char *src, i16 *dst, i32 num)
-/*
-void BLT2(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
-          i16 *palette,
-          ui8 *overlay)
-{
-  _asm
-  {
-    mov esi,src
-    mov edi,dst
-    mov ecx,num
-    mov edx,overlay
-    mov ebp,palette
-    sub ebx,ebx
-next:
-    movzx bx,[edx] //overlay byte
-    inc edx
-    shl bx,4
-    or  bl,[esi]   //Graphic nibble
-    inc esi
-    mov ax,[ebp+ebx*2]
-    //shr ax,1
-    //and ax,0x3def
-
-    mov [edi],ax
-    mov [edi+320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+320*2*6],ax
-    add edi,2
-    loop next
-  };
-}
-*/
-void BLT2(ui8  *src,     // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
-          i32  num,      // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
-          ui8  *overlay) // Overlay pixels
-{
-  ui16 color;
-  for (;num>0; num--)
-  {
-    color = palette[(*(overlay++) << 4) + *(src++)];
-    dst[0] = color;
-    dst[1] = color;
-    dst[640+0] = color;
-    dst[640+1] = color;
-    dst+=2;
-  };
-}
-
-
-
-/*
-//void BLT3(unsigned char *src, i16 *dst, i32 num)
-void BLT3(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
-          i16 *palette,
-          ui8 *overlay)
-{
-  _asm
-  {
-    mov esi,src
-    mov edi,dst
-    mov ecx,num
-    mov edx,overlay
-    mov ebp,palette
-    sub ebx,ebx
-next:
-    movzx bx,[edx] //overlay byte
-    inc edx
-    shl bx,4
-    or  bl,[esi]   //Graphic nibble
-    inc esi
-    mov ax,[ebp+ebx*2]
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    add edi,2
-    loop next
-  };
-}
-*/
-void BLT3(ui8  *src,     // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
-          i32  num,      // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
-          ui8  *overlay) // Overlay pixels
-{
-  ui16 color;
-  for (;num>0; num--)
-  {
-    color = palette[(*(overlay++) << 4) + *(src++)];
-    dst[0] = color;
-    dst[1] = color;
-    dst[2] = color;
-    dst[3*320+0] = color;
-    dst[3*320+1] = color;
-    dst[3*320+2] = color;
-    dst[3*2*320+0] = color;
-    dst[3*2*320+1] = color;
-    dst[3*2*320+2] = color;
-    dst+=3;
-  };
-}
-
-#ifdef BLUR
-
-
-//#define mv(x,y) mov [edi+2*x+y*320*2*4],ax
-//#define dv _asm shr ax,1 _asm and ax,0x3def
-//#define dvu _asm mov cx,ax _asm shr ax,1 _asm and ax,0x3def _asm and cx,0x421 _asm add ax,cx 
-//#define ad(x,y) add [edi+2*x+y*320*2*4],ax
-
-//void BLT4(unsigned char *src, i16 *dst, i32 num)
-/*
-void BLT4(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
-          i16 *palette,
-          ui8 *overlay)
-{
-  _asm
-  {
-    mov esi,src
-    mov edi,dst
-    mov ecx,num
-    mov edx,overlay
-    mov ebp,palette
-    sub ebx,ebx
-next:
-    movzx bx,[edx] //overlay byte
-    shl bx,4
-    or  bl,[esi]   //Graphic nibble
-    mov ax,[ebp+ebx*2]
-    mv(0,0)
-/*
-    mov ax,0
-    mv(0,1)
-    mv(0,2)
-    mv(0,3)
-    mv(1,0)
-    mv(1,1)
-    mv(1,2)
-    mv(1,3)
-    mv(2,0)
-    mv(2,1)
-    mv(2,2)
-    mv(2,3)
-    mv(3,0)
-    mv(3,1)
-    mv(3,2)
-    mv(3,3)
-*/
-    inc edx
-    inc esi
-    add edi,8
-    loop next
-  };
-}
-*/
-void BLT4(ui8  *src,     // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
-          i32  num,      // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
-          ui8  *overlay) // Overlay pixels
-{
-  ui16 color;
-  for (;num>0; num--)
-  {
-    color = palette[(*(overlay++) << 4) + *(src++)];
-    dst[0] = color;
-    dst[1] = color;
-    dst[2] = color;
-    dst[3] = color;
-    dst[4*320+0] = color;
-    dst[4*320+1] = color;
-    dst[4*320+2] = color;
-    dst[4*320+3] = color;
-    dst[4*2*320+0] = color;
-    dst[4*2*320+1] = color;
-    dst[4*2*320+2] = color;
-    dst[4*2*320+3] = color;
-    dst[4*3*320+0] = color;
-    dst[4*3*320+1] = color;
-    dst[4*3*320+2] = color;
-    dst[4*3*320+3] = color;
-    dst+=4;
-  };
-}
-
-
-/*
-//void BLS4(i16 *bmp)
-void BLS4(i16 *bmp)
-{
-  _asm
-  {
-    mov edi,bmp
-    mov ax,[edi]
-    cmp ax,[edi+8]
-    jnz hard
-    cmp ax,[edi+4*320*2*4]
-    jnz hard
-    cmp ax,[edi+4*320*2*4+8]
-    jnz hard
-    mv(0,1)
-    mv(0,2)
-    mv(0,3)
-    mv(1,0)
-    mv(1,1)
-    mv(1,2)
-    mv(1,3)
-    mv(2,0)
-    mv(2,1)
-    mv(2,2)
-    mv(2,3)
-    mv(3,0)
-    mv(3,1)
-    mv(3,2)
-    mv(3,3)
-    jmp xit
-hard:
-    dvu            // 8/16 A
-    mv(1,0)
-    mv(2,0)
-    mv(0,1)
-    mv(1,1)
-    mv(0,2)
-    dvu            // 4/16 A
-    ad(1,0)
-    mv(3,0)
-    ad(0,1)
-    mv(2,1)
-    mv(1,2)
-    mv(2,2)
-    mv(0,3)
-    dvu            // 2/16 A
-    ad(2,1)
-    mv(3,1)
-    ad(1,2)
-    mv(3,2)
-    mv(1,3)
-    mv(2,3)
-    dvu           // 1/16 A
-    ad(1,1)
-    ad(3,1)
-    ad(1,3)
-    mv(3,3)
-
-
-    mov ax,[edi+8]
-    dv            // 8/16 B
-    ad(3,0)
-    ad(2,0)
-    ad(3,1)
-    dv            // 4/16 B
-    ad(3,0)
-    ad(1,0)
-    ad(2,1)
-    ad(3,2)
-    ad(2,2)
-    dv            // 2/16 B
-    ad(2,1)
-    ad(1,1)
-    ad(1,2)
-    ad(3,2)
-    ad(3,3)
-    ad(2,3)
-    dv            // 1/16 B
-    ad(3,1)
-    ad(1,1)
-    ad(3,3)
-    ad(1,3)
-
-
-    mov ax,[edi+4*320*2*4]
-    dv            // 8/16 C
-    ad(0,3)
-    ad(1,3)
-    ad(0,2)
-    dv            // 4/16 C
-    ad(0,3)
-    ad(2,3)
-    ad(1,2)
-    ad(2,2)
-    ad(0,1)
-    dv            // 2/16 C
-    ad(2,3)
-    ad(3,3)
-    ad(1,2)
-    ad(3,2)
-    ad(1,1)
-    ad(2,1)
-    dv            // 1/16 C
-    ad(1,3)
-    ad(3,3)
-    ad(1,1)
-    ad(3,1)
-
-    mov ax,[edi+4*320*2*4+8]
-    dvu            // 8/16 D
-    ad(3,3)
-    dv            // 4/16 D
-    ad(2,3)
-    ad(3,2)
-    ad(2,2)
-    dvu            // 2/16 D
-    ad(2,3)
-    ad(1,3)
-    ad(3,2)
-    ad(1,2)
-    ad(3,1)
-    ad(2,1)
-    dvu            // 1/16 D
-    ad(3,3)
-    ad(1,3)
-    ad(3,1)
-    ad(1,1)
-
-xit:  
-  };
-}
-*/
-#else
-
-//void BLT4(unsigned char *src, i16 *dst, i32 num)
-/*
-void BLT4(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
-          i16 *palette,
-          ui8 *overlay)
-{
-  _asm
-  {
-    mov esi,src
-    mov edi,dst
-    mov ecx,num
-    mov edx,overlay
-    mov ebp,palette
-    sub ebx,ebx
-next:
-    movzx bx,[edx] //overlay byte
-    inc edx
-    shl bx,4
-    or  bl,[esi]   //Graphic nibble
-    inc esi
-    mov ax,[ebp+ebx*2]
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    add edi,2
-    loop next
-  };
-}
-*/
-
-void BLT4(ui8  *src,     // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
-          i32  num,      // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
-          ui8  *overlay) // Overlay pixels
-{
-  ui16 color;
-  for (;num>0; num--)
-  {
-    color = palette[(*(overlay++) << 4) + *(src++)];
-    dst[0] = color;
-    dst[1] = color;
-    dst[2] = color;
-    dst[3] = color;
-    dst[4*320+0] = color;
-    dst[4*320+1] = color;
-    dst[4*320+2] = color;
-    dst[4*320+3] = color;
-    dst[4*2*320+0] = color;
-    dst[4*2*320+1] = color;
-    dst[4*2*320+2] = color;
-    dst[4*2*320+3] = color;
-    dst[4*3*320+0] = color;
-    dst[4*3*320+1] = color;
-    dst[4*3*320+2] = color;
-    dst[4*3*320+3] = color;
-    dst+=4;
-  };
-}
-
-
-
-
-#endif
-/*
-void BLT5(unsigned char *src,
-          i16 *dst,
-          i32 num,
-          i16 *palette,
-          ui8 *overlay)
-{
-_asm
-  {
-    mov esi,src
-    mov edi,dst
-    mov ecx,num
-    mov edx,overlay
-    mov ebp,palette
-    sub ebx,ebx
-next:
-    movzx bx,[edx] //overlay byte
-    inc edx
-    shl bx,4
-    or bl,[esi] //Graphic nibble
-    inc esi
-    mov ax,[ebp+ebx*2]
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    add edi,2
-    sub ecx,1
-    jne next
-  };
-}
-*/
-void BLT5(ui8  *src,     // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
-          i32  num,      // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
-          ui8  *overlay) // Overlay pixels
-{
-  ui16 color;
-  for (;num>0; num--)
-  {
-    color = palette[(*(overlay++) << 4) + *(src++)];
-    dst[0] = color;
-    dst[1] = color;
-    dst[2] = color;
-    dst[3] = color;
-    dst[4] = color;
-    dst[5*320+0] = color;
-    dst[5*320+1] = color;
-    dst[5*320+2] = color;
-    dst[5*320+3] = color;
-    dst[5*320+4] = color;
-    dst[5*2*320+0] = color;
-    dst[5*2*320+1] = color;
-    dst[5*2*320+2] = color;
-    dst[5*2*320+3] = color;
-    dst[5*2*320+4] = color;
-    dst[5*3*320+0] = color;
-    dst[5*3*320+1] = color;
-    dst[5*3*320+2] = color;
-    dst[5*3*320+3] = color;
-    dst[5*3*320+4] = color;
-    dst[5*4*320+0] = color;
-    dst[5*4*320+1] = color;
-    dst[5*4*320+2] = color;
-    dst[5*4*320+3] = color;
-    dst[5*4*320+4] = color;
-    dst+=5;
-  };
-}
-
-
-
-/*
-void BLT6(unsigned char *src,
-          i16 *dst,
-          i32 num,
-          i16 *palette,
-          ui8 *overlay)
-{
-_asm
-  {
-    mov esi,src
-    mov edi,dst
-    mov ecx,num
-    mov edx,overlay
-    mov ebp,palette
-    sub ebx,ebx
-next:
-    movzx bx,[edx] //overlay byte
-    inc edx
-    shl bx,4
-    or bl,[esi] //Graphic nibble
-    inc esi
-    mov ax,[ebp+ebx*2]
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    mov [edi+5*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    mov [edi+5*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    mov [edi+5*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    mov [edi+5*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    mov [edi+5*320*2*6],ax
-    add edi,2
-    mov [edi],ax
-    mov [edi+1*320*2*6],ax
-    mov [edi+2*320*2*6],ax
-    mov [edi+3*320*2*6],ax
-    mov [edi+4*320*2*6],ax
-    mov [edi+5*320*2*6],ax
-    add edi,2
-    sub ecx,1
-    jne next
-  };
-}
-*/
-void BLT6(ui8  *src,     // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
-          i32  num,      // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
-          ui8  *overlay) // Overlay pixels
-{
-  ui16 color;
-  for (;num>0; num--)
-  {
-    color = palette[(*(overlay++) << 4) + *(src++)];
-    dst[0] = color;
-    dst[1] = color;
-    dst[2] = color;
-    dst[3] = color;
-    dst[4] = color;
-    dst[5] = color;
-    dst[6*320+0] = color;
-    dst[6*320+1] = color;
-    dst[6*320+2] = color;
-    dst[6*320+3] = color;
-    dst[6*320+4] = color;
-    dst[6*320+5] = color;
-    dst[6*2*320+0] = color;
-    dst[6*2*320+1] = color;
-    dst[6*2*320+2] = color;
-    dst[6*2*320+3] = color;
-    dst[6*2*320+4] = color;
-    dst[6*2*320+5] = color;
-    dst[6*3*320+0] = color;
-    dst[6*3*320+1] = color;
-    dst[6*3*320+2] = color;
-    dst[6*3*320+3] = color;
-    dst[6*3*320+4] = color;
-    dst[6*3*320+5] = color;
-    dst[6*4*320+0] = color;
-    dst[6*4*320+1] = color;
-    dst[6*4*320+2] = color;
-    dst[6*4*320+3] = color;
-    dst[6*4*320+4] = color;
-    dst[6*4*320+5] = color;
-    dst[6*5*320+0] = color;
-    dst[6*5*320+1] = color;
-    dst[6*5*320+2] = color;
-    dst[6*5*320+3] = color;
-    dst[6*5*320+4] = color;
-    dst[6*5*320+5] = color;
-    dst+=6;
-  };
-}
-
-
-
-
-
 int updateScreenAreaEnterCount = 0;
 int updateScreenAreaLeaveCount = 0;
 
 // Returns 1 if screen area changed.
-int UpdateScreenArea(
+int UpdateScreenArea(HDC hdc,
                       ui8  *STScreen,
                       i32  x0,
                       i32  y0,
@@ -1019,6 +388,12 @@ int UpdateScreenArea(
                       i32  size,
                       bool useOverlay)
 {
+#ifndef USE_DIBS
+  i16 *pBitmap=g_bitmap+x0+y0*320;
+#else
+   i16 *pBitmap=g_bitmap;
+#endif
+
   bool overlayChanged = false;
   i32 firstNibble[7];
   i32 firstOverlay[7];
@@ -1248,52 +623,13 @@ int UpdateScreenArea(
       pOverlay =   (useOverlay && overlayActive)
                  ? currentOverlay.m_overlay+224*(135-line) + firstOverlay[segment]
                  : black;
-      switch (size)
-      {
-      case 1:
+
         BLT1(pNibbles,                               // Raw 8-bit pixel data
-            (ui16 *)bitmap + 1*(320*line + currentPixel), 
+            (ui16 *)pBitmap + 1*(320*line + currentPixel), 
             segWidth[segment],          
             (ui16 *)currentOverlay.m_table, 
             pOverlay);
-        break;
-      case 2:
-        BLT2(pNibbles,                               // Raw 8-bit pixel data
-            (ui16 *)bitmap + 2*(320*2*line + currentPixel),  // Destination in BMP data
-            segWidth[segment],                       // Width in source
-            (ui16 *)currentOverlay.m_table,                  // Palette
-            pOverlay);                               // Overlay pixels data
-        break;
-      case 3:
-        BLT3(pNibbles,
-            (ui16 *)bitmap + 3*(320*3*line + currentPixel),
-            segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
-            pOverlay);
-        break;
-      case 4:
-        BLT4(pNibbles,
-            (ui16 *)bitmap + 4*(320*4*line + currentPixel),
-            segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
-            pOverlay);
-        break;
-      case 5:
-        BLT5(pNibbles,
-            (ui16 *)bitmap + 5*(320*5*line + currentPixel),
-            segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
-            pOverlay);
-        break;
-      case 6:
-        BLT6(pNibbles,
-            (ui16 *)bitmap + 6*(320*6*line + currentPixel),
-            segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
-            pOverlay);
-        break;
-      default: break;
-      };
+
       currentPixel += segWidth[segment];
     };
   };
@@ -1310,9 +646,11 @@ int UpdateScreenArea(
     };
   };
 #endif
+
+#ifdef USE_DIBS
   bitmapInfo.bmiHeader.biSize=0x28;
-  bitmapInfo.bmiHeader.biWidth=320*size;
-  bitmapInfo.bmiHeader.biHeight=-height * size;
+  bitmapInfo.bmiHeader.biWidth=320;
+  bitmapInfo.bmiHeader.biHeight=-height;
   bitmapInfo.bmiHeader.biPlanes=1;
   bitmapInfo.bmiHeader.biBitCount=16;
   bitmapInfo.bmiHeader.biCompression=BI_RGB;
@@ -1321,24 +659,9 @@ int UpdateScreenArea(
   bitmapInfo.bmiHeader.biYPelsPerMeter=0;
   bitmapInfo.bmiHeader.biClrUsed=0;
   bitmapInfo.bmiHeader.biClrImportant=0;
-  UI_SetDIBitsToDevice(
-                      // handle to device context
-    dstX,             // x-coordinate of upper-left corner of
-                      // dest. rect.
-    dstY,             // y-coordinate of upper-left corner of
-                      // dest. rect.
-    width*size,       // source rectangle width
-    height*size,      // source rectangle height
-    0,                // x-coordinate of lower-left corner of
-                      // source rect.
-    0,                // y-coordinate of lower-left corner of
-                      // source rect.
-    0,                // first scan line in array
-    height*size,      // number of scan lines
-    (char *)bitmap,   // address of array with DIB bits
-    &bitmapInfo,      // address of structure with bitmap info.
-    DIB_RGB_COLORS    // RGB or palette indexes
-    );
+  SetDIBitsToDevice(hdc, dstX, dstY, width, height, 0, 0, 0, height, (char *)g_bitmap, &bitmapInfo, DIB_RGB_COLORS);
+#endif
+
   updateScreenAreaLeaveCount++;
   return 1;
 };
@@ -1510,9 +833,20 @@ void display (void){
     areaChangedCount = 0;
     if (!virtualFullscreen)
     {
-      i32 size = screenSize;
+#ifdef USE_DIBS
+      if(!g_bmpOffscreen)
+         g_bmpOffscreen=CreateCompatibleBitmap(GetDC(hWnd), 320,200);
+
+      WindowDC dc(&Window(hWnd));
+      BitmapDC dcBitmap(g_bmpOffscreen, dc);
+      HDC hdc=dcBitmap.hDC();
+#else
+      HDC hdc{};
+#endif
+
+      i32 size = 1;
       areaChangedCount +=
-      UpdateScreenArea(         //Viewport
+      UpdateScreenArea(hdc,         //Viewport
                        physbase(),//STScreen,
                        0,
                        0x21,
@@ -1526,7 +860,7 @@ void display (void){
                        size,
                        videoMode==VM_ADVENTURE);
       areaChangedCount +=
-      UpdateScreenArea(   //Text scrolling area
+      UpdateScreenArea(hdc,   //Text scrolling area
                        physbase(),//STScreen,
                        0,
                        0xa9,
@@ -1540,7 +874,7 @@ void display (void){
                        size,
                        false);
       areaChangedCount +=
-      UpdateScreenArea(             //portrait area
+      UpdateScreenArea(hdc,             //portrait area
                        physbase(),//STScreen,
                        0,
                        0,
@@ -1554,7 +888,7 @@ void display (void){
                        size,
                        false);
       areaChangedCount +=
-      UpdateScreenArea(              //spells,weapons,moves
+      UpdateScreenArea(hdc,              //spells,weapons,moves
                        physbase(),//STScreen,
                        0xe0,
                        0x21,
@@ -1567,9 +901,37 @@ void display (void){
                        prevScreen,
                        size,
                        false);
+
+#ifdef USE_DIBS
+      dc.StretchBlt(g_rcClient, dcBitmap, g_rcAtari, SRCCOPY);
+#else
+      struct RGB16
+      {
+         WORD b : 5;
+         WORD g : 5;
+         WORD r : 5;
+         WORD unused : 1;
+      };
+
+      DWORD pixels[320*200];
+      const RGB16 *pSrc=reinterpret_cast<const RGB16*>(g_bitmap);
+      for(unsigned i=0;i<320*200;i++)
+      {
+         auto pixel=pSrc[i];
+         pixels[i]=(pixel.r<<(3+16)) | (pixel.g<<(3+8)) | (pixel.b<<(3));
+      }
+
+      g_pID2DRenderTarget->BeginDraw();
+      g_pID2DBitmap->CopyFromMemory(&D2D1_RECT_U{0, 0, uint32_t(g_rcAtari.right), uint32_t(g_rcAtari.bottom)}, pixels, sizeof(DWORD)*g_rcAtari.right);
+
+      g_pID2DRenderTarget->DrawBitmap(g_pID2DBitmap, D2D1_RECT_F{float(g_rcClient.left), float(g_rcClient.top), float(g_rcClient.right), float(g_rcClient.bottom)}, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+      g_pID2DRenderTarget->EndDraw();
+#endif
+
     }
     else
     {
+#if 0
       if (videoSegSize[0] != 0)
       {
         areaChangedCount +=
@@ -1638,6 +1000,7 @@ void display (void){
                          videoSegSize[3],
                          false);
       };
+#endif
     };
     if (areaChangedCount)
     {

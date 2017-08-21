@@ -10,11 +10,11 @@ public:
   FILE *Create(const char *name, const char *flags);
   i32 Rename(const char *oldname, const char *newname);
   i32 Unlink(const char *name);
-  FILENAME(void);
-  ~FILENAME(void);
+  FILENAME();
+  ~FILENAME();
 };
 
-FILENAME::FILENAME(void)
+FILENAME::FILENAME()
 {
   m_name[0] = NULL;
   m_name[1] = NULL;
@@ -22,7 +22,7 @@ FILENAME::FILENAME(void)
   m_fName = NULL;
 }
 
-FILENAME::~FILENAME(void)
+FILENAME::~FILENAME()
 {
   i32 i;
   for (i=0; i<3; i++)
@@ -53,7 +53,7 @@ char *FILENAME::createName(const char *folder, const char *file)
     };
   };
 #ifdef _MSVC_INTEL
-  return strlwr(result);
+  return _strlwr(result);
 #endif
 #ifdef _LINUX
   return result;
@@ -158,10 +158,10 @@ ui64 MODIFIEDTIME(i32 file)
 {
   char *fn;
   HANDLE fh;
-  WIN32_FIND_DATAA fData;
+  WIN32_FIND_DATA fData;
   fn=GETFILENAME(file);
   if (fn == NULL) return 0;
-  fh = FindFirstFileA(fn, &fData);
+  fh = FindFirstFile(fn, &fData);
   if (fh == INVALID_HANDLE_VALUE) return 0;
   FindClose(fh);
   return *(ui64 *)(&fData.ftLastWriteTime);

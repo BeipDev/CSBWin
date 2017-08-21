@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by CSBwin.rc
 //
 #define IDC_MYICON                      2
@@ -64,6 +64,8 @@
 #define IDM_Statistics                  32808
 #define IDC_Quintuple                   32809
 #define IDC_Sextuple                    32810
+#define ID_MISC_4X3ASPECTRATIO          32811
+#define ID_4X3ASPECTRATIO               32812
 #define IDC_VIDEOEXPOSE                 32900
 #define IDC_VIDEORESIZE                 32901
 #define IDC_STATIC                      -1
@@ -73,7 +75,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        142
-#define _APS_NEXT_COMMAND_VALUE         32811
+#define _APS_NEXT_COMMAND_VALUE         32813
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

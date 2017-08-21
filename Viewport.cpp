@@ -3275,7 +3275,7 @@ void Interpret(ui16 *code,
 #endif
       };
       break;
-    case BitmapInfo:
+    case ::BitmapInfo:
       {
         int width = 0;
         int height = 0;
