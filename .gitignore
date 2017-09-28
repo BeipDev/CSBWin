@@ -260,3 +260,13 @@ paket-files/
 __pycache__/
 *.pyc
 /Game/CSBWin_Debug.exe
+/Game/GRAPHICS-csb.DAT
+/Game/graphics-conflux.dat
+/Game/Dungeon-Kid.dat
+/Game/dungeon-csb.dat
+/Game/dungeon-conflux.dat
+/Game/CSBWin_Debug_X64.exe
+/Game/CSBWin.exe
+/Game/CSBgraphics-conflux.dat
+/Game/csbgame.dat
+/Game/csbgame.bak
