@@ -18,7 +18,7 @@
 #include <SYS\STAT.h>
 #endif
 
-extern CntPtrTo<ID2D1Factory1> g_pID2D1Factory1;
+extern CntPtrTo<ID2D1Factory> g_pID2D1Factory;
 extern CntPtrTo<ID2D1HwndRenderTarget> g_pID2DRenderTarget;
 extern CntPtrTo<ID2D1Bitmap> g_pID2DBitmap;
 
@@ -97,12 +97,11 @@ i16 palette2[16];
 i16 oldPalette1[16];
 i16 oldPalette2[16];
 ui8 black[320]; //All zeros for one line of overlay
-//ui8 nibbles[64000];
-ui8 fourBitPixels[64000];
+ui8 fourBitPixels[320*200];
 bool screenAlreadyUnpacked;
 
 
-pnt logbase(void);
+pnt logbase();
 bool screenInconsistent = true;
 
 RECT g_rcClient{0, 0, 1, 1}; // The rect that the DM screen is mapped to in the window
@@ -113,7 +112,7 @@ bool IsTextScrollArea(i32, i32)
   return false;
 }
 
-void SwapTextZOrder(void)
+void SwapTextZOrder()
 {
   return;
 }
@@ -128,8 +127,8 @@ bool HasPaletteChanged(i16 *palette, i16 *oldpalette)
     {
       oldpalette[i]=palette[i];
       change=true;
-    };
-  };
+    }
+  }
   return change;
 }
 
@@ -290,22 +289,18 @@ void createPalette16(i16 *palette)
 
 bool ForcedScreenDraw = false;
 
-void ForceScreenDraw(void)
+void ForceScreenDraw()
 {
   ForcedScreenDraw = true;
 }
 
-ui32 unpack[256];
 
-void BuildUnpackTable(void)
+constexpr auto BuildUnpackTable()
 {
-  static bool finished = false;
-  ui32 m, i;
-  if (finished) return;
-  finished = true;
-  for (i=0; i<256; i++)
+  std::array<ui32, 256> table{};
+  for(int i=0; i<256; i++)
   {
-    m = 0;
+    ui32 m = 0;
     if (i & 0x80) m |= 0x00000001;
     if (i & 0x40) m |= 0x00000100;
     if (i & 0x20) m |= 0x00010000;
@@ -314,10 +309,12 @@ void BuildUnpackTable(void)
     if (i & 0x04) m |= 0x00001000;
     if (i & 0x02) m |= 0x00100000;
     if (i & 0x01) m |= 0x10000000;
-    unpack[i] = m;
-  };
+    table[i] = m;
+  }
+  return table;
 }
 
+constexpr std::array<ui32, 256> unpack=BuildUnpackTable();
 
 // Unpack 64000 (320x200) pixels of ST graphic.
 // Convert from bit-plane to single byte-per-pixel format
@@ -325,20 +322,16 @@ void BuildUnpackTable(void)
 void UnpackScreen(ui8 *src, ui8 *dst)
 {
   ui32 *piDest = (ui32 *)dst;
-  ui32 r;
-  int i;
   if (screenAlreadyUnpacked) return;
   screenAlreadyUnpacked = true;
-  BuildUnpackTable();
-  for (i=0; i<64000/16; i++,src+=8,piDest+=4)
+  for (int i=0; i<320*200/16; i++,src+=8,piDest+=4)
   {
-    r  =  (unpack[src[0]] << 0)
-        | (unpack[src[2]] << 1)
-        | (unpack[src[4]] << 2)
-        | (unpack[src[6]] << 3);
+    ui32 r = (unpack[src[0]] << 0)
+           | (unpack[src[2]] << 1)
+           | (unpack[src[4]] << 2)
+           | (unpack[src[6]] << 3);
     piDest[0] = r & 0x0f0f0f0f;
     piDest[1] = (r >> 4) & 0x0f0f0f0f;
-
 
     r =  (unpack[src[1]] << 0)
        | (unpack[src[3]] << 1)
@@ -346,16 +339,9 @@ void UnpackScreen(ui8 *src, ui8 *dst)
        | (unpack[src[7]] << 3);
     piDest[2] = r & 0x0f0f0f0f;
     piDest[3] = (r >> 4) & 0x0f0f0f0f;
+  }
+}
 
-  };
-};
-
-
-
-// Don't warning about modifing EBP
-#if defined(_MSC_VER)
-#pragma warning( disable : 4731)
-#endif
 void BLT1(ui8  *src,     // Raw 8-bit pixels
           ui16 *dst,     // Destination if 16-bit result pixels
           i32  num,      // Width
@@ -367,7 +353,7 @@ void BLT1(ui8  *src,     // Raw 8-bit pixels
   {
     color = palette[(*(overlay++) << 4) + *(src++)];
     *(dst++) = color;
-  };
+  }
 }
 
 int updateScreenAreaEnterCount = 0;
@@ -398,47 +384,24 @@ int UpdateScreenArea(HDC hdc,
   i32 firstNibble[7];
   i32 firstOverlay[7];
   i32 segWidth[7];
-  //i32 LineEnd   = (((x0&0xff0)+width+15)/16) * 8;
-  //i32 LineStart = (x0/16) * 8;
-  //ui8 *pNibbles = nibbles;
   ui8 *pPixels;
   i32 line, segment, xgj, xoj, ygj, currentGraphicLine, lastGraphicLine;
-  //i32 numPixel, skipPixel, n;
-  //i16 *pPalette;
-  //char *pFirstGroup;
   updateScreenAreaEnterCount++;
   overlayChanged = useOverlay && currentOverlay.m_change;
   currentOverlay.m_change = false;
   if (!paletteChanged && !overlayChanged && !jitterChanged) 
   {
-//    if (!HasScreenChanged(STScreen+160*y0+LineStart,
-//                          (LineEnd-LineStart) / 4,
-//                          height,
-//                          160-(LineEnd-LineStart),
-//                          pOldChecksum)) 
     if (!HasAreaChanged(STScreen,
                         x0, y0, width, height,
                         pOldScreen)) 
     {
       updateScreenAreaLeaveCount++;
       return 0;
-    };
-  };
+    }
+  }
   UnpackScreen(physbase(), fourBitPixels);
-  //createPalette16(palette);
-  //if (pOverlayData != NULL)
-  //{
-  //  pOverlayData->CreateOverlayTable(palette16);
-  //  pPalette = pOverlayData->m_table;
-  //}
-  //else
-  //{
-  //  pPalette = palette16;
-  //};
   jitterChanged = false;
-  currentOverlay.Allocate();
   currentOverlay.CreateOverlayTable(palette, useOverlay);
-  //pPalette = pOverlayData->m_table;
 
   STBLTCount++;
   if (useOverlay)
@@ -452,7 +415,7 @@ int UpdateScreenArea(HDC hdc,
     xgj = 0;
     xoj = 0;
     ygj = 0;
-  };
+  }
   if (ygj >= 0)
   {
     currentGraphicLine = -ygj;
@@ -751,7 +714,7 @@ void DumpWindow(FILE *f)
 #endif
 
 /*
-void DumpImages(void)
+void DumpImages()
 {
   static ui64 prevTime = 0;
   static int count = 0;
@@ -788,7 +751,7 @@ void DumpImages(void)
 ui8 prevScreen[32000];
 
 bool pc1, pc2;
-void display (void){
+void display (){
   static i32 numDisplay = 0;
   static bool initialized = false;
   int areaChangedCount;

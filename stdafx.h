@@ -26,6 +26,8 @@
 #include <limits>
 #include <type_traits>
 #include <memory>
+#include <array>
+#include <unordered_map>
 #endif
 
 // C RunTime Header Files
@@ -63,7 +65,7 @@
 #endif
 
 #ifdef _MSVC_CE2002ARM
-void ec(void);
+void ec();
 #define EC ec();
 #define CEtry _try {
 #define CEexception(n) } _except(per=GetExceptionInformation(),CaptureExceptionInfo(), 1){PrintExceptionInfo();PostQuitMessage(1); };

@@ -4,7 +4,7 @@ extern SDL_Surface *WND;
 extern float st_Y;
 extern float st_X;
 //void LIN_PlaySound(i8* audio, ui32 size, i32 volume);
-void UI_Initialize_sounds(void);
+void UI_Initialize_sounds();
 //void LIN_KillSound(i8*);
 #define MB_OK MESSAGE_OK
 #endif
@@ -111,7 +111,7 @@ void UI_Die(int v); //Called by game to terminate abnormally.
                     //In windows version this is implemented
                     //with try .. catch  code structure.
 void UI_Sleep(i32 milliseconds);
-i64  UI_GetSystemTime(void); //cumulative milliseconds
+i64  UI_GetSystemTime(); //cumulative milliseconds
 const i32 MESSAGE_OK          = 1;
 const i32 MESSAGE_YESNO       = 2;
 const i32 MESSAGE_ICONERROR   = 4;
@@ -126,14 +126,14 @@ void UI_Invalidate(bool erase = false); // Send UIM_Paint message when
 const i32 SOUND_SYNC   =1;
 const i32 SOUND_ASYNC  =2;
 const i32 SOUND_MEMORY =4;
-bool UI_PlaySound(const char *wave, i32 flags, i32 attenuation);
-void UI_StopSound(void);
+bool UI_PlaySound(const BYTE *wave, i32 flags, i32 attenuation);
+void UI_StopSound();
 void UI_PushMessage(MTYPE,i32=0,i32=0,i32=0,i32=0,i32=0,i32=0);
 void UI_GetCursorPos(i32 *x, i32 *y);
-i32  UI_CONSTAT(void);// return non-zero if key available
-i32  UI_DIRECT_CONIN(void); //Get next key...no waiting.
-void UI_ClearScreen(void);
-i32  UI_DisableAllMessages(void);
+i32  UI_CONSTAT();// return non-zero if key available
+i32  UI_DIRECT_CONIN(); //Get next key...no waiting.
+void UI_ClearScreen();
+i32  UI_DisableAllMessages();
 i32 UI_EnableMessages(i32);
 void UI_SetDIBitsToDevice(
             i32,
@@ -161,7 +161,7 @@ FILE *UI_fopen(const char *name, const char *flags);
 
 void *UI_malloc(i32 size, ui32 id);
 void *UI_realloc(void *buf, i32 size, ui32 id);
-void  UI_CheckMemoryLeaks(void);
+void  UI_CheckMemoryLeaks();
 
 #if defined _MSVC_INTEL || defined _LINUX || defined _MSVC_CE2002ARM
 void UI_free(void *buf);
@@ -183,15 +183,15 @@ private:
   HBITMAP hOldBitmap;
   BMI_CE2002 bmi;
   unsigned short *bitmap;
-  void ReleaseBitmap(void);
+  void ReleaseBitmap();
 public:
-  VIDEOCE(void){hDC=0;hDCmem=0;hBitmap=0;hOldBitmap=0;bitmap=NULL;};
-  ~VIDEOCE(void){ReleaseBitmap();};
+  VIDEOCE(){hDC=0;hDCmem=0;hBitmap=0;hOldBitmap=0;bitmap=NULL;};
+  ~VIDEOCE(){ReleaseBitmap();};
   unsigned short *GetBitmap(int width, int height);
-  unsigned short *GetBitmap(void){return bitmap;};
+  unsigned short *GetBitmap(){return bitmap;};
   void SetPalette(i32 *palette);
   void DrawBitmap(int srcx, int srcy, int dstx, int dsty, int width, int height);
-  void ClearScreen(void);
+  void ClearScreen();
 };
 
 #endif
@@ -205,9 +205,9 @@ public:
                       //responsible for it.
   char *m_finalText;  //We will allocate this from the
                       //heap. You are responsible for it.
-  EditDialog(void);
-  ~EditDialog(void);
-  i32 DoModal(void);
+  EditDialog();
+  ~EditDialog();
+  i32 DoModal();
 };
 
 
@@ -219,9 +219,9 @@ public:
                       //responsible for it.
   //char *m_finalText;  //We will allocate this from the
                       //heap. You are responsible for it.
-  DSAListDialog(void);
-  ~DSAListDialog(void);
-  i32 DoModal(void);
+  DSAListDialog();
+  ~DSAListDialog();
+  i32 DoModal();
 };
 
 
@@ -230,11 +230,11 @@ class LISTING
 {
   char *m_listing;
 public:
-  LISTING(void);
-  ~LISTING(void);
-  void Clear(void);  // Remove all text
+  LISTING();
+  ~LISTING();
+  void Clear();  // Remove all text
   void DisplayList(const char *title);
   void AddLine(const char *line);  // Add an endline sequence followed by text.
-  void NewLine(void);        // Add newline sequence.
+  void NewLine();        // Add newline sequence.
   void AddText(const char *text);  // Add text with no endline sequence.
 };

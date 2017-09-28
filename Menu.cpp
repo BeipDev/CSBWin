@@ -265,7 +265,7 @@ RESTARTABLE _DoMenu(
   END_RESTARTMAP
   setscreen(d.LogicalScreenBase,d.LogicalScreenBase,0);
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ExpandGraphic((i8 *)d.compressedGraphic0,
+  ExpandGraphic((i8*)d.compressedGraphic0.get(),
                 d.pViewportBMP,
                 0,
                 0);

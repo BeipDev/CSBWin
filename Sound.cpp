@@ -172,12 +172,10 @@ static i32 curVol=-1;
 // *********************************************************
 // Turn an atari graphic sound into a .wav file.
 // *********************************************************
-char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
+std::unique_ptr<ui8[]> SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
 { // volume is a divisor
   char *pN;
   FILE *f=NULL;
-  unsigned char *pW;
-  SNDHEAD *WavBuf;
   i32 i, n, repeat, sample, nibble;
   bool even;
 #ifdef _SNDDEBUG
@@ -196,11 +194,11 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
       for (k=128; k<256; k++)
         volTable[k] = (ui8)((k-128+volume/2)/volume + 128);
       curVol = volume;
-    };
-  };
-  WavBuf = (SNDHEAD *)UI_malloc(numSample + 58, MALLOC042);
-  if (WavBuf == NULL) die (0,"No Memory");
-  pW = (unsigned char *)WavBuf->sample58;
+    }
+  }
+  auto pWavBuf = std::make_unique<ui8[]>(numSample+sizeof(SNDHEAD)+13);
+  auto WavBuf = (SNDHEAD *)pWavBuf.get();
+  auto pW = (unsigned char *)WavBuf->sample58;
   n = numSample; // Number of samples to store
   pN = (char *)pGraphic;
   if (f) fprintf(f,"Starting pN = %08x   Number of samples=%08x\n"
@@ -305,16 +303,15 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
   //WavBuf->numBytes46 = numSample;
   memcpy(WavBuf->byte50,"data",4);
   WavBuf->numSamples54 = numSample;
-  return (char *)WavBuf;
+  return pWavBuf;
 }
 
 //===============================================
 // Allocate memory and construct an internal .wav file from the
 // custom sound.
 //===============================================
-char *SOUNDDATA::Decode(i32 volume)
+std::unique_ptr<ui8[]> SOUNDDATA::Decode(i32 volume)
 { // volume = divisor
-  SNDHEAD *WavBuf;
   i32 i;
   if (!usingDirectX)
   {
@@ -326,9 +323,10 @@ char *SOUNDDATA::Decode(i32 volume)
       for (i=128; i<256; i++)
         volTable[i] = (ui8)((i-128+volume/2)/volume + 128);
       curVol = volume;
-    };
-  };
-  WavBuf = (SNDHEAD *)UI_malloc(m_size + 58, MALLOC089);
+    }
+  }
+  auto pWavBuf = std::make_unique<ui8[]>(m_size+58);
+  auto WavBuf = (SNDHEAD *)pWavBuf.get();
   memcpy(WavBuf->byte0,"RIFF",4);
   WavBuf->Size = m_size+58-4;
   memcpy(WavBuf->byte8,"WAVEfmt ",8);
@@ -356,45 +354,37 @@ char *SOUNDDATA::Decode(i32 volume)
   {
     memcpy(WavBuf->sample58, m_sound, m_size);
   };
-  return (char *)WavBuf;
+  return pWavBuf;
 }  
 
 // Made this a class so the destructor will
 // clean things up when we stop the program.
-class SOUNDER
+struct SOUNDER
 {
-  char *m_wave[MAXWAVE];
-  char *m_toFree;
-  i32   m_attenuation[MAXWAVE];
-public:
-  SOUNDER(void) {m_toFree=NULL;i32 i;for(i=0;i<MAXWAVE;i++)m_wave[i]=NULL;};
-  ~SOUNDER(void) {Cleanup();};
-  void Cleanup(void)
+  ~SOUNDER() { Cleanup(); }
+
+  void Cleanup()
   {
-    i32 i;
-    if (m_toFree!=NULL) UI_free(m_toFree);
-    m_toFree = NULL;
-    if (m_wave[0] != NULL)
-    {
+    m_toFree.reset();
+
+    if(m_waves[0])
       UI_StopSound();
-      UI_free (m_wave[0]);
-      m_wave[0] = NULL;
-    };
-    for (i=1; i<MAXWAVE; i++)
-    {
-      if (m_wave[i] != NULL)
-      {
-        UI_free(m_wave[i]);
-        m_wave[i] = NULL;
-      };
-    }
-  };
-  void Sound(char *wave, i32 attenuation);
-  i32 CheckQueue(void);
-  void AddWave(char *wave, i32 attenuation);
+
+    for(auto &wave : m_waves)
+      wave.reset();
+  }
+
+  void Sound(std::unique_ptr<ui8[]> &&pWave, i32 attenuation);
+  i32 CheckQueue();
+  void AddWave(std::unique_ptr<ui8[]> &&pWave, i32 attenuation);
 #ifdef _MSVC_CE2002ARM
   char *Resample(char *wave);
 #endif
+
+private:
+  std::unique_ptr<ui8[]> m_waves[MAXWAVE];
+  std::unique_ptr<ui8[]> m_toFree;
+  i32 m_attenuation[MAXWAVE];
 };
 
 #ifdef _MSVC_CE2002ARM
@@ -471,15 +461,14 @@ char *SOUNDER::Resample(char *wave)
 
 #endif
 
-i32 SOUNDER::CheckQueue(void)
+i32 SOUNDER::CheckQueue()
 {
   //If any sounds are waiting try to see if we can
   //play them now.  Return number waiting in queue.
 #if MAXWAVE > 1
-  i32 i;
-  if (m_wave[1] != NULL)
+  if(m_waves[1])
   {
-    if (UI_PlaySound(m_wave[1],SOUND_ASYNC|SOUND_MEMORY, m_attenuation[1]))
+    if(UI_PlaySound(m_waves[1].get(), SOUND_ASYNC|SOUND_MEMORY, m_attenuation[1]))
     {
       //I was getting an access violation in WINMM.DLL.
       //It seems that starting a new sound successfully does not
@@ -487,14 +476,11 @@ i32 SOUNDER::CheckQueue(void)
       //sound!  So, I delay freeing the wave buffer by saving
       //it up in m_toFree.  That delay seems to be sufficient.
       //I have been unable to reproduce the access violation.
-      if (this->m_toFree != NULL)
+      m_toFree.reset();
+      m_toFree = std::move(m_waves[0]);
+      for(unsigned i=0; i<MAXWAVE-1; i++)
       {
-        UI_free(m_toFree);
-      };
-      m_toFree = m_wave[0];
-      for (i=0; i<MAXWAVE-1; i++)
-      {
-        m_wave[i] = m_wave[i+1];
+        m_waves[i] = std::move(m_waves[i+1]);
         m_attenuation[i] = m_attenuation[i+1];
       };
 #ifdef _MSVC_CE2002ARM
@@ -506,42 +492,41 @@ i32 SOUNDER::CheckQueue(void)
         //UI_free(temp);
       };
 #endif
-      m_wave[i] = NULL;
-    };
-    for (i=1; i<MAXWAVE; i++)
+    }
+    for(unsigned i=1; i<MAXWAVE; i++)
     {
-      if (m_wave[i] == NULL) break;
-    };
-    return i-1;
+      if(!m_waves[i])
+         return i;
+    }
+    return MAXWAVE-1;
   }
   else
   {
     return 0;
-  };
+  }
 #else
   return 0;
 #endif
 }
 
 #if MAXWAVE>1
-void SOUNDER::AddWave(char *wave, i32 attenuation)
+void SOUNDER::AddWave(std::unique_ptr<ui8[]> &&pWave, i32 attenuation)
 {
-  i32 i;
-  if (m_wave[0] == NULL)
+  if(!m_waves[0])
   {
 #ifdef _MSVC_CE2002ARM
     m_wave[0] = Resample(wave);
     //UI_free(wave);
 #else
-    m_wave[0] = wave;
+    m_waves[0] = std::move(pWave);
 #endif
     m_attenuation[0] = attenuation;
-    UI_PlaySound(m_wave[0], SOUND_ASYNC|SOUND_MEMORY,m_attenuation[0]);
+    UI_PlaySound(m_waves[0].get(), SOUND_ASYNC|SOUND_MEMORY,m_attenuation[0]);
     return;
-  };
-  for (i=0; i<MAXWAVE; i++)
+  }
+  for(unsigned i=0; i<MAXWAVE; i++)
   {
-    if (m_wave[i] == NULL)
+    if(!m_waves[i])
     {
 #ifdef _MSVC_CE2002ARM
       if (i == 1)
@@ -554,13 +539,12 @@ void SOUNDER::AddWave(char *wave, i32 attenuation)
         m_wave[i] = wave;
       };
 #else
-      m_wave[i] = wave;
+      m_waves[i] = std::move(pWave);
 #endif
       m_attenuation[i] = attenuation;
       return;
-    };
-  };
-  UI_free(wave);
+    }
+  }
 }
 #else //if MAXWAVE==1
 // Linux uses SDL and therefore MAXWAVE must be 1 when using Linux.
@@ -615,23 +599,20 @@ void SOUNDER::AddWave(char *wave, i32 attenuation)
 }
 #endif // _LINUX
 #endif //MAXWAVE
-void SOUNDER::Sound(char *wave, i32 attenuation)
+void SOUNDER::Sound(std::unique_ptr<ui8[]> &&pWave, i32 attenuation)
 {
   // We free wave.  Therefore you better not use
   // it again after you call us to play it!
-  ASSERT(m_wave[0] != wave,"wave");
-  ASSERT(wave != NULL,"wave");
+  ASSERT(m_waves[0].get() != pWave.get(),"wave");
+  ASSERT(pWave.get(),"wave");
   if (VBLMultiplier != 1) 
-  {
-    UI_free(wave);
     return;
-  };
 
 //First we try to remove any queued item
   CheckQueue();
 
 // Now we want to add the new wave to the queue
-  AddWave(wave, attenuation); //And play it if is the only one.
+  AddWave(std::move(pWave), attenuation); //And play it if is the only one.
 
 // And once again, see if we can remove any queued item.
   CheckQueue();
@@ -649,7 +630,6 @@ void StartSound(ui8 *SoundBytes,
                 i32  highVolume)
 {
   i32 size, volume;
-  char *Wave;
   if (SoundBytes == NULL)
   {
     sounder.Cleanup();
@@ -662,8 +642,8 @@ void StartSound(ui8 *SoundBytes,
   volume = 1;
   if (highVolume==0) volume = 18;// attenuation
   volume *= volumeTable[gameVolume].divisor;
-  Wave = SoundDecode((pnt)SoundBytes+2, size, volume);
-  sounder.Sound(Wave, volumeTable[gameVolume].attenuation);
+  auto pWave = SoundDecode((pnt)SoundBytes+2, size, volume);
+  sounder.Sound(std::move(pWave), volumeTable[gameVolume].attenuation);
 }
 
 
@@ -757,7 +737,7 @@ i32 SoundFilter(i32 soundNumber, i32 highVolume, const LOCATIONREL *soundLocr)
 }
 
 
-i32 CheckSoundQueue(void)
+i32 CheckSoundQueue()
 {
   return sounder.CheckQueue();
 }
@@ -786,7 +766,7 @@ void TAG001e16(i16 P1)
 // sound timer interrupts.  I think it operates at
 // about 8 KHz.
 // *********************************************************
-void TAG001e50(void)
+void TAG001e50()
 {
   dReg D6, D7;
   pnt pD7;
@@ -967,14 +947,7 @@ PlayResource("soundName");
 
 
 
-SOUNDDATA::SOUNDDATA(void)
-{
-  m_sound = NULL;
-  m_soundNum = -1;
-  m_size = -1;
-};
-
-SOUNDDATA::~SOUNDDATA(void)
+SOUNDDATA::~SOUNDDATA()
 {
   Cleanup();
 }
@@ -985,6 +958,14 @@ void SOUNDDATA::Allocate(i32 numSample)
   m_sound = (ui8 *)UI_malloc(numSample, MALLOC090);
 }
 
+void SOUNDDATA::Cleanup()
+{
+  if (m_sound != NULL)
+  {
+    UI_free(m_sound);
+    m_sound = NULL;
+  };
+}
 
 bool SOUNDDATA::ReadSound(i32 soundNum)
 {
@@ -1025,26 +1006,13 @@ bool SOUNDDATA::ReadSound(i32 soundNum)
 }
 
 
-
-void SOUNDDATA::Cleanup(void)
-{
-  if (m_sound != NULL)
-  {
-    UI_free(m_sound);
-    m_sound = NULL;
-  };
-}
-
-
 void PlayCustomSound(i32 soundNum, i32 volume, i32 /*flags*/)
 {
-  char *wav;
-  SOUND *pSound;
   if (soundNum < 0)
   {
     soundNum = -soundNum-1;
     if (soundNum > 21) return;
-    pSound = &d.sound1772[soundNum];
+    SOUND *pSound = &d.sound1772[soundNum];
     StartSound(GetBasicGraphicAddress(pSound->word0|0x8000),// Start Sound
                (UI8)(pSound->byte3),
                volume);
@@ -1054,7 +1022,7 @@ void PlayCustomSound(i32 soundNum, i32 volume, i32 /*flags*/)
     if (!currentSound.ReadSound(soundNum)) return;
     if (gameVolume == VOLUME_OFF) return;
     if (NoSound) return;
-    wav = currentSound.Decode(volume?volume:1);
-    sounder.Sound(wav, volume + volumeTable[gameVolume].attenuation);
+    auto wav = currentSound.Decode(volume?volume:1);
+    sounder.Sound(std::move(wav), volume + volumeTable[gameVolume].attenuation);
   };
 }

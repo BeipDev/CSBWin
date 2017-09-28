@@ -9,12 +9,12 @@
 #include "CSB.h"
 #include "Data.h"
 
-void DisableTraceIfEnciphered(void);
-void PlayFile_Close(void);
-void RecordFile_Close(void);
-bool IsPlayFileOpen(void);
-bool IsRecordFileRecording(void);
-void RecordFile_Open(void);
+void DisableTraceIfEnciphered();
+void PlayFile_Close();
+void RecordFile_Close();
+bool IsPlayFileOpen();
+bool IsRecordFileRecording();
+void RecordFile_Open();
 void RecordFile_Record(i32 x, i32 y, i32 z);
 
 extern bool RepeatGame;
@@ -63,7 +63,7 @@ extern ui32 VBLCount;
 //
 // *********************************************************
 //           TAG01f9e6
-RESTARTABLE _ShowCredits(const i32 P1) //(void)
+RESTARTABLE _ShowCredits(const i32 P1) //()
 { // The game is lost!  Or won!!!
   static dReg D0, D4, D5, D6, D7;
   static aReg A0, A2, A3;

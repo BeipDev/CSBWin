@@ -11,7 +11,7 @@ int numXlate = 0;
 char **xlate = NULL; // translation strings come in pairs. English then translation.
 
 
-void ReadTranslationFile(void)
+void ReadTranslationFile()
 {
   char buf[200];
   int handle, len, len1, len2;
@@ -70,7 +70,7 @@ const char *TranslateLanguage(const char *text)
   return text;
 }
 
-void CleanupTranslations(void)
+void CleanupTranslations()
 {
   int i;
   for (i=0; i<numXlate; i++)

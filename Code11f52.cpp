@@ -18,7 +18,7 @@ void settrace(i32 n);
 #endif
 
 
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 
 extern bool version90Compatible;
 extern bool drawAsSize4Monsters;
@@ -407,7 +407,7 @@ void AddObjectToRoom(RN newObj,RN prevObj,i32 mapX,i32 mapY,MMRECORD *pmmr)
               newObj.ConvertToInteger(), d.LoadedLevel, mapX, mapY,newObj.pos());
   };
   if (newObj == RNeof) return;
-  prnA3 = d.objectList + d.dungeonDatIndex->ObjectListLength();
+  prnA3 = d.objectList.data() + d.dungeonDatIndex->ObjectListLength();
   for (j=0; j<5; j++)
   {
     if ((*(--prnA3)).ConvertToInteger() != 0xffff) break;
@@ -418,11 +418,7 @@ void AddObjectToRoom(RN newObj,RN prevObj,i32 mapX,i32 mapY,MMRECORD *pmmr)
     // expand  d.objectList.
     i32 newLength;
     newLength = d.dungeonDatIndex->ObjectListLength() + 50;
-    d.objectList = (RN *)UI_realloc(d.objectList, newLength * sizeof(RN),MALLOC096);
-    for (j=d.dungeonDatIndex->ObjectListLength(); j<newLength; j++)
-    {
-      d.objectList[j] = RNnul; 
-    };
+    d.objectList.resize(newLength, RNnul);
     d.dungeonDatIndex->ObjectListLength((ui16)newLength);
   };
   newObjAddr = GetCommonAddress(newObj);
@@ -443,7 +439,7 @@ void AddObjectToRoom(RN newObj,RN prevObj,i32 mapX,i32 mapY,MMRECORD *pmmr)
         //An error in some converted dungeon caused the 
         //CF flag to be set when there were no objects
         //in the room.  We will tolerate this condition.
-        //Find the root and stuff our new object into it.
+        //Find the g_root and stuff our new object into it.
         i32 objectListIndex;
         objectListIndex = GetObjectListIndex(mapX, mapY);
         ASSERT (objectListIndex >= 0,"objIndex");
@@ -686,7 +682,7 @@ void CreateAndDropObject(i32 P1,
                          i32 mapY ,
                          i32 position,  // (or 255)
                          i32 delay)     // sound delay
-{ //(void)
+{ //()
   dReg D1, D6, D7;
   RN   objD5;
   DBCOMMON *dbA2;
@@ -804,7 +800,7 @@ void CreateAndDropObject(i32 P1,
 //
 // *********************************************************
 void TAG00b522(RN monster, i32 newX, i32 newY)
-{//(void)
+{//()
   MONSTERTYPE monsterType;
   DB4 *pDB4_4;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -833,7 +829,7 @@ void DropMonsterRemains(i32 mapX,
                         i16 bodyPartSoundDelay, 
                         i32 monsterAttachedToLevel,
                         bool dropResidue)
-{ //(void)
+{ //()
   dReg D6, D7;
   DB4  *DB4A3;
   RN    objD4, objD5;
@@ -1024,7 +1020,7 @@ void ProcessMonsterDeleteFilter(i32 mapX, i32 mapY, DELETEMONSTERPARAMETERS *pdm
 // *********************************************************
 //   TAG00b6ac
 void DeleteMonster(i32 mapX, i32 mapY, MMRECORD *pmmr)
-{//(void)
+{//()
   RN   objD7;
   DB4 *DB4A3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1379,7 +1375,7 @@ void CreateCloud(RN P1,
                  i32 missileX, i32 missileY,
                  i16 position, 
                  MMRECORD *pmmr)
-{//(void)
+{//()
   dReg        D0, D1, D3, D4;
   MONSTERTYPE mtD0;
   DB15        *DB15A3;
@@ -3462,7 +3458,7 @@ i16 MoveObject(const RN        object,
 //
 // *********************************************************
 //   TAG012b80
-void RotateActuatorList(void)
+void RotateActuatorList()
 {
   DBCOMMON *dbA3;
   DB3     *DB3A2;
@@ -3567,7 +3563,7 @@ void QueueSwitchAction(DB3 *pDB3,        //Source switch's DB entry
                        i32 tmrAct,       //Action set/clear/toggle
                        i32 mapX,i32 mapY,//Source switch's location
                        i32 P5)
-{//(void)
+{//()
   i32 targetX, targetY, targetPos;
   i32 actionTime;
   i32 numericFunction;
@@ -4073,7 +4069,7 @@ i32 CharacterAtPosition(i32 pos)
 // *********************************************************
 //   TAG01470c
 void SetPartyFacing(i32 newDirection)
-{//(void)
+{//()
   dReg D0;
   CHARDESC *pcA0;
   i32 deltaFacing;
@@ -4146,8 +4142,8 @@ bool DrawModifiedObjectAtLocation(i32 ScreenLocation,RN object)
 //
 // *********************************************************
 //   TAG015508
-void DrawEightHands(void)
-{//(void)
+void DrawEightHands()
+{//()
   dReg D0, D4, D6, D7;
   OBJ_NAME_INDEX objNID5;
   bool modifiedD5;

@@ -16,7 +16,7 @@
 
 bool GetVideoRectangle(i32, RECT *);
 void FreeIfNonNULL(void **pointer);
-void DumpImages(void);
+void DumpImages();
 
 
 i32 trace = -1;
@@ -25,8 +25,8 @@ bool overlappingText = false;
 extern i32 screenSize;
 extern bool BeginRecordOK;
 extern bool ItemsRemainingOK;
-extern bool PlayfileIsOpen(void);
-extern bool RecordfileIsOpen(void);
+extern bool PlayfileIsOpen();
+extern bool RecordfileIsOpen();
 extern bool TimerTraceActive;
 extern bool AttackTraceActive;
 extern bool AITraceActive;
@@ -53,7 +53,7 @@ CntPtrTo<ID2D1Bitmap> g_pID2DBitmap;
 
 POINT g_aspectRatio{320, 240};
 
-char *parentFolder(char *folderName, char *endName);
+std::string parentFolder(char *folderName, char *endName);
 
 char *helpMessage = "CSBWin looks in three places for files:\n"
                     " 1) The default directory\n"
@@ -215,7 +215,7 @@ i32 WINAPI WinMain(HINSTANCE hInstance ,
 	return msg.wParam;
 }
 
-void ProcessCommandLine(void)
+void ProcessCommandLine()
 {
   char *lpCmdLine;
   char *pCol, *command;
@@ -235,7 +235,7 @@ void ProcessCommandLine(void)
     if (*pCol == term) break;
     pCol++;
   };
-  root = parentFolder(command, pCol);
+  g_root = parentFolder(command, pCol);
   pCol = lpCmdLine;
   if (pCol[0] == '"')
   {
@@ -354,7 +354,7 @@ BOOL InitInstance(HINSTANCE hInstance, i32 nCmdShow)
 i32 delta[60];
 i32 prevms = -1;
 i32 slot;
-void display(void);
+void display();
 extern ui32 VBLInterruptCount;
 extern ui32 CheckVBLCount;
 extern ui32 STBLTCount;
@@ -398,6 +398,8 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       case WM_SIZE:
       {
          RECT rcClient; ::GetClientRect(hWnd, &rcClient);
+         if(rcClient.right-rcClient.left==0 || rcClient.bottom-rcClient.top==0)
+            break;
 
          g_rcClient=TouchFromInside(rcClient, g_aspectRatio);
          g_pID2DRenderTarget->Resize(D2D1_SIZE_U{uint32_t(rcClient.right-rcClient.left), uint32_t(rcClient.bottom-rcClient.top)});

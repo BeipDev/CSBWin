@@ -45,7 +45,7 @@ class SDOBJ
 public:
   ui32 m_priority;
   void Get(i32 *level, i32 *x, i32 *y, RN *obj);
-  SDOBJ(void);
+  SDOBJ();
   SDOBJ(i32 level, i32 x, i32 y, RN *obj, ui32 priority);
 };
 
@@ -55,7 +55,7 @@ SDOBJ::SDOBJ(i32 level, i32 x, i32 y, RN *obj, ui32 priority)
   m_priority = priority;
 }
 
-SDOBJ::SDOBJ(void)
+SDOBJ::SDOBJ()
 {
   RN obj;
   m_object = obj.ConvertToInteger();
@@ -139,15 +139,15 @@ class SDOBJLIST
   //ancientComment//old comment//check when adding another object that room exists.  We
   //ancientComment//old comment//ignore objects if they don't fit.
 public:
-  SDOBJLIST(void) {m_numEntry = 0;};
-  void Clear(void) {m_numEntry = 0;};
+  SDOBJLIST() {m_numEntry = 0;};
+  void Clear() {m_numEntry = 0;};
   void AddObjectIncr(SDOBJ *pSDobj);
   void AddObjectDecr(SDOBJ *pSDobj);
   bool DeleteObjectIncr(SDOBJ *pSDobj);
   bool DeleteObjectDecr(SDOBJ *pSDobj);
   bool SearchStillAvailable(SDOBJ *pSDobj);
-  void Reverse(void); // Invert so largest is first.
-//  float TopPriority(void) {return ComputePriority(&m_sdobj[0]);};
+  void Reverse(); // Invert so largest is first.
+//  float TopPriority() {return ComputePriority(&m_sdobj[0]);};
 };
 
 void SDOBJLIST::AddObjectDecr(SDOBJ *pSDobj)
@@ -318,7 +318,7 @@ bool SDOBJLIST::DeleteObjectDecr(SDOBJ *pSDobj)
   return true;
 }
 
-void SDOBJLIST::Reverse(void)
+void SDOBJLIST::Reverse()
 { // Reverse the list to be in 'high priority first' order
   int num, high, low;
   SDOBJ temp;
@@ -400,12 +400,12 @@ SRCHPKT *SearchForObject(RN objID)
   i32 col0Index, lastCol, col, colIndex;
   i32 numRow, row;
   len = d.dungeonDatIndex->ObjectListLength();
-  for (i=0, pRN=d.objectList; i<len; i++,pRN++)
+  for (i=0, pRN=d.objectList.data(); i<len; i++,pRN++)
   {
     if (*pRN == objID)
     {
       srchPkt.place = PLACE_InDungeon;
-      index = pRN-d.objectList;
+      index = pRN-d.objectList.data();
       numLev = d.dungeonDatIndex->NumLevel();
       for (level=numLev-1; level>=0; level--)
       {
@@ -619,7 +619,7 @@ int ScanOneCell(SDOBJLIST *pSDObjList)
 }
 
 
-static int ScanDungeon(void)
+static int ScanDungeon()
 {
   //Return value is number of objects examined.
   //Return value is 99999 if scan is complete.
@@ -659,7 +659,7 @@ static int ScanDungeon(void)
   return result;
 }
 
-static void DiscardObject(void)
+static void DiscardObject()
 {
 //  float priority;
   i32 oldLevel;
@@ -930,7 +930,7 @@ INTERIMTABLE interimTable[] =
 };
 */
 /*
-void BuildSmartDiscardTable(void)
+void BuildSmartDiscardTable()
 {
   //Back in the ole days there was a limit of 1020 items
   //in a database and it was critical to discard the 

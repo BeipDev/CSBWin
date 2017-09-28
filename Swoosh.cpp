@@ -118,7 +118,7 @@ struct bpb
         WORD    recsiz;         // sector size in bytes //
         WORD    clsiz;          // cluster size in sectors //
         WORD    clsizb;         // cluster size in bytes //
-        WORD    rdlen;          // root directory length in records //
+        WORD    rdlen;          // g_root directory length in records //
         WORD    fsiz;             // fat size in records //
         WORD    fatrec;         // first fat record (of last fat) //
         WORD    datrec;         // first data record //
@@ -147,7 +147,7 @@ struct bs {
   /*   d */  UBYTE spc;       // sectors per cluster */
   /*   e */  UBYTE res[2];    // number of reserved sectors */
   /*  10 */  UBYTE fat;       // number of FATs */
-  /*  11 */  UBYTE dir[2];    // number of DIR root entries */
+  /*  11 */  UBYTE dir[2];    // number of DIR g_root entries */
   /*  13 */  UBYTE sec[2];    // total number of sectors */
   /*  15 */  UBYTE media;     // media descriptor */
   /*  16 */  UBYTE spf[2];    // sectors per FAT */
@@ -188,7 +188,7 @@ void A16LDCode();
  d 	  	sectors per cluster
  e- f 	number of reserved sectors
 10		number of fatek
-11-12	number of root dir entries
+11-12	number of g_root dir entries
 13-14	total number of sectors
 15		media descriptor
 16-17	sectors per fat

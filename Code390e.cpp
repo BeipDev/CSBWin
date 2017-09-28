@@ -13,8 +13,8 @@
 //
 //*********************************************************
 //          _TAG00390e
-void ReadGraphicsForLevel(void)
-{//(void)
+void ReadGraphicsForLevel()
+{//()
   static dReg D0, D1, D3, D5, D6, D7;
   static aReg A0, A3;
   static i16 LOCAL_22;
@@ -69,11 +69,11 @@ void ReadGraphicsForLevel(void)
   d.UseByteCoordinates = 1;
   d.Pointer2234 = (pnt)d.pWallBitmaps[4];
   MakeMirror((ui8 *)d.Pointer2234,
-             (ui8 *)tempBitmap,
+             g_tempBitmap.get(),
              d.wallRectangles[0].b.uByte4,  //(UI8)(d.Byte3074[4]),
              d.wallRectangles[0].b.uByte5); //(UI8)(d.Byte3074[5]));
   Flood((ui8 *)d.Pointer2214, 10, 0x198);
-  TAG0088b2((ui8 *)tempBitmap,    //src
+  TAG0088b2(g_tempBitmap.get(),    //src
             (ui8 *)d.Pointer2214,    //dest
             (RectPos *)d.Byte2958,       //rectPos
             11,               //src x offset
@@ -83,11 +83,11 @@ void ReadGraphicsForLevel(void)
             -1);
   d.Pointer2238 = (pnt)d.pWallBitmaps[3];
   MakeMirror((ui8 *)d.Pointer2238,
-             (ui8 *)tempBitmap,
+             g_tempBitmap.get(),
              d.wallRectangles[3].b.uByte4,  //(UI8)(d.Byte3050[4]),
              d.wallRectangles[3].b.uByte5); //(UI8)(d.Byte3050[5]));
   Flood((ui8 *)d.Pointer2218,10,0x27f);
-  TAG0088b2((ui8 *)tempBitmap,     // src
+  TAG0088b2(g_tempBitmap.get(),     // src
             (ui8 *)d.Pointer2218,     // dst
             (RectPos *)d.Byte2962,        // rectPos
             8,                 // src x offset

@@ -10,7 +10,7 @@
 #include "Data.h"
 
 
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 
 //*********************************************************
 // I separated this from SummarizeRoomInfo to make it 

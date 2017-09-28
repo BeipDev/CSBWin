@@ -239,7 +239,7 @@ extern bool boolResult;
 extern pnt pntResult;
 
 
-void _RETURN(void);
+void _RETURN();
 void _RETURN_i16(i16);
 void _RETURN_int(i32);
 void _RETURN_RN(RN);

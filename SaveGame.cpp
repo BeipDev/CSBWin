@@ -50,11 +50,11 @@ i32 LoadLong(pnt addr);
 void RecordFile_Record(const char *line);
 void RecordFile_Record(i32 x, i32 y, i32 z);
 void RecordFile_Record(MouseQueueEnt *MQ);
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 bool PlayFile_Play(MouseQueueEnt *MQ);
-bool IsRecordFileRecording(void);
-void RecordFile_Open(void);
-void RecordFile_Close(void);
+bool IsRecordFileRecording();
+void RecordFile_Open();
+void RecordFile_Close();
 
 
 struct GAMEBLOCK1
@@ -162,7 +162,7 @@ void BO(ui16& word)
   word = LE16(word);
 }
 
-void SwapDataIndexMap(void)
+void SwapDataIndexMap()
 {
   i32 i;
   for (i=0; i<dataMapLength; i++)
@@ -171,7 +171,7 @@ void SwapDataIndexMap(void)
   };
 }
 
-void SwapIndirectTextIndex(void)
+void SwapIndirectTextIndex()
 {
   i32 i;
   for (i=0; i<d.dungeonDatIndex->NumWordsInTextArray(); i++)
@@ -269,7 +269,7 @@ i32 WriteGameInfo(i32 handle, i32 size)
   return size;
 }
 
-void ClearDSALevelIndex(void)
+void ClearDSALevelIndex()
 {
   i32 i,j;
   for (i=0; i<64; i++)
@@ -478,7 +478,7 @@ void swapBlock2(GAMEBLOCK2 *b)
   BO(b->TimerSequence);        //180
 }
 
-void swapITEM16s(void)
+void swapITEM16s()
 { // Fix byte order in ITEM16 entries
   i32 i;
   for (i=0; i<d.MaxITEM16; i++)
@@ -520,7 +520,7 @@ void swapCharacter(i32 i)
   pc->shieldStrength = LE16(pc->shieldStrength);
 }
 
-void swapPointer10454(void)
+void swapPointer10454()
 {
   for (i32 i=0; i<d.numColumnPointers; i++)
     d.objectListIndex[i] = LE16(d.objectListIndex[i]);
@@ -533,7 +533,7 @@ void swapPRN10464(i32 num)
 }
 
 
-void swapCharacterData(void)
+void swapCharacterData()
 {
   i32 i;
   for (i=0; i<4; i++) swapCharacter(i);
@@ -543,7 +543,7 @@ void swapCharacterData(void)
 }
 
 #ifdef _DEBUG
-void recomputeLoads(void)
+void recomputeLoads()
 {
   i32 p, c;
   for (c=0; c<d.NumCharacter; c++)
@@ -562,7 +562,7 @@ void recomputeLoads(void)
 #endif
 
 
-void swapTimers(void)
+void swapTimers()
 {
   TIMER_SEARCH timerSearch;
   //for (i32 i=0; i<d.MaxTimer(); i++)
@@ -752,7 +752,7 @@ i16 ScrambleAndWrite(i16 *pwbuf)
 
 
 
-ui16 countDSAs(void)
+ui16 countDSAs()
 {
   i32 i;
   ui16 numDSA = 0;
@@ -814,7 +814,7 @@ struct BlockDesc
 //
 // *********************************************************
 // TAG001de4c
-RESTARTABLE _DisplayDiskMenu(void)
+RESTARTABLE _DisplayDiskMenu()
 {//void
   static dReg D0, D1, D5, D6, D7;
   static aReg A3;
@@ -1252,7 +1252,7 @@ RESTARTABLE _DisplayDiskMenu(void)
 
     swapPRN10464(d.dungeonDatIndex->ObjectListLength());
     D0W = WriteAndChecksum(
-                     (ui8 *)d.objectList,
+                     (ui8 *)d.objectList.data(),
                      pwA3,
                      2*d.dungeonDatIndex->ObjectListLength());
     swapPRN10464(d.dungeonDatIndex->ObjectListLength());
@@ -1261,26 +1261,25 @@ RESTARTABLE _DisplayDiskMenu(void)
 
     SwapIndirectTextIndex();
     D0W = WriteAndChecksum(
-                     (ui8 *)d.indirectTextIndex,
+                     (ui8 *)d.indirectTextIndex.data(),
                      pwA3,
                      4*d.dungeonDatIndex->NumWordsInTextArray());
     SwapIndirectTextIndex();
     if (D0W == 0) goto tag01e4f0;
 // ******
 
-    d.sizeOfCompressedText = BE32(d.sizeOfCompressedText);
+    i32 sizeOfCompressedText = BE32(d.compressedText.size());
     D0W = WriteAndChecksum(
-                     (ui8 *)&d.sizeOfCompressedText,
+                     (ui8 *)&sizeOfCompressedText,
                      pwA3,
                      4);
-    d.sizeOfCompressedText = BE32(d.sizeOfCompressedText);
     if (D0W == 0) goto tag01e4f0;
 // ******
 
     D0W = WriteAndChecksum(
-                     (ui8 *)d.compressedText,
+                     (ui8 *)d.compressedText.data(),
                      pwA3,
-                     2*d.sizeOfCompressedText);
+                     2*d.compressedText.size());
     if (D0W == 0) goto tag01e4f0;
     if (disableSaves)
     {
@@ -1432,7 +1431,7 @@ void CheckMonster(RN obj)
   };
 }
 
-void CheckMonsters(void)
+void CheckMonsters()
 {
   i32 numLevel, width, height;
   i32 level, x, y;
@@ -1457,7 +1456,7 @@ void CheckMonsters(void)
   };
 }
 
-void CheckCelltypes(void)
+void CheckCelltypes()
 {
   i32 numLevel, level, x, y;
   i32 width, height;
@@ -1492,7 +1491,7 @@ void CheckCelltypes(void)
   };
 }
 
-void ExtendPortraits(void)
+void ExtendPortraits()
 {
   i32 i;
   i32 numEnt;
@@ -1525,7 +1524,7 @@ static str1eb18 b;  // Our local variables
 //
 // *********************************************************
 //          TAG01eb18
-RESTARTABLE _ReadEntireGame(void)
+RESTARTABLE _ReadEntireGame()
 {//i16
   static dReg D0, D1, D5, D6, D7;
   static dReg saveD0;
@@ -1822,7 +1821,7 @@ tag01ed86:
         {
           char *pTimer;
           int j;
-          pTimer = (char *)gameTimers.m_timers + 10*gameTimers.m_timerQueue[i];
+          pTimer = (char *)gameTimers.m_timers.data() + 10*gameTimers.m_timerQueue[i];
           fprintf(GETFILE(TraceFile), "%04x   ", gameTimers.m_timerQueue[i]);
           for (j=0; j<sizeof(TIMER); j++)
           {
@@ -1838,53 +1837,39 @@ tag01ed86:
     gameTimers.ConvertToSequencedTimers();
   };
 
-  {
-    int i;
-    if (GETFILE(TraceFile) != NULL)
-    {
-      for (i=0; i<gameTimers.m_numTimer; i++)
+   if (GETFILE(TraceFile) != NULL)
+   {
+      for (int i=0; i<gameTimers.m_numTimer; i++)
       {
-        TIMER *pTimer;
-        int j;
-        pTimer = gameTimers.m_timers + gameTimers.m_timerQueue[i];
-        fprintf(GETFILE(TraceFile), "%04x   ", gameTimers.m_timerQueue[i]);
-        for (j=0; j<sizeof(TIMER); j++)
-        {
-          fprintf(GETFILE(TraceFile), "%02x ", (*((char *)pTimer + j))&0xff);
-        };
-        fprintf(GETFILE(TraceFile),"\n");
-      };
-    };
-  };
+         TIMER *pTimer = &gameTimers.m_timers[gameTimers.m_timerQueue[i]];
+         fprintf(GETFILE(TraceFile), "%04x   ", gameTimers.m_timerQueue[i]);
+         for(int j=0; j<sizeof(TIMER); j++)
+         {
+            fprintf(GETFILE(TraceFile), "%02x ", (*((char *)pTimer + j))&0xff);
+         }
+         fprintf(GETFILE(TraceFile),"\n");
+      }
+   }
 
   if (!extendedTimers)
-  {
     gameTimers.ConvertToExtendedTimers();
-  };
   
   
   swapTimers();
 
-
-
-  {
-    int i;
-    if (GETFILE(TraceFile) != NULL)
-    {
-      for (i=0; i<gameTimers.m_numTimer; i++)
+   if (GETFILE(TraceFile) != NULL)
+   {
+      for (int i=0; i<gameTimers.m_numTimer; i++)
       {
-        TIMER *pTimer;
-        int j;
-        pTimer = gameTimers.m_timers + gameTimers.m_timerQueue[i];
-        fprintf(GETFILE(TraceFile), "%04x   ", gameTimers.m_timerQueue[i]);
-        for (j=0; j<sizeof(TIMER); j++)
-        {
-          fprintf(GETFILE(TraceFile), "%02x ", (*((char *)pTimer + j))&0xff);
-        };
-        fprintf(GETFILE(TraceFile),"\n");
-      };
-    };
-  };
+         TIMER *pTimer = &gameTimers.m_timers[gameTimers.m_timerQueue[i]];
+         fprintf(GETFILE(TraceFile), "%04x   ", gameTimers.m_timerQueue[i]);
+         for (int j=0; j<sizeof(TIMER); j++)
+         {
+            fprintf(GETFILE(TraceFile), "%02x ", (*((char *)pTimer + j))&0xff);
+         }
+         fprintf(GETFILE(TraceFile),"\n");
+      }
+   }
 
 
 
@@ -2217,7 +2202,7 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
   };
 }
 
-void ConvertTimers(void)
+void ConvertTimers()
 {
   TIMER_SEARCH timerSearch;
   //for (i32 i=0; i<d.MaxTimer(); i++)
@@ -2243,7 +2228,7 @@ void ConvertTimers(void)
   };
 }
 
-void ConvertCharacters(void)
+void ConvertCharacters()
 {
   i32 i, j;
   for (i=0; i<d.NumCharacter; i++)
@@ -2413,27 +2398,13 @@ i32 ComputeTextLength(ui16 *pCompText)
 
 i32 ConvertToIndirectText(ui16 *text)
 {
-  i32 i, len, oldIndex, newIndex;
-  i32 indirectIndexLen;
-  DB2 *pDB2;
-  if (d.indirectTextIndex != NULL)
+  d.indirectTextIndex.clear();
+  d.compressedText.clear();
+  for(int i=0; i<db.NumEntry(dbTEXT); i++)
   {
-    UI_free(d.indirectTextIndex);
-    d.indirectTextIndex = NULL;
-    indirectTextIndexSize = 0;
-  };
-  indirectIndexLen = 0;
-  if (d.compressedText != NULL)
-  {
-    UI_free(d.compressedText);
-    d.compressedText = NULL;
-  };
-  d.sizeOfCompressedText = 0;
-  for (i=0; i<db.NumEntry(dbTEXT); i++)
-  {
-    pDB2 = GetRecordAddressDB2(i);
+    auto pDB2 = GetRecordAddressDB2(i);
     if (pDB2->link() == RNnul) continue;
-    oldIndex = pDB2->index();
+    auto oldIndex = pDB2->index();
     if (oldIndex > d.dungeonDatIndex->NumWordsInTextArray())
     {
       UI_MessageBox("A Text Record has an illegal text index",
@@ -2442,39 +2413,16 @@ i32 ConvertToIndirectText(ui16 *text)
       pDB2->index(0);
       continue;
     };
-    len = ComputeTextLength(text+oldIndex);
+    auto len = ComputeTextLength(text+oldIndex);
     //Add one entry to m_indirectTextIndex;
-    newIndex = indirectIndexLen;
-    indirectIndexLen++;
-    indirectTextIndexSize = 4*((indirectIndexLen+99)/100 * 100); 
-    d.indirectTextIndex 
-         = (ui32 *)UI_realloc(d.indirectTextIndex,
-                          indirectTextIndexSize, 
-                          MALLOC055);
-    d.indirectTextIndex[newIndex] = d.sizeOfCompressedText;
-    d.sizeOfCompressedText += len;
-    d.compressedText
-         = (ui16 *)UI_realloc(d.compressedText,
-                           2*((d.sizeOfCompressedText+199)/200 * 200),
-                           MALLOC056);
-    memcpy(d.compressedText+d.indirectTextIndex[newIndex],
-           text + oldIndex,
-           2*len);
+    auto newIndex = d.indirectTextIndex.size();
+    d.indirectTextIndex.push_back(d.compressedText.size());
+    d.compressedText.insert(d.compressedText.end(), text+oldIndex, text+oldIndex+len);
     pDB2->index(newIndex);
   };
-  d.dungeonDatIndex->NumWordsInTextArray((ui16)indirectIndexLen);
+  d.dungeonDatIndex->NumWordsInTextArray((ui16)d.indirectTextIndex.size());
   return 1;
 }
-
-
-
-class SAFEMEM
-{
-public:
-  ui16 *p;
-  SAFEMEM(void){p=NULL;};
-  ~SAFEMEM(void){if (p!=NULL) UI_free(p);};
-};
 
 
 void MakeBigActuators()
@@ -2514,7 +2462,7 @@ void MakeBigActuators()
 //
 // *********************************************************
 //  TAG01e552
-i16 ReadDatabases(void)
+i16 ReadDatabases()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   dReg D0, D1, D3, D4, D5, D6;
@@ -2533,7 +2481,6 @@ i16 ReadDatabases(void)
   i16 CheckSum;
   i16 LOCAL_6;
   CELLFLAG *LOCAL_4;
-  SAFEMEM textArray;
   CheckSum = 0;
   d.inStreamBuffered = 0; // Read from file
   if (d.gameState != GAMESTATE_ResumeSavedGame)
@@ -2643,28 +2590,24 @@ i16 ReadDatabases(void)
   };
   if (d.PartyHasDied == 0)
   {
-    objectListIndexSize = (D4W<<1)&0xffff;
-    d.objectListIndex = (ui16 *)allocateMemory(objectListIndexSize,1);
-    objectListSize = 2*d.dungeonDatIndex->ObjectListLength();
-    d.objectList = (RN *)UI_malloc(objectListSize,MALLOC095);
-    indirectTextIndexSize = (d.dungeonDatIndex->NumWordsInTextArray()<<2)&0xffff;
-    d.indirectTextIndex = (ui32 *)UI_malloc(indirectTextIndexSize,
-                                             MALLOC039);
-    d.compressedText = NULL;
-    d.sizeOfCompressedText = 0;
+    g_objectListIndexSize = (D4W<<1)&0xffff;
+    d.objectListIndex = (ui16 *)allocateMemory(g_objectListIndexSize,1);
+    d.objectList.resize(d.dungeonDatIndex->ObjectListLength());
+    d.indirectTextIndex.resize(d.dungeonDatIndex->NumWordsInTextArray()&0xffff);
+    d.compressedText.clear();
   }
   else
   {
     memSizeError = 0;
-    if (objectListIndexSize < ((D4W<<1)&0xffff))
+    if (g_objectListIndexSize < ((D4W<<1)&0xffff))
     {
       memSizeError |= 1;
     };
-    if (objectListSize < 2*d.dungeonDatIndex->ObjectListLength())
+    if (d.objectList.size() < d.dungeonDatIndex->ObjectListLength())
     {
       memSizeError |= 2;
     };
-    if (indirectTextIndexSize < ((d.dungeonDatIndex->NumWordsInTextArray()<<2) & 0xffff))
+    if (d.indirectTextIndex.size() < (d.dungeonDatIndex->NumWordsInTextArray() & 0xffffU))
     {
       memSizeError |= 4;
     };
@@ -2682,7 +2625,7 @@ i16 ReadDatabases(void)
   D0W = FetchDataBytes((ui8 *)d.objectListIndex,&CheckSum,(ui16)D4W*2);
   if (D0W == 0) return 0;
   swapPointer10454();
-  D0W = FetchDataBytes((ui8 *)d.objectList,&CheckSum,D5W*2);
+  D0W = FetchDataBytes((ui8 *)d.objectList.data(),&CheckSum,D5W*2);
   if (D0W == 0) return 0;
   swapPRN10464(D5W);
   if (d.gameState != GAMESTATE_ResumeSavedGame)
@@ -2694,47 +2637,35 @@ i16 ReadDatabases(void)
     };
   };
   
-
+  std::unique_ptr<ui16[]> pTextArray;
   if (!indirectText)
   { 
-    textArray.p = (ui16 *)UI_malloc(d.dungeonDatIndex->NumWordsInTextArray()*2,
-                                    MALLOC040);
-    D0W = FetchDataBytes((ui8 *)textArray.p, &CheckSum, d.dungeonDatIndex->NumWordsInTextArray()*2);
+    pTextArray = std::make_unique<ui16[]>(d.dungeonDatIndex->NumWordsInTextArray());
+    D0W = FetchDataBytes((ui8 *)pTextArray.get(), &CheckSum, d.dungeonDatIndex->NumWordsInTextArray()*2);
     if (D0W == 0) return 0;
   }
   else //if m_indirectText
   {//nothing is swapped!
     //fetch indirecttext(NumWordsInTextArray);
-    D0W = FetchDataBytes(
-                  (ui8 *)d.indirectTextIndex, 
-                  &CheckSum, 
-                  d.dungeonDatIndex->NumWordsInTextArray()*4);
+    D0W = FetchDataBytes((ui8 *)d.indirectTextIndex.data(), &CheckSum, d.dungeonDatIndex->NumWordsInTextArray()*4);
     SwapIndirectTextIndex();
     if (D0W == 0) return 0;
       //fetch sizeof compressedText;
-    if (d.compressedText != NULL)
-    {
-      UI_free (d.compressedText);
-      d.compressedText = NULL;
-      d.sizeOfCompressedText = 0;
-    };
-    D0W = FetchDataBytes(
-                  (ui8 *)&d.sizeOfCompressedText, 
-                  &CheckSum, 
-                  4);
-    d.sizeOfCompressedText = BE32(d.sizeOfCompressedText);
+    d.compressedText.clear();
+    i32 sizeOfCompressedText = 0;
+    D0W = FetchDataBytes((ui8 *)&sizeOfCompressedText, &CheckSum, 4);
+    sizeOfCompressedText = BE32(sizeOfCompressedText);
     if (D0W == 0) return 0;
     //fetch compressedText;
-    if (d.sizeOfCompressedText > 1000000)
+    if (sizeOfCompressedText > 1000000)
     {
       die(0x4ccce,"Excessive compressed text");
     };
-    d.compressedText = (ui16 *)UI_malloc(d.sizeOfCompressedText*2,
-                                         MALLOC041);
+    d.compressedText.resize(sizeOfCompressedText);
     D0W = FetchDataBytes(
-                  (ui8 *)d.compressedText, 
+                  (ui8 *)&d.compressedText[0],
                   &CheckSum, 
-                  d.sizeOfCompressedText*2);
+                  sizeOfCompressedText*2);
     if (D0W == 0) return 0;
   };
   if (d.gameState != GAMESTATE_ResumeSavedGame) 
@@ -2838,7 +2769,7 @@ i16 ReadDatabases(void)
   }; //for
   if (!indirectText)
   {
-    if (ConvertToIndirectText(textArray.p) == 0) return 0;
+    if (ConvertToIndirectText(pTextArray.get()) == 0) return 0;
   };
   if (d.PartyHasDied == 0)
   {
@@ -2921,7 +2852,7 @@ i16 ReadDatabases(void)
       for (x=0; x<=d.pLevelDescriptors[level].LastColumn(); x++)
       {
         columnPointerCF = d.pppdPointer10450[level][x];
-        columnPointerRN = d.objectList + d.objectListIndex[d.objectLevelIndex[level]+x];
+        columnPointerRN = d.objectList.data() + d.objectListIndex[d.objectLevelIndex[level]+x];
         for (y=0; y<=d.pLevelDescriptors[level].LastRow(); y++)
         {
           cf = d.pppdPointer10450[level][x][y];

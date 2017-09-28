@@ -10,7 +10,7 @@
 #include "Data.h"
 
 
-void TAG021234(void)
+void TAG021234()
 {
   HopefullyNotNeeded(0x21234);
 }
@@ -103,7 +103,7 @@ void TAG0220fa(i32 P1)
 //
 //*********************************************************
 //   TAG022132
-void CompactMemory(void)
+void CompactMemory()
 {
   dReg D5, D6, D7;
   pnt A2, A3;
@@ -168,7 +168,7 @@ void CompactMemory(void)
 //*********************************************************
 //          _TAG0222ea
 void LoadNeededGraphics(i16 *P1, const i32 Count)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   dReg D0, D4, D5, D6, D7;
   aReg A0, A2, A3;

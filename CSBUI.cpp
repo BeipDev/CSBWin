@@ -38,7 +38,7 @@ extern i32 dsaFilterLeaveCount;
 
 
 void DSAInstrumentation_Dump();
-void ReadTranslationFile(void);
+void ReadTranslationFile();
 void RecordFile_Record(const char *line);
 
 struct SNDHEAD
@@ -63,13 +63,13 @@ struct SNDHEAD
 };
 
 
-void Statistics(void);
+void Statistics();
 void EnqueMouseClick(i32, i32, i32);
 void  TAG001afe(i32, i32, i32);
 //i32 AddSD(char *, i32, float, float, float);
 void ItemsRemaining(i32 mode);
-char *parentFolder(char *folderName, char *endName);
-bool PlayfileIsOpen(void);
+std::string parentFolder(char *folderName, char *endName);
+bool PlayfileIsOpen();
 bool GetVideoRectangle(i32, RECT *);
 ui32 dumpWindow = 0;
 bool annotationPlaced = false;
@@ -97,16 +97,16 @@ extern i32 keyboardMode;
 extern i32 trace;
 void PlayfileOpen(bool);
 void RecordfileOpen(bool);
-void RecordfilePreOpen(void);
+void RecordfilePreOpen();
 extern bool BeginRecordOK;
 extern bool TimerTraceActive;
 extern bool AttackTraceActive;
 extern bool RepeatGame;
 extern i32 NoSpeedLimit;
-bool OpenTraceFile(void);
-void CloseTraceFile(void);
-bool OpenGraphicTraceFile(void);
-void CloseGraphicTraceFile(void);
+bool OpenTraceFile();
+void CloseTraceFile();
+bool OpenGraphicTraceFile();
+void CloseGraphicTraceFile();
 extern bool g_cursorIsShowing;
 extern bool RecordCommandOption;
 extern bool NoRecordCommandOption;
@@ -144,13 +144,13 @@ i32 keyQueueLen=3;
 i32 keyQueue[3];
 
 #ifdef _MSVC_INTEL //004
-DSAListDialog::DSAListDialog(void)
+DSAListDialog::DSAListDialog()
 {
   //m_initialText = NULL;
   //m_finalText = NULL;
 }
 
-DSAListDialog::~DSAListDialog(void)
+DSAListDialog::~DSAListDialog()
 {
 }
 
@@ -349,7 +349,7 @@ LRESULT CALLBACK DSAListCallback(
 
 
 
-i32 DSAListDialog::DoModal(void)
+i32 DSAListDialog::DoModal()
 {
   i32 result;
   bool saveCursorShowing;
@@ -371,13 +371,13 @@ i32 DSAListDialog::DoModal(void)
 #endif //004
 
 
-EditDialog::EditDialog(void)
+EditDialog::EditDialog()
 {
   m_initialText = NULL;
   m_finalText = NULL;
 }
 
-EditDialog::~EditDialog(void)
+EditDialog::~EditDialog()
 {
 }
 
@@ -491,7 +491,7 @@ LRESULT CALLBACK EditTextCallback(
 }
 
 
-i32 EditDialog::DoModal(void)
+i32 EditDialog::DoModal()
 {
   i32 result;
   bool saveCursorShowing;
@@ -510,45 +510,41 @@ i32 EditDialog::DoModal(void)
 }
 #endif //005
 
-class KEYXLATE 
+struct KEYXLATE 
 {
-private:
-  i32 m_numkey;
-  i32 *m_xlate;
-public:
-  KEYXLATE(void)
-  {
-    m_numkey=0;
-    m_xlate=NULL;
-  };
-  ~KEYXLATE(void)
-  {
-    if (m_xlate!=NULL) UI_free(m_xlate);
-    m_xlate = NULL;
-  };
+   struct Key
+   {
+      i32 m_scan, m_mode;
+      XLATETYPE m_type;
+      bool operator==(const Key &key) const { return m_scan==key.m_scan && m_mode==key.m_mode && m_type==key.m_type; }
+   };
+
   void addkey(i32 scan, i32 key, i32 mode, XLATETYPE type);
   i32 translate(i32 scan, i32 mode, XLATETYPE type);
+
+private:
+
+   struct Map
+   {
+      Key m_key;
+      i32 m_result;
+   };
+
+   std::vector<Map> m_map;
 };
 
 void KEYXLATE::addkey(i32 scan, i32 key, i32 mode, XLATETYPE type)
 {
-  m_xlate = (i32 *)UI_realloc(m_xlate, 16*(m_numkey+1), 0xffff);
-  m_xlate[m_numkey*4+0] = scan;
-  m_xlate[m_numkey*4+1] = key;
-  m_xlate[m_numkey*4+2] = mode;
-  m_xlate[m_numkey*4+3] = type;
-  m_numkey++;
+   m_map.emplace_back(Map{Key{scan, mode, type}, key});
 }
 
 i32 KEYXLATE::translate(i32 scan, i32 mode, XLATETYPE type)
 {
-  for (i32 i=0; i<m_numkey; i++)
-  {
-    if (   (m_xlate[4*i+0] == scan)
-        && (m_xlate[4*i+2] == mode) 
-        && (m_xlate[4*i+3] == type) ) return m_xlate[4*i+1];
-  };
-  return 0;
+   Key key{scan, mode, type};
+   for(auto &entry : m_map)
+      if(entry.m_key==key)
+         return entry.m_result;
+   return 0;
 }
 
 KEYXLATE keyxlate;
@@ -737,7 +733,7 @@ static void _strupr(char *str) {
     }
 }
 #endif //009
-void ReadConfigFile(void)
+void ReadConfigFile()
 {
   char buf[501];
   i16 f;
@@ -798,12 +794,12 @@ void ReadConfigFile(void)
     if (strcmp(field,"DIRECTORY")==0)
     {
       field = getfield(buf,col);
-      if (folderName != NULL) UI_free(folderName);
-      folderName = (char *) UI_malloc(strlen(field) + 1, MALLOC012);
-      if (folderName!=NULL)
+      if (g_folderName != NULL) UI_free(g_folderName);
+      g_folderName = (char *) UI_malloc(strlen(field) + 1, MALLOC012);
+      if (g_folderName!=NULL)
       {
-        strcpy(folderName, field);
-        folderParentName = parentFolder(folderName, folderName+strlen(folderName+1));
+        strcpy(g_folderName, field);
+        g_folderParentName = parentFolder(g_folderName, g_folderName+strlen(g_folderName+1));
       };
       continue;
     };
@@ -866,7 +862,7 @@ extern ui32 TImER;
 
 
 
-i32 UI_DisableAllMessages(void)
+i32 UI_DisableAllMessages()
 {
   i32 oldmask = messageMask;
   messageMask = 0;
@@ -1370,13 +1366,13 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags)
 
 
 
-i32 UI_CONSTAT(void)
+i32 UI_CONSTAT()
 {
   if (keyQueueStart != keyQueueEnd) return 1;
   return 0; // No console input available
 }
 
-i32 UI_DIRECT_CONIN(void)
+i32 UI_DIRECT_CONIN()
 { //We should wait for a keystroke.  But we don't.  It is
   // up to you to be sure that input exists before
   // calling DIRECT_CONIN.
@@ -1416,7 +1412,7 @@ void Win32_SoundMixer_Play(BYTE *pWave, DWORD dwBytes);
 void Win32_SoundMixer_Shutdown();
 #endif //019
 
-void UI_StopSound(void)
+void UI_StopSound()
 {
   sndPlaySound(NULL,SND_SYNC);
 }
@@ -1429,19 +1425,19 @@ class PlayDirectSound
   bool m_initialized;
   bool m_failed;
 public:
-  PlayDirectSound(void);
-  ~PlayDirectSound(void);
+  PlayDirectSound();
+  ~PlayDirectSound();
   bool Play(char *wave);
   void Shutdown();
 };
 
-PlayDirectSound::PlayDirectSound(void)
+PlayDirectSound::PlayDirectSound()
 {
   m_initialized = false;
   m_failed = false;
 }
 
-PlayDirectSound::~PlayDirectSound(void)
+PlayDirectSound::~PlayDirectSound()
 {
   Shutdown();
 }
@@ -1462,7 +1458,7 @@ bool PlayDirectSound::Play(char *wave)
   return true;
 }
 
-void PlayDirectSound::Shutdown(void)
+void PlayDirectSound::Shutdown()
 {
   if (m_initialized & !m_failed)
   {
@@ -1494,36 +1490,29 @@ ui8 IID_DS[] =
 };
 
 
-class MYDIRECTSOUND
+struct MYDIRECTSOUND
 {
-  bool                m_failed;
-  bool                m_comInitialized;
-  IDirectSound       *m_directSound;
+  ~MYDIRECTSOUND();
+
+  bool Initialize(); //Allocate DirectSound object
+  void Clean();      //Release completed buffers.
+  void Shutdown();   //Release DirectSound object
+  bool Play(const BYTE *wave, i32 attenuation); //Play a single sound.
+
+private:
+  bool                m_failed{};
+  bool                m_comInitialized{};
+  IDirectSound       *m_directSound{};
   IDirectSoundBuffer *m_soundBuffers[64];
   i32                 m_numBuffersActive;
-public:
-  MYDIRECTSOUND(void);
-  ~MYDIRECTSOUND(void);
-  bool Initialize(void); //Allocate DirectSound object
-  void Clean(void);      //Release completed buffers.
-  void Shutdown(void);   //Release DirectSound object
-  bool Play(const char *wave, i32 attenuation); //Play a single sound.
 };
 
-
-MYDIRECTSOUND::MYDIRECTSOUND(void)
-{
-  m_directSound = NULL;
-  m_failed = false;
-  m_comInitialized = false;
-}
-
-MYDIRECTSOUND::~MYDIRECTSOUND(void)
+MYDIRECTSOUND::~MYDIRECTSOUND()
 {
   Shutdown();
 }
 
-bool MYDIRECTSOUND::Initialize(void)
+bool MYDIRECTSOUND::Initialize()
 {
   HRESULT result;
   WAVEFORMATEX fmt;
@@ -1589,7 +1578,7 @@ bool MYDIRECTSOUND::Initialize(void)
   return true;
 }
 
-void MYDIRECTSOUND::Shutdown(void)
+void MYDIRECTSOUND::Shutdown()
 {
   i32 i;
   if (m_directSound != NULL)
@@ -1609,7 +1598,7 @@ void MYDIRECTSOUND::Shutdown(void)
   };
 }
 
-void MYDIRECTSOUND::Clean(void)
+void MYDIRECTSOUND::Clean()
 {
   i32 i;
   i32 status;
@@ -1623,7 +1612,7 @@ void MYDIRECTSOUND::Clean(void)
   };
 }
 
-bool MYDIRECTSOUND::Play(const char *wave, i32 attenuation)
+bool MYDIRECTSOUND::Play(const BYTE *wave, i32 attenuation)
 {
   //SNDHEAD sndhead;
   DSBUFFERDESC dbd;
@@ -1716,20 +1705,20 @@ class MIDI
 {
   bool isOpen;
 public:
-  void OpenMediaFile(void);
-  void ClosePlayer(void);
-  void PlayMIDI(void);
-  void PlayMediaFile(void);
+  void OpenMediaFile();
+  void ClosePlayer();
+  void PlayMIDI();
+  void PlayMediaFile();
 };
 
-void MIDI::OpenMediaFile(void)
+void MIDI::OpenMediaFile()
 {
    HWND handle = 0;
    int status;
    char text[100];
    ClosePlayer();
    char playCommand[256];
-   sprintf(playCommand,"open %stest.mid type sequencer alias %s", root,mediaName);
+   sprintf(playCommand,"open %stest.mid type sequencer alias %s", g_root,mediaName);
    status = mciSendStringA(playCommand, NULL, 0, handle);
    mciGetErrorStringA(status, text, 100);
    isOpen = true;
@@ -1757,7 +1746,7 @@ void MIDI::ClosePlayer()
 }
 
 
-void MIDI::PlayMIDI(void)
+void MIDI::PlayMIDI()
 {
   OpenMediaFile();
   PlayMediaFile();
@@ -1765,7 +1754,7 @@ void MIDI::PlayMIDI(void)
 
 MIDI midi;
 
-void playmidi(void)
+void playmidi()
 {
   midi.PlayMIDI();
 }
@@ -1777,7 +1766,7 @@ bool mostRecentResult[10];
 //ui32 mostRecentTime[10];
 static ui64 finishTime = 0;   //Time at which sound should be finished
 
-bool UI_PlaySound(const char *wave, i32 /*flags*/, i32 attenuation)
+bool UI_PlaySound(const BYTE *wave, i32 /*flags*/, i32 attenuation)
 {
   //We will not stop any current sound.
   //Return true if new sound successfully started.
@@ -1814,7 +1803,7 @@ bool UI_PlaySound(const char *wave, i32 /*flags*/, i32 attenuation)
   mostRecentSound[2] = mostRecentSound[1];
   mostRecentSound[1] = mostRecentSound[0];
   mostRecentSound[0] = (ui8 *)wave;
-  result = sndPlaySoundA(wave, sndflags) != 0;
+  result = sndPlaySoundA((const char *)wave, sndflags) != 0;
   mostRecentResult[9] = mostRecentResult[8];
   mostRecentResult[8] = mostRecentResult[7];
   mostRecentResult[7] = mostRecentResult[6];
@@ -1860,13 +1849,13 @@ void UI_PlaySound(char *wave, i32 flags)
 #endif //023 TARGET_OS_MAC
 
 #ifdef TARGET_OS_MAC //024 
-void UI_ClearScreen(void)
+void UI_ClearScreen()
 {
 }
 #endif //024
 
 #ifdef _LINUX //025
-void UI_ClearScreen(void)
+void UI_ClearScreen()
 {
   //nothing;
   UI_Invalidate();
@@ -1875,7 +1864,7 @@ void UI_ClearScreen(void)
 
 
 #ifdef _MSVC_INTEL //026
-void UI_ClearScreen(void)
+void UI_ClearScreen()
 {
   RedrawWindow(hWnd,NULL,NULL,RDW_ERASE|RDW_INVALIDATE);
 }
@@ -1906,18 +1895,17 @@ bool UI_ProcessOption(char *key, char *value)
 {
   if (strcmp(key,"DIRECTORY")==0)
   {
-    if (folderName != NULL) UI_free(folderName);
-    folderName = (char *)UI_malloc(strlen(value)+2, MALLOC013);
-    if (folderName != NULL) 
+    if (g_folderName != NULL) UI_free(g_folderName);
+    g_folderName = (char *)UI_malloc(strlen(value)+2, MALLOC013);
+    if (g_folderName != NULL) 
     {
-      strcpy(folderName,value);
-      if (folderName[strlen(folderName)-1] != '\\')
+      strcpy(g_folderName,value);
+      if (g_folderName[strlen(g_folderName)-1] != '\\')
       {
-        folderName[strlen(folderName)+1] = 0;
-        folderName[strlen(folderName)] = '\\';
+        g_folderName[strlen(g_folderName)+1] = 0;
+        g_folderName[strlen(g_folderName)] = '\\';
       };
-      if (folderParentName != NULL) UI_free(folderParentName);
-      folderParentName = parentFolder(folderName, folderName+strlen(folderName));
+      g_folderParentName = parentFolder(g_folderName, g_folderName+strlen(g_folderName));
     };
     return true;
   };
@@ -2090,9 +2078,9 @@ void UI_BeginRecordOK(bool ok)
   };
 }
 
-char *parentFolder(char *fileName, char *endname)
+std::string parentFolder(char *fileName, char *endname)
 {
-  char *result=NULL;
+  std::string result;
   // fileName points to first character; endname points to last+1;
   // Now we back up, looking for a '\'
 #ifdef _MSVC_INTEL //031
@@ -2114,18 +2102,13 @@ char *parentFolder(char *fileName, char *endname)
   if (endname > fileName)
   {
     endname++; //include the backslash at the end
-    result = (char *)UI_malloc(endname-fileName+1, MALLOC014);
-    if (result != NULL)
-    {
-      memcpy(result,fileName,endname-fileName);
-      result[endname-fileName] = 0;
-    };
-  };
+    result.append( fileName, endname-fileName); 
+  }
   return result;
 }
 
 #ifdef _MSVC_INTEL //033
-i64 UI_GetSystemTime(void)
+i64 UI_GetSystemTime()
 {
   // Cumulative milliseconds since 1980 (or whenever..not important)
   SYSTEMTIME st;
@@ -2165,15 +2148,16 @@ FILE *UI_fopen(const char *name, const char *flags)
 ui8 *allocatedMemoryList = NULL;
 ui32 listLength = 0;
 
-void AllocationError(void)
+void AllocationError()
 {
   UI_MessageBox("Cannot allocate memory","Fatal error",MESSAGE_OK);
   die(0xdab6);
 };
 
 #ifdef _DEBUG //035o
-void CheckAllAllocated(void)
+void CheckAllAllocated()
 {
+#if 0
   static i32 callcount = 0;
   ui8 *current, *end;
   callcount++;
@@ -2192,6 +2176,7 @@ void CheckAllAllocated(void)
       UI_MessageBox("Memory destruction","Disaster",MB_OK);
     };
   };
+#endif
 }
 #endif //035
 
@@ -2301,7 +2286,7 @@ void UI_free(void *buf)
 #endif //041
 }
 
-void UI_CheckMemoryLeaks(void)
+void UI_CheckMemoryLeaks()
 {
   if (listLength != 0)
   {
@@ -2330,19 +2315,19 @@ void UI_CheckMemoryLeaks(void)
 
 #if !defined(_LINUX) //043
 
-LISTING::LISTING(void)
+LISTING::LISTING()
 {
   m_listing = (char *)malloc(1);
   *m_listing = 0;
 }
 
-void LISTING::Clear(void)
+void LISTING::Clear()
 {
   free(m_listing);
   m_listing = NULL;
 }
 
-LISTING::~LISTING(void)
+LISTING::~LISTING()
 {
   Clear();
 }
@@ -2364,7 +2349,7 @@ void LISTING::AddText(const char *line)
   strcpy(m_listing+len, line);
 }
 
-void LISTING::NewLine(void)
+void LISTING::NewLine()
 {
   AddText("\015\012");
 }

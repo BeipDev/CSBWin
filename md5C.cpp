@@ -87,7 +87,7 @@ void MD5Init (MD5_CTX *ctxt)
   ctxt->state[3] = 0x10325476;
 }
 
-void MD5Init(void)
+void MD5Init()
 {
   MD5Init(&context);
 }

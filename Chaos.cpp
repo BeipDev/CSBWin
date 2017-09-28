@@ -39,7 +39,7 @@ static void DontDoThis(i32 n)
 i32 ReadExtendedFeatures(i32 handle);
 ui32 FormChecksum(ui8 *buf, i32 num);
 void info(char *, unsigned int);
-ui16 countDSAs(void);
+ui16 countDSAs();
 void WriteDSAs(i32 handle);
 void WriteDSALevelIndex(i32 handle);
 
@@ -581,22 +581,22 @@ void reverseBMP(ui32 *bmp, i32 n)
     bmp[i]=LE32(bmp[i]);
 }
 
-void InitializeE(void)
+void InitializeE()
 {
   memset(&e, 0, sizeof (e));
   reverseBMP(FrameImage, 246);
 }
 
 
-void pumper(void); // Pump any queued Windows messages
+void pumper(); // Pump any queued Windows messages
 ui8 *MALLOC(i32 size);
 void  MFREE(ui8 *address);
-//i32  DIRECT_CONIN(void); // Trap 1 #0x07
-//i16  CONSTAT(void);      // Trap 1 #0x0b
-void SetSupervisorMode(void);
-void ClearSupervisorMode(void);
+//i32  DIRECT_CONIN(); // Trap 1 #0x07
+//i16  CONSTAT();      // Trap 1 #0x0b
+void SetSupervisorMode();
+void ClearSupervisorMode();
 //void ClearMemory(pnt dest, i16 numByte); // TAG000a84
-ui8 *physbase(void);
+ui8 *physbase();
 void SetDLogicalBase(ui8 *);
 //i16  OPEN(char *name, i32 ref);
 //i16  CREATE(char *name, i16 flag);
@@ -617,19 +617,19 @@ static i16  MyWriteScrambled(ui8 *, i16, ui16, ui16 *);//TAG01d0ea
 //     TAG0000d6
 ui32 Times(ui32, ui32);
 void   TAG00022a(i16);
-void   TAG0002b0(void);
-void   TAG0002c2(void);
-void   TAG0002d0(void);
-void   TAG00031c(void);
+void   TAG0002b0();
+void   TAG0002c2();
+void   TAG0002d0();
+void   TAG00031c();
 ui8   *AllocateMemory(i32);//TAG000328
 void   ReleaseMemory(ui8 *);//TAG0003a0
 char  *GetSubString(const char *, char *, i16); //TAG000472
 void   PrintDialogText(const char *, i32, i32, i32); //TAG0004ec
-void   TAG00054a(void);
-void   TAG0006e4(void);
+void   TAG00054a();
+void   TAG0006e4();
 i16    TAG0008dc(i16);
-i16    TAG000952(void);
-void   TAG0009a8(void);
+i16    TAG000952();
+void   TAG0009a8();
 i16    ReadGameFile(ui8 *, i32);//TAG000aee
 i16    WriteGameFile(ui8 *, i16);//TAG000b28
 //i16    TAG000b94(pnt,i16,i16);(use GenChecksum)
@@ -640,15 +640,15 @@ static i16 MyWriteAndChecksum(ui8 *, ui16 *, i32);//TAG000c98
 i16    ReadGameBlock1(ui8 *);//TAG000cde
 i16    UnscrambleBlock1(ui8 *, i16);//TAG000d08
 i16    WriteFirstBlock(ui8 *, i16);//TAG000d7c
-void   TAG00136c(void);
+void   TAG00136c();
 i16    TAG00142e(ui8 *);
 void   TAG001676(ui8 *, i16);
-void   TAG002724(void);
+void   TAG002724();
 i16    TestInRectangle(wordRectPos *, i32 x, i32 y);//TAG002c70
-void   TAG002ca8(void);
+void   TAG002ca8();
 i16    TAG002cdc(DlgButton *, i32, i32, i32);
 void   EnqueMouseClick(i32, i32, i32);//TAG002d3c
-void   CheckPendingMouseClick(void);//TAG002e2c
+void   CheckPendingMouseClick();//TAG002e2c
 void   TAG002e4a(i32);
 i16    TAG002faa(S12406 *P1);
 //i16    TAG002faa(pnt);
@@ -656,9 +656,9 @@ i16    TAG002faa(S12406 *P1);
 S12406 **SetActiveDialog(S12406 **); // Actually an array of (6) &S12406
 void   TAG003106(i16);
 void   TAG0031a6(i16);
-void   TAG00323c(void);
-void   TAG00324c(void);
-void   TAG003264(void);
+void   TAG00323c();
+void   TAG00324c();
+void   TAG003264();
 void   TAG003294(i16, i16);
 void   TAG0032b4(i16, i16);
 void   BitBltSquareImage(pnt, const wordRectPos *, i16, i16); //TAG0033b6
@@ -672,13 +672,13 @@ void   DrawDialogBoxOutline(wordRectPos *, i16, i16, i16);
 void   PrintCharacterName(i16); //TAG003748
 void   DrawCharacterHeader(i16, i16); //TAG0037ac
 void   AddDialogButton(DlgButton *, const char*, i16);//TAG003860
-void   TAG0039a8(void);
+void   TAG0039a8();
 void   FillCharacterNameEditBox(const char *, i16, i16);//TAG0039ea
 void   PrintAttributeValue(const char *, i32, i32); //TAG003a7c
-void   DrawMagnifiedCharacterImage(void); //TAG0036c0
+void   DrawMagnifiedCharacterImage(); //TAG0036c0
 void   GetPalleteItemRect(i16, wordRectPos *); //TAG0038ea
 void   DrawSelectedColor(i16); //TAG003922
-void   TAG00439e(void);
+void   TAG00439e();
 //void TAG004a32(char *); //FadeToPalette
 //   TAG004bbc
 void TextOutB(ui8 *dest,
@@ -691,14 +691,14 @@ void TextOutB(ui8 *dest,
 void   TextToScreen(i32, i32, i32, i32, const char *);//TAG004e76
 i16    TAG004ec0(i32);
 void   TAG004ea2(i16 *);
-i16    TAG00507e(void);
-i16    TAG0050d2(void);
+i16    TAG00507e();
+i16    TAG0050d2();
 i16    TAG005868(i16 *, i16 *, i16 *, i16 *);
 void   TAG00589e(i16, i16);
 //void TAG005c50(i32); //Trap #14
 void   TAG005c92(pnt);
 void   TAG005cd6(pnt *);
-void   TAG005cf6(void);
+void   TAG005cf6();
 void   TAG005d12(i16 *, i16 *, i16 *);
 void   TAG005d8e(i16 *, i16 *, i16 *);
 void   TAG005df2(i16);
@@ -731,7 +731,7 @@ ui8   *TAG007cc6(i32, i16, char *);
 ui8   *TAG007d4c(STRUCT12 *);
 void   TAG007e16(ui8 *, ui8 *);
 i32    TAG007e42(i16, i16);
-void   TAG007f54(void);
+void   TAG007f54();
 ui8   *TAG007f64(i32, i16);
 i32    TAG007f92(ui8 *);
 ui8   *TAG007fe8(ui8 *);
@@ -909,7 +909,7 @@ void TAG00022a(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG0002d0(void)
+void TAG0002d0()
 {
   i32 i;
 //;;;;;;;;;;;;;
@@ -927,7 +927,7 @@ void TAG0002d0(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG00031c(void)
+void TAG00031c()
 {
   TAG007f54();
 }
@@ -1067,7 +1067,7 @@ void PrintDialogText(const char *P1,i32 P2,i32 P3,i32 P4)
 // *********************************************************
 //
 // *********************************************************
-void TAG00054a(void)
+void TAG00054a()
 {
 //;;;;;;;;;;;;;;
   if (e.Word23398 == 0) return;
@@ -1161,7 +1161,7 @@ RESTARTABLE _UtilityDialogBox(const char *P1, const i32 p2, const char *p3, S124
   RETURN_i16(D6W);
 }
 
-void TAG0006e4(void)
+void TAG0006e4()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;
   SetSupervisorMode();
@@ -1173,7 +1173,7 @@ void TAG0006e4(void)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG000952(void)
+i16 TAG000952()
 {
 //;;;;;;;;;;;;
 
@@ -1185,7 +1185,7 @@ i16 TAG000952(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG0009a8(void)
+void TAG0009a8()
 {
   DontDoThis(0x9a8);
 }
@@ -1431,7 +1431,7 @@ i16 TAG0008dc(i16)
 //
 // *********************************************************
 //  TAG000e64
-RESTARTABLE _CheckChampionNames(void)
+RESTARTABLE _CheckChampionNames()
 {//(i16)
   static dReg D0, D6, D7;
   static aReg A0, A4;
@@ -1553,7 +1553,7 @@ RESTARTABLE _TAG000ede(const i32 P1, char *P2)
 // *********************************************
 static ui32 WCSRCSchecksum;
 
-static ui32 chaosWCS(void)
+static ui32 chaosWCS()
 {
   ui32 temp;
   temp = WCSRCSchecksum;
@@ -1641,7 +1641,7 @@ static void RCS(char *c, i32 n)
 //
 // *********************************************************
 RESTARTABLE _TAG000fc4(const i32 P1)
-{//(void)
+{//()
   static dReg D0, D1, D3, D7;
   static ui8 *pD0, *pD1, *pD2;
   static aReg A0, A1, A4;
@@ -1900,7 +1900,7 @@ tag001328:
 // *********************************************************
 //
 // *********************************************************
-void TAG00136c(void)
+void TAG00136c()
 {
   dReg D0;
   aReg A0;
@@ -2498,7 +2498,7 @@ tag001da8:
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG00260e(void)
+RESTARTABLE _TAG00260e()
 {//(i16)
   static const char* pnt_12;
   static ui8 *pBlock1;
@@ -2568,7 +2568,7 @@ RESTARTABLE _TAG0026c4(pnt P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG002724(void)
+void TAG002724()
 {
   dReg D0, D6, D7;
   aReg A0, A1, A4;
@@ -2684,7 +2684,7 @@ void TAG002724(void)
 // *********************************************************
 //   TAG002a38
 RESTARTABLE _StartChaos(const CSB_UI_MESSAGE *)
-{//(void)
+{//()
   static i16  w_130;
   RESTARTMAP
     RESTART(1)
@@ -2750,7 +2750,7 @@ RESTARTABLE _StartChaos(const CSB_UI_MESSAGE *)
 //
 // *********************************************************
 //  TAG002c18
-//i16 Random(void)
+//i16 Random()
 //{
 //  dReg D0;
 //;;;;;;;;;;;;;;;;;
@@ -2784,7 +2784,7 @@ i16 TestInRectangle(wordRectPos *rect, i32 x, i32 y)
 // *********************************************************
 // Discard any queued keystrokes
 // *********************************************************
-void TAG002ca8(void)
+void TAG002ca8()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;
   while (UI_CONSTAT() != 0)
@@ -2882,7 +2882,7 @@ void EnqueMouseClick(i32 P1,i32 P2,i32 P3)
 //
 // *********************************************************
 //   TAG002e2c
-void CheckPendingMouseClick(void)
+void CheckPendingMouseClick()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (e.Word9210 == 0) return;
@@ -3115,7 +3115,7 @@ void TAG0031a6(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG00323c(void)
+void TAG00323c()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   TAG005df2(e.Word9124);
@@ -3125,7 +3125,7 @@ void TAG00323c(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG00324c(void)
+void TAG00324c()
 {
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;
@@ -3140,7 +3140,7 @@ void TAG00324c(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG003264(void)
+void TAG003264()
 {
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3310,7 +3310,7 @@ void DrawNameTitleCarret(i16 P1, i16 P2)
 // *********************************************************
 //          _TAG00352c
 RESTARTABLE _InvertButton(const wordRectPos *pRect)
-{//(void)
+{//()
   static dReg D5, D6, D7;
   static aReg A3;
   const static wordRectPos *rectA4;
@@ -3470,7 +3470,7 @@ void DrawDialogBoxOutline(wordRectPos *rectPos,
 //
 // *********************************************************
 //   TAG0036c0
-void DrawMagnifiedCharacterImage(void)
+void DrawMagnifiedCharacterImage()
 {
   dReg D0, D6, D7;
   aReg A4;
@@ -3628,7 +3628,7 @@ void DrawSelectedColor(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG0039a8(void)
+void TAG0039a8()
 {
   aReg A0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3680,7 +3680,7 @@ void PrintAttributeValue(const char* P1, i32 P2, i32 P3)
 // *********************************************************
 //          _TAG003ab6
 RESTARTABLE _DrawCharacterDetails(const i32 P1, const i32 P2)
-{//(void)
+{//()
   static dReg D0, D3, D4, D5, D6, D7;
   static aReg A0, A1, A4;
   static char b_28[20];
@@ -3752,8 +3752,8 @@ RESTARTABLE _DrawCharacterDetails(const i32 P1, const i32 P2)
 //
 // *********************************************************
 //          _TAG003f12
-RESTARTABLE _DrawCharacterEditorScreen(void)
-{//(void)
+RESTARTABLE _DrawCharacterEditorScreen()
+{//()
   static dReg D7;
   static wordRectPos rect_8;
   RESTARTMAP
@@ -3791,7 +3791,7 @@ RESTARTABLE _DrawCharacterEditorScreen(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG00439e(void)
+void TAG00439e()
 {
   dReg D7;
 //;;;;;;;;;;;;;;;
@@ -3821,7 +3821,7 @@ void TAG00439e(void)
 //
 // *********************************************************
 RESTARTABLE _TAG004430(i32 P1)
-{//(void)
+{//()
   static dReg D7;
   static aReg A0, A1;
   RESTARTMAP
@@ -3871,8 +3871,8 @@ RESTARTABLE _TAG004430(i32 P1)
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG004518(void)
-{//(void)
+RESTARTABLE _TAG004518()
+{//()
   static dReg D0;
   static unsigned char buffer[6];
   RESTARTMAP
@@ -4238,7 +4238,7 @@ i16 TAG004ec0(i32 P1)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG00507e(void)
+i16 TAG00507e()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   Storepi16(&e.Pnt714[0], e.Word826);
@@ -4256,7 +4256,7 @@ i16 TAG00507e(void)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG0050d2(void)
+i16 TAG0050d2()
 {
   TAG004ec0(19);
   return 1;
@@ -4315,7 +4315,7 @@ void TAG005cd6(char * *P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG005cf6(void)
+void TAG005cf6()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;
   //Trap #2 with parameter 115 does do something on the
@@ -5130,7 +5130,7 @@ i32 TAG007e42(i16 P1, i16 P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG007f54(void)
+void TAG007f54()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   MFREE(LoadPnt((ui8 *)&e.pAllocDBank434));

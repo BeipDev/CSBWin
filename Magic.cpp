@@ -183,7 +183,7 @@ void LevelUp(i32 chIdx, i32 basicSkill) // Fighter, ninja, etc.
 // ***********************************************************
 //   TAG01605a
 void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
-{//(void)
+{//()
   //dReg D6;
   SKILL *psA3;
   CHARDESC *pcA2;
@@ -358,7 +358,7 @@ void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
 // ***********************************************************
 //   TAG01605a
 void AddToSkill(i32 chIdx,i32 skillNumber,i32 experience)
-{//(void)
+{//()
   //dReg D6;
   SKILL *psA3;
   CHARDESC *pcA2;
@@ -500,7 +500,7 @@ i16 CharacterThrowsSpell(i32 chIdx, RN object, i32 range, i32 neededMana)
 // ***********************************************************
 //   TAG017756
 void DisableCharacterAction(i32 chIdx, i32 timeDelay)
-{//(void)
+{//()
   dReg D5, D6, D7;
   CHARDESC *pcA3;
   TIMER timer;
@@ -543,7 +543,7 @@ void DisableCharacterAction(i32 chIdx, i32 timeDelay)
 // *********************************************************
 //   TAG019d90
 RESTARTABLE _MagicSelection(const i32 button)
-{//(void)
+{//()
   static dReg D0, D7;
   static CHARDESC *pcA0;
   static i16 *pwA3;
@@ -587,7 +587,7 @@ RESTARTABLE _MagicSelection(const i32 button)
 
 //   TAG019e4a
 RESTARTABLE _HandleMagicClick(const i32 clickX, const i32 clickY)
-{//(void)
+{//()
   static dReg D6, D7;
   RESTARTMAP
     RESTART(1)
@@ -803,7 +803,7 @@ void DisplayMagicSelection(CHARDESC *pChar) // Magic button pressed
 //
 // *********************************************************
 //   TAG01ba5a
-void BackspaceMagicSelection(void)
+void BackspaceMagicSelection()
 {
   dReg D0, D7;
   CHARDESC *pcA3;

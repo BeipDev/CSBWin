@@ -151,7 +151,7 @@ tag0065e0:
         if (RelativeCellNumber != 9)
         {
           ShrinkBLT((ui8 *)A3,
-                    (ui8 *)tempBitmap,
+                    g_tempBitmap.get(),
                     //2*(UI8)(A2[2]),
                     2*d.struct5688[idx].width,
                     //(UI8)(A2[3]),
@@ -159,7 +159,7 @@ tag0065e0:
                     2*LOCAL_22,
                     LOCAL_24,
                     d.IdentityColorMap);
-          A3 = (i8 *)tempBitmap;
+          A3 = (i8*)g_tempBitmap.get();
         };
         goto tag006932;
       };
@@ -196,13 +196,13 @@ tag006774:
     if (w_162 != 0)
     {
       ShrinkBLT((ui8 *)A3,             //src
-                (ui8 *)tempBitmap,  //dst
+                g_tempBitmap.get(),  //dst
                 48,             //src width
                 32,             //src height
                 48,             //dst width
                 32,             //dst height
                 d.Byte5712);    //???
-      A3 = (i8 *)tempBitmap;
+      A3 = (i8*)g_tempBitmap.get();
     };
     TAG008c98((ui8 *)A3,
               d.pViewportBMP,
@@ -290,8 +290,8 @@ tag006932:
           LOCAL_22 = (UI16)((LOCAL_22+7)&0xfff8);
           if ( (LOCAL_36!=0) || (w_142) )
           {
-            MemMove((ui8 *)A3, (ui8 *)tempBitmap, LOCAL_22*LOCAL_24);
-            A3 = (i8 *)tempBitmap;
+            MemMove((ui8 *)A3, g_tempBitmap.get(), LOCAL_22*LOCAL_24);
+            A3 = (i8 *)g_tempBitmap.get();
           };
           if (LOCAL_36 != 0)
           {
@@ -724,8 +724,8 @@ void DrawMonster(
           A3 = (pnt)GetBasicGraphicAddress(graphicNum0);
           if (MonsterRelFacing_74 == 1)
           {
-            MakeMirror((ui8 *)A3, (ui8 *)tempBitmap, dstByteWidth, dstHeight);
-            A3 = (i8 *)tempBitmap;
+            MakeMirror((ui8 *)A3, g_tempBitmap.get(), dstByteWidth, dstHeight);
+            A3 = (i8 *)g_tempBitmap.get();
           };
         }
         else //b not side view
@@ -737,8 +737,8 @@ void DrawMonster(
             {
               if (sms_78.TestMirror())
               {
-                MakeMirror((ui8 *)A3, (ui8 *)tempBitmap, dstByteWidth, dstHeight);
-                A3 = (i8 *)tempBitmap;
+                MakeMirror((ui8 *)A3, g_tempBitmap.get(), dstByteWidth, dstHeight);
+                A3 = (i8 *)g_tempBitmap.get();
               };
             };
           }
@@ -868,8 +868,8 @@ tag005e98:
             D4W = (UI16)((dstByteWidth +7) & 0xfff8);
             if (!frontViewMirror_106)
             {
-              MemMove((ui8 *)A3, (ui8 *)tempBitmap, (ui16)D4W*(ui16)dstHeight);
-              A3 = (i8 *)tempBitmap;
+              MemMove((ui8 *)A3, g_tempBitmap.get(), (ui16)D4W*(ui16)dstHeight);
+              A3 = (i8 *)g_tempBitmap.get();
             };
             Mirror((ui8 *)A3, D4W, dstHeight);
           };
@@ -980,9 +980,9 @@ struct ALTMONGRAPH
 
 struct ALTMONCACHE // 108 entries. One for each of 27 monstertypes and 4 alternate graphics
 {
-  ALTMONCACHE(void);
-  ~ALTMONCACHE(void){Clear();};
-  void Clear(void);
+  ALTMONCACHE();
+  ~ALTMONCACHE(){Clear();};
+  void Clear();
   ALTMONGRAPH *pGraphic;
   i32  size;      // size initially set to -1;
                   // if (pGraphic == NULL and size == 0) then the entry does not exist.
@@ -992,7 +992,7 @@ struct ALTMONCACHE // 108 entries. One for each of 27 monstertypes and 4 alterna
 };
 
 
-ALTMONCACHE::ALTMONCACHE(void)
+ALTMONCACHE::ALTMONCACHE()
 {
   ui32 i;
   pGraphic = NULL;
@@ -1005,7 +1005,7 @@ ALTMONCACHE::ALTMONCACHE(void)
   graphicID = -1;
 }
 
-void ALTMONCACHE::Clear(void)
+void ALTMONCACHE::Clear()
 {
   ui32 i;
   if (pGraphic != NULL)
@@ -1029,7 +1029,7 @@ void ALTMONCACHE::Clear(void)
 // A cache of Derived graphics for Alternate Monster Graphics
 ALTMONCACHE altMonCache[27][4]; //27 monster types - 4 alternate graphics.
 
-void CleanupAltMonCache(void)
+void CleanupAltMonCache()
 {
   i32 i, j;
   for (i=0; i<27; i++)
@@ -1521,8 +1521,8 @@ void DrawMonster(
           A3 = GetAlternateBasicGraphicAddress(pAlternateGraphic, graphicNum0);
           if (MonsterRelFacing_74 == 1)
           {
-            MakeMirror((ui8 *)A3, (ui8 *)tempBitmap, dstByteWidth, dstHeight);
-            A3 = (i8 *)tempBitmap;
+            MakeMirror((ui8 *)A3, g_tempBitmap.get(), dstByteWidth, dstHeight);
+            A3 = (i8 *)g_tempBitmap.get();
           };
         }
         else //b not side view
@@ -1534,8 +1534,8 @@ void DrawMonster(
             {
               if (sms_78.TestMirror())
               {
-                MakeMirror((ui8 *)A3, (ui8 *)tempBitmap, dstByteWidth, dstHeight);
-                A3 = (i8 *)tempBitmap;
+                MakeMirror((ui8 *)A3, g_tempBitmap.get(), dstByteWidth, dstHeight);
+                A3 = (i8*)g_tempBitmap.get();
               };
             };
           }
@@ -1666,8 +1666,8 @@ tag005e98:
             D4W = (UI16)((dstByteWidth +7) & 0xfff8);
             if (!frontViewMirror_106)
             {
-              MemMove((ui8 *)A3, (ui8 *)tempBitmap, (ui16)D4W*(ui16)dstHeight);
-              A3 = (i8 *)tempBitmap;
+              MemMove((ui8 *)A3, g_tempBitmap.get(), (ui16)D4W*(ui16)dstHeight);
+              A3 = (i8 *)g_tempBitmap.get();
             };
             Mirror((ui8 *)A3, D4W, dstHeight);
           };
@@ -1837,8 +1837,8 @@ void DrawSingleObject(
     height_LOCAL_24 = (UI8)(pGraphicClass->height);
     if (LOCAL_36)
     {
-      MakeMirror((ui8 *)A3, (ui8 *)tempBitmap, width_LOCAL_22, height_LOCAL_24);
-      A3 = (aReg)tempBitmap;
+      MakeMirror((ui8 *)A3, g_tempBitmap.get(), width_LOCAL_22, height_LOCAL_24);
+      A3 = (aReg)g_tempBitmap.get();
     };
   }
   else
@@ -2493,7 +2493,7 @@ void ProcessOnePosition(
         }
         else
         {
-          A3 = (i8 *)tempBitmap;
+          A3 = (i8 *)g_tempBitmap.get();
         };
         D0W = sw(distanceFromUs_52 >> 1);
         ShrinkBLT((ui8 *)LOCAL_12,
@@ -2515,10 +2515,10 @@ void ProcessOnePosition(
     if ( (LOCAL_36!=0) || (w_142!=0) )
     { 
       D4W = (I16)((LOCAL_22 + 7) & 0xfff8);//width in bytes?
-      if (A3 != (i8 *)tempBitmap)
+      if (A3 != (i8*)g_tempBitmap.get())
       {
-        MemMove((ui8 *)A3, (ui8 *)tempBitmap, D4W * LOCAL_24);
-        A3 = (i8 *)tempBitmap;
+        MemMove((ui8 *)A3, g_tempBitmap.get(), D4W * LOCAL_24);
+        A3 = (i8*)g_tempBitmap.get();
       };
       if (w_142 != 0)
       {

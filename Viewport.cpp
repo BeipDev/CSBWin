@@ -12,8 +12,8 @@
 extern bool playback_71;
 
 
-bool OpenGraphicTraceFile(void);
-void CloseGraphicTraceFile(void);
+bool OpenGraphicTraceFile();
+void CloseGraphicTraceFile();
 void info(char *msg, ui32 n);
 
 
@@ -115,8 +115,8 @@ class CUSTOMBITMAP
   i32   m_wordsPerGroup;
   i32   m_maxIndex;      //First non-accesible word
 public:
-  CUSTOMBITMAP(void);
-  ~CUSTOMBITMAP(void);
+  CUSTOMBITMAP();
+  ~CUSTOMBITMAP();
   void  Initialize(ui16 *pGraphic, 
                    i32 numberOfBitPlanes, 
                    i32 grapahicSize);  //i32 units
@@ -128,14 +128,14 @@ public:
 };
 
 
-CUSTOMBITMAP::CUSTOMBITMAP(void)
+CUSTOMBITMAP::CUSTOMBITMAP()
 {
   m_wordsPerRow = 0;
   m_wordsPerGroup = 0;
   m_maxIndex = -1;
 }
 
-CUSTOMBITMAP::~CUSTOMBITMAP(void)
+CUSTOMBITMAP::~CUSTOMBITMAP()
 {
 }
 
@@ -2220,7 +2220,7 @@ static ui16 rstack[256];
 static ui8 sp = 0;
 static ui8 rsp = 0;
 
-i16 pop(void)
+i16 pop()
 {
   return stack[(sp++) & 0xff];
 }
@@ -2235,7 +2235,7 @@ void push(RN obj)
   stack[(--sp) & 0xff] = obj.ConvertToInteger();
 }
 
-i16 rpop(void)
+i16 rpop()
 {
   return rstack[(rsp++) & 0xff];
 }
@@ -2246,7 +2246,7 @@ void rpush(i32 v)
 }
 
 
-RN popRN(void)
+RN popRN()
 {
   unsigned int n;
   RN result;
@@ -2574,9 +2574,9 @@ void Interpret(ui16 *code,
     case StdDoorRectsF0:   push(RECT_StdDoorRectsF0);   break;
       //
     case StdDrawSeeThruDoorEdge:
-               MemMove(d.pDoorBitmaps[1], (ui8 *)tempBitmap, 1968);
+               MemMove(d.pDoorBitmaps[1], g_tempBitmap.get(), 1968);
                TAG0088b2(GetBasicGraphicAddress(41),
-                  (ui8 *)tempBitmap,
+                  g_tempBitmap.get(),
                   (RectPos *)d.uByte2542,
                   //d.DoorTrackTopRect[0].b.x1-d.uByte2534[0], // This isn't right (srcOffsetX)
                   d.DoorTrackTopRect[0].b.x1-d.SeeThruWallsRect.b.uByte4, // This isn't right (srcOffsetX)
@@ -2584,7 +2584,7 @@ void Interpret(ui16 *code,
                   48,
                   16,
                   9);
-               BltShapeToViewport(tempBitmap, &d.DoorTrackTopRect[6]);
+               BltShapeToViewport(g_tempBitmap.get(), &d.DoorTrackTopRect[6]);
                 break;
     case StdDrawDoor:
                 pRectangle = StdRectanglePointers(pop());
@@ -2854,8 +2854,8 @@ void Interpret(ui16 *code,
     case StdMirrorShapeToViewport: 
       pRectangle = StdRectanglePointers(pop());
       pBitmap = (pnt)StdBitmapPointers(pop());
-      MemMove((ui8 *)pBitmap,(ui8 *)tempBitmap,pRectangle->b.uByte4*pRectangle->b.uByte5);
-      MirrorShapeBltToViewport((ui8 *)tempBitmap, pRectangle);
+      MemMove((ui8 *)pBitmap, g_tempBitmap.get(),pRectangle->b.uByte4*pRectangle->b.uByte5);
+      MirrorShapeBltToViewport(g_tempBitmap.get(), pRectangle);
       break;
     case Literal:
       push(*(P++));
@@ -3306,7 +3306,7 @@ void Interpret(ui16 *code,
 
 
 //   TAG00133e
-void ClearHeldObjectName(void)
+void ClearHeldObjectName()
 {
   i16 save;
   save = d.UseByteCoordinates;
@@ -3319,7 +3319,7 @@ void ClearHeldObjectName(void)
 }
 
 //   TAG004308
-void FloorAndCeilingOnly(void)
+void FloorAndCeilingOnly()
 {
   static i32 count=0;
   if ((VBLMultiplier!=1) && (((count++)%1) != 0) && (VBLMultiplier!=99)) return;
@@ -5330,7 +5330,7 @@ i8 DXSID[4] = {1,0,-1,0};
 i8 DYSID[4] = {0,1,0,-1};
 
 
-BACKGROUND_LIB::BACKGROUND_LIB(void)
+BACKGROUND_LIB::BACKGROUND_LIB()
 {
   backgroundGraphics = NULL;
   size = 0;
@@ -5338,7 +5338,7 @@ BACKGROUND_LIB::BACKGROUND_LIB(void)
   sequence = 0;
 }
 
-void BACKGROUND_LIB::Cleanup(void)
+void BACKGROUND_LIB::Cleanup()
 {
   int i;
   if (backgroundGraphics != NULL) 
@@ -5358,7 +5358,7 @@ void BACKGROUND_LIB::Cleanup(void)
   num = 0;
 }
 
-BACKGROUND_LIB::~BACKGROUND_LIB(void)
+BACKGROUND_LIB::~BACKGROUND_LIB()
 {
   Cleanup();
 }
@@ -7230,7 +7230,7 @@ void DrawFoodWaterBar(i16 value,i16 y,i16 color)
 //
 //*********************************************************
 //   TAG0188e4
-void DisplayFoodWater(void)
+void DisplayFoodWater()
 {
   CHARDESC *pcA3;
   pcA3 = &d.CH16482[d.SelectedCharacterOrdinal-1];
@@ -7254,8 +7254,8 @@ void DisplayFoodWater(void)
 //
 //*********************************************************
 //           TAG0191e8
-RESTARTABLE _ClickOnEye(void)
-{//(void)
+RESTARTABLE _ClickOnEye()
+{//()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP

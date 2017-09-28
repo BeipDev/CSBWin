@@ -25,7 +25,7 @@
 #endif
 
 void info(char *, unsigned int);
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 
 extern unsigned char *encipheredDataFile;
 void RC4_prepare_key(unsigned char *key_data_ptr, 
@@ -98,58 +98,40 @@ ui16 _uw(i32 i, i32 line, char *file)
 
 FILETABLE fileTable[maxFilesOpen];
 
-void FILETABLECleanup(void)
+void FILETABLECleanup()
 {
-  int i;
-  for (i=0; i<maxFilesOpen; i++)
-  {
+  for(int i=0; i<maxFilesOpen; i++)
     fileTable[i].Cleanup();
-  };
 }
 
 
-FILETABLE::FILETABLE(void)
+void FILETABLE::Cleanup()
 {
-  m_enciphered = false;
-  m_file = NULL;
-  m_fileName = NULL;
-}
-
-void FILETABLE::Cleanup(void)
-{
-  if (m_file != NULL) fclose(m_file);
-  m_file = NULL;
-  if (m_fileName != NULL) UI_free(m_fileName);
-  m_fileName = NULL;
+  if(m_file)
+  {
+    fclose(m_file);
+    m_file = nullptr;
+  }
+  m_fileName.clear();
 }
 
 
-FILETABLE::~FILETABLE(void)
+FILETABLE::~FILETABLE()
 {
   Cleanup();
 }
 
 void FILETABLE::SetFile(FILE *f, const char *fileName)
 {
-  ASSERT((f==NULL) || (m_file == NULL),"f");
+  ASSERT(f==nullptr || m_file == nullptr, "f");
   m_file = f;
-  if (m_fileName != NULL)
-  {
-    UI_free(m_fileName);
-  };
-  m_fileName = NULL;
-  if (m_file != NULL)
-  {
-    if (fileName != NULL)
-    {
-      m_fileName = (char *)UI_malloc(strlen(fileName)+1, MALLOC107);
-      strcpy(m_fileName, fileName);
-    };
-  }
+  m_fileName.clear();  
 
+  if(m_file)
+    m_fileName=fileName;
 }
 
-ICOUNTS::ICOUNTS(void)
+ICOUNTS::ICOUNTS()
 {
   for (i32 i=0; i<numInstrumentation; i++)
     m_InstrumentationCounts[i] = 0;
@@ -233,7 +215,7 @@ FILE *GETFILE(i32 f)
   return fileTable[f].GetFile();
 }
 
-char *GETFILENAME(i32 f)
+const char *GETFILENAME(i32 f)
 {
   return fileTable[f].GetFileName();
 }
@@ -339,7 +321,7 @@ char staticDTA[44];
 
 pnt currentDTA = (pnt)staticDTA;
 
-pnt GETDTA(void)
+pnt GETDTA()
 {
   return currentDTA;
 }
@@ -349,7 +331,7 @@ void SETDTA(pnt P1)
   currentDTA = P1;
 }
 
-void xbtimer(i16 /*timer*/,i16 /*control*/ ,i16 /*data*/,void (* /*f*/)(void))
+void xbtimer(i16 /*timer*/,i16 /*control*/ ,i16 /*data*/,void (* /*f*/)())
 { // TRAP 14 #31
   HopefullyNotNeeded(0x0612);
 }
@@ -377,7 +359,7 @@ i16 giaccess(i32 /*data*/,i32/* Register*/)
   return 0;
 }
 
-i16 drvmap(void) //TRAP #13
+i16 drvmap() //TRAP #13
 {
   return 3;
 }
@@ -398,7 +380,7 @@ void jenabint(i16 /*P1*/)
 //i32 saveIndex = 0;
 //i32 rgsv[200];
 
-void Invalidate(void)
+void Invalidate()
 {
   Instrumentation(icntInvalidate);
   UI_Invalidate();
@@ -518,7 +500,7 @@ i16 OPEN(const char *name, const char *ref)
   };
   if (i==maxFilesOpen) die(141); // i=fileTable index
   f = fileName.Open(name, ref);
-  GETFILETABLE((ui16)i)->SetFile(f, fileName.m_fName);
+  GETFILETABLE((ui16)i)->SetFile(f, fileName.m_fName.c_str());
   if (GETFILE((ui16)i)==NULL)
   {
     char msg[100];
@@ -538,7 +520,7 @@ i32 dist[100];
 ui32 CheckVBLCount = 0;
 
 extern void LIN_Invalidate();
-void checkVBL(void)
+void checkVBL()
 {
   bool forceVBL = false;
   static ui64 prevTime(0), curTime(0);
@@ -660,12 +642,12 @@ RESTARTABLE _wvbl(const CSB_UI_MESSAGE *pMsg)
   RETURN;
 }
 
-void ClearViewport(void)
+void ClearViewport()
 {
   memset(d.pViewportBMP,0,15232);
 }
 
-void RevealViewport(void)
+void RevealViewport()
 {
   static i16 changer;
   aReg A0, A1;
@@ -911,10 +893,10 @@ class AT
 {
 public:
   i32 activeTable[st_Last-st_First+1];
-  AT(void);
+  AT();
 };
 
-AT::AT(void)
+AT::AT()
 {
   memset(activeTable,0,sizeof (AT));
 }
@@ -930,7 +912,7 @@ void Deactivate(i32 state)
   at.activeTable[state] = 0;
 }
 
-void _RETURN(void)
+void _RETURN()
 {
   ASSERT(numState != 0,"numState");
   numState--;

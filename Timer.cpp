@@ -94,29 +94,29 @@ void TraceTimer(TIMER *pTimer, i32 index, const char *msg)
 //}
 //#endif //_DEBUG
 
-void TIMER::swapTimerWord6(void)
+void TIMER::swapTimerWord6()
 {
   *(i16 *)(&m_timerUByte6) = LE16(*(i16 *)(&m_timerUByte6));
 }
 
 
-void TIMER::swapTimerObj8(void)
+void TIMER::swapTimerObj8()
 {
   *(i16 *)(&m_timerUByte8) = LE16(*(i16 *)(&m_timerUByte8));
 }
 
-void TIMER::swapTimerObj6(void)
+void TIMER::swapTimerObj6()
 {
   *(i16 *)(&m_timerUByte6) = LE16(*(i16 *)(&m_timerUByte6));
 }
 
 
-void TIMER::swapTimerWord8(void)
+void TIMER::swapTimerWord8()
 {
   *(i16 *)(&m_timerUByte8) = LE16(*(i16 *)(&m_timerUByte8));
 }
 
-void TIMER::swapTimerSequence(void)
+void TIMER::swapTimerSequence()
 {
   m_timerSequence = LE16(m_timerSequence);
 }
@@ -127,7 +127,7 @@ void TIMER::swapTimerSequence(void)
 //*********************************************************
 //   TAG00e17a
 void ProcessObjectFromMissile(RN missile, RN *pDest, i32 mapX, i32 mapY)
-{ //(void)
+{ //()
   RN objD6;
   RN objD7;
   DB14     *DB14A3;
@@ -182,7 +182,7 @@ TIMER missileFilterTimer;
 //*********************************************************
 //   TAG00e962
 void MissileTimer(TIMER *pTimer)
-{//(void)
+{//()
   // A thrown Screamer Slice passes this way, too.
   // A fireball is represented by a timer entry with:
   //    function = 48 then 49.
@@ -434,7 +434,7 @@ void MissileTimer(TIMER *pTimer)
 //*********************************************************
 //   TAG00ecca
 void ProcessTT_25(TIMER *pTimer)
-{ //(void)
+{ //()
   //An open door spell???  Other missiles??
   dReg         D0, D1, D4, D5, D6, D7;
   aReg         A0, A1;
@@ -633,24 +633,15 @@ bool OpenTeleporterPitOrDoor(i32 mapX, i32 mapY)
 }
 
 
-GameTimers::GameTimers(void)
+GameTimers::GameTimers()
 {
-  m_timerQueue = NULL;
-  m_searchList = NULL;
-  m_timers = NULL;
   m_maxTimers = 0;
   m_searchActive = false;
   m_timerSequence = 0;
 }
 
-GameTimers::~GameTimers(void)
+GameTimers::~GameTimers()
 {
-  if (m_timerQueue != NULL) UI_free(m_timerQueue);
-  if (m_timers != NULL) UI_free(m_timers);
-  if (m_searchList != NULL) UI_free(m_searchList);
-  m_timerQueue = NULL;
-  m_searchList = NULL;
-  m_timers = NULL;
   m_maxTimers = 0;
 }
 
@@ -658,41 +649,20 @@ void GameTimers::Allocate(i32 numEnt)
 {
   i32 i;
   if (m_maxTimers >= numEnt) return;
-  m_timerQueue = (ui16 *)UI_realloc(m_timerQueue, numEnt*sizeof(m_timerQueue[0]), MALLOC110);
-  if (m_timerQueue == NULL)
-  {
-    die(0x41fb,"Cannot allocate timer index");
-  };
-  m_searchList = (ui16 *)UI_realloc(m_searchList, numEnt*sizeof(m_timerQueue[0]), MALLOC110);
-  if (m_searchList == NULL)
-  {
-    die(0x41fb,"Cannot allocate timer search list");
-  };
-  m_timers = (TIMER *)UI_realloc(m_timers,numEnt*sizeof(TIMER), MALLOC110);
-  if (m_timers == NULL)
-  {
-    die(0x41fb,"Cannot allocate timers");
-  };
+  m_timerQueue.resize(numEnt, 0);
+  m_searchList.resize(numEnt);
+  m_timers.resize(numEnt, TIMER());
 //  d.timerQue = (i16 *)m_index;
   //d.Timers = (TIMER *)m_timers;
   for (i=m_maxTimers; i<numEnt; i++)
-  {
-    memset(m_timers+i, 0, sizeof(m_timers[i]));
-    m_timerQueue[i] = 0;
     m_timers[i].Function(TT_EMPTY);
-  };
   m_maxTimers = (ui16)numEnt;
   //d.MaxTimers = (i16)m_size;
 }
 
-void GameTimers::Cleanup(void)
+void GameTimers::Cleanup()
 {
-  if (m_timerQueue != NULL) UI_free(m_timerQueue);
-  if (m_timers!= NULL) UI_free(m_timers);
-  if (m_searchList != NULL) UI_free(m_searchList);
-  m_searchList = NULL;
-  m_timerQueue = NULL;
-  m_timers = NULL;
+  m_timerQueue.clear();
   m_maxTimers = 0;
   m_timerSequence = 0;
 }
@@ -709,7 +679,7 @@ TIMER *GameTimers::pTimer(HTIMER hTimer)
   }
   else
   {
-    return m_timers+hTimer;
+    return &m_timers[hTimer];
   };
 }
 
@@ -719,21 +689,14 @@ GameTimers gameTimers;
 //
 //*********************************************************
 //   TAG00fd1c
-void GameTimers::InitializeTimers(void)
+void GameTimers::InitializeTimers()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  dReg D7;
-  TIMER *pTimer;
-  //d.Timers = (TIMER *)malloc((ui16)d.MaxTimers*(ui32)10, 1);
-  //d.timerQue = (i16 *)allocateMemory(d.MaxTimers*2,1);
   Allocate(m_maxTimers);
   if (d.gameState != GAMESTATE_ResumeSavedGame)
   {
-    D7L = 0;
-    for (pTimer=m_timers; D7W<m_maxTimers; D7W++, pTimer++)
-    {
-      pTimer->Function(TT_EMPTY);
-    };
+    for(unsigned i=0;i<m_maxTimers;i++)
+      m_timers[i].Function(TT_EMPTY);
 
     //d.numTimer = 0;
     //d.FirstAvailTimer = 0;
@@ -747,7 +710,7 @@ void GameTimers::InitializeTimers(void)
 //  NotImplemented();
 //}
 
-//void GameTimers::DecrementNumTimer(void)
+//void GameTimers::DecrementNumTimer()
 //{
 //  NotImplemented();
 //}
@@ -811,19 +774,9 @@ bool TIMER::operator < (const TIMER& timer2) const // TAG00fd9e
 //  TAG00fdce
 i16 GameTimers::FindTimerPosition(HTIMER P1)
 { // Find position of timer entry in timer queue.
-  dReg D0, D1;
-  ui16 *pwA0;
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  //pwA0 = gameTimers.TimerQueue();
-  pwA0 = m_timerQueue;
-  D1L = m_maxTimers;
-  D0L = 0;
-  do
-  {
-    if (P1 == *(pwA0++)) return D0W;
-    D0W++;
-  } while (D0W < D1W);
-//
+  for(unsigned i=0;i<m_timerQueue.size();i++)
+    if(m_timerQueue[i]==P1)
+      return i;
   return 0;
 }
 
@@ -896,7 +849,7 @@ void GameTimers::AdjustTimerQueue(i32 timerQueueIndex)
 }
 
 
-i16 TIMER_SEARCH::FindQPos(void)
+i16 TIMER_SEARCH::FindQPos()
 {
   if (gameTimers.m_searchList[m_index] == gameTimers.m_timerQueue[m_index])
   {
@@ -910,7 +863,7 @@ i16 TIMER_SEARCH::FindQPos(void)
 
 
 
-void TIMER_SEARCH::AdjustTimerPriority(void)
+void TIMER_SEARCH::AdjustTimerPriority()
 {
   gameTimers.AdjustTimerQueue(FindQPos());
 }
@@ -929,7 +882,7 @@ void GameTimers::AdjustTimerPriority(HTIMER hTimer)
 #else
 #define ASSERTTimer(x)
 #endif
-bool GameTimers::CheckTimers(void)
+bool GameTimers::CheckTimers()
 { // Return true if all is well.
   // We check that the queue is properly ordered.
   i32 n, N;
@@ -961,7 +914,7 @@ void GameTimers::DeleteTimer(HTIMER hTimer, const char *tag)
   i32 QPos;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ASSERTTimer(CheckTimers());
-  TraceTimer(m_timers + hTimer, hTimer, tag==NULL?"Delete":tag);
+  TraceTimer(&m_timers[hTimer], hTimer, tag==NULL?"Delete":tag);
   m_timers[hTimer].Function(TT_EMPTY);//  .WB8.bytes[0] = 0;
   if (hTimer < m_firstAvailTimer)
   {
@@ -1206,11 +1159,11 @@ HTIMER GameTimers::SetTimer(TIMER *pNewTimer) //
 }
 
 
-i32 GameTimers::CreateSearchList(void)
+i32 GameTimers::CreateSearchList()
 {
   if (m_searchActive) die(0xccb7, "Recursive timer search");
   m_searchActive = true;
-  memcpy(m_searchList, m_timerQueue, m_numTimer*sizeof(m_timerQueue[0]));
+  memcpy(m_searchList.data(), m_timerQueue.data(), m_numTimer*sizeof(m_timerQueue[0]));
   return m_numTimer;
 }
 
@@ -1225,7 +1178,7 @@ void GameTimers::GetNextTimerEntry(TIMER *P1, ui32 *index)
   pnt A0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   *index = m_timerQueue[0];
-  ptA1 = m_timers + (*index);
+  ptA1 = &m_timers[*index];
   A0 = (pnt)P1;
   //MoveWords(A0, (pnt)ptA1, 4); // 5 words = 10 Bytes
   memcpy(A0, ptA1, sizeof(TIMER));
@@ -1237,7 +1190,7 @@ void GameTimers::GetNextTimerEntry(TIMER *P1, ui32 *index)
 //
 //*********************************************************
 //  TAG010260
-bool GameTimers::CheckForTimerEvent(void)
+bool GameTimers::CheckForTimerEvent()
 {
   dReg D0, D1;
   bool zflag;
@@ -1269,7 +1222,7 @@ tag01028c:
 //*********************************************************
 //   TAG0102a4
 void ProcessTT_1(TIMER *pTimer)
-{//(void)
+{//()
   static dReg D0, D1, D4, D5;
   static CELLFLAG *cfA2;
   static i16  w_10;
@@ -1686,7 +1639,7 @@ void OperateCounterActuator(const TIMER *pTimer, DB3 *pActuator)
 //*********************************************************
 //   TAG010642
 void ProcessTT_OPENROOM(TIMER *pTimer, ui32 index)
-{//(void)
+{//()
   dReg D5, D6, D7;
   i32 targetX, targetY;
   RN  objD4;
@@ -1881,7 +1834,7 @@ void ProcessTT_ReactivateGenerator(TIMER *pTimer)
 //*********************************************************
 //   TAG010910
 void TriggerMissileLauncher(DB3 *pDB3, const TIMER *pTimer)
-{//(void)
+{//()
   //dReg D5;
   i32 actuatorTypeD4;
   RN  secondObject, firstObject;
@@ -2163,7 +2116,7 @@ void ProcessPortraitTimer7(RN targetObj, const TIMER *pTimer)
 //*********************************************************
 //   TAG010b9a
 bool ProcessTT_STONEROOM(TIMER *pTimer, ui32 index)
-{//(void)
+{//()
   dReg D4, D5;
   RN   objAtTarget;
   DB3 *pDB3A2;
@@ -2388,7 +2341,7 @@ bool ProcessTT_STONEROOM(TIMER *pTimer, ui32 index)
 //*********************************************************
 //   TAG0110a6
 void ProcessTT_TELEPORTER(TIMER *pTimer)
-{//(void)
+{//()
   CELLFLAG *pcf;
   i32 mapX, mapY;
   if (timerTypeModifier[pTimer->timerUByte9()] == 3) return;
@@ -2426,7 +2379,7 @@ void ProcessTT_TELEPORTER(TIMER *pTimer)
 //*********************************************************
 //   TAG010e98
 void WiggleEverything(i32 mapX, i32 mapY)
-{//(void)
+{//()
   dReg D5;
   DB14  *pDB14A3;
   TIMER *ptA2;
@@ -2518,7 +2471,7 @@ void WiggleEverything(i32 mapX, i32 mapY)
 //*********************************************************
 //   TAG01111c
 void ProcessTT_PITROOM(TIMER *pTimer)
-{//(void)
+{//()
   dReg D0;
   int x, y;
   CELLFLAG *pcfA2;
@@ -2564,7 +2517,7 @@ void ProcessTT_PITROOM(TIMER *pTimer)
 //*********************************************************
 //   TAG011192
 void ProcessTimer60and61(TIMER *pTimer)
-{//(void)
+{//()
   //Appears to be a pending monster generator.  A monster
   //was generated where a monster already existed.  Try
   //again later.  Or a monster teleported to such a place.
@@ -2708,7 +2661,7 @@ void TAG011366(i16 chIdx)
 //*********************************************************
 //   TAG0113c4
 void ProcessTT_ViAltar(TIMER *pTimer)
-{ //(void)
+{ //()
   //I got here when I put bones in altar of VI.
   dReg D5;
   i32 bonesX, bonesY;
@@ -2814,7 +2767,7 @@ void ProcessTT_ViAltar(TIMER *pTimer)
 //
 //*********************************************************
 //   TAG0114d0
-void SetWatchdogTimer(void)
+void SetWatchdogTimer()
 {
   TIMER LOCALa;
   //i32 LOCAL_10;
@@ -2875,7 +2828,7 @@ void ProcessLightLevelTimer(TIMER *pTimer)
 //}
 
 
-void GameTimers::ConvertToSequencedTimers(void)
+void GameTimers::ConvertToSequencedTimers()
 {
   // Note that the timers are still in big-endian order!
   // This will not bother us as we simpy copy them as-is and
@@ -2889,14 +2842,14 @@ void GameTimers::ConvertToSequencedTimers(void)
   ui8 *pNewTimer;
   for (i=m_maxTimers-1; i>=0; i--)
   {
-    pOldTimer =   (ui8 *)m_timers + i*oldSize;
-    pNewTimer =   (ui8 *)m_timers + i*newSize;
+    pOldTimer =   (ui8 *)&m_timers[i*oldSize];
+    pNewTimer =   (ui8 *)&m_timers[i*newSize];
     memmove(pNewTimer, pOldTimer, oldSize);
     ((TIMER *)pNewTimer)->m_timerSequence = 0;
   };
 }
 
-void GameTimers::ConvertToExtendedTimers(void)
+void GameTimers::ConvertToExtendedTimers()
 {
   // Note that the timers are still in big-endian order!
   // This will not bother us as we simpy copy them as-is and
@@ -2907,8 +2860,8 @@ void GameTimers::ConvertToExtendedTimers(void)
   TIMER *pOldTimer, *pNewTimer;
   for (i=m_maxTimers-1; i>=0; i--)
   {
-    pNewTimer =   m_timers + i;
-    pOldTimer =   (TIMER *)(((char *)m_timers) + 12*i);
+    pNewTimer =   &m_timers[i];
+    pOldTimer =   (TIMER *)(((char *)m_timers.data()) + 12*i);
     time = pOldTimer->m_time;
     memmove(pNewTimer, pOldTimer, sizeof(TIMER));
     pNewTimer->Time(time & 0xffffff00);
@@ -2921,7 +2874,7 @@ void GameTimers::ConvertToExtendedTimers(void)
 
 
 
-bool TIMER_SEARCH::FindNextTimer(void)
+bool TIMER_SEARCH::FindNextTimer()
 {
   if (m_index < 0)
   {
@@ -2935,7 +2888,7 @@ bool TIMER_SEARCH::FindNextTimer(void)
 }
 
 
-void TIMER_SEARCH::DeleteTimer(void)
+void TIMER_SEARCH::DeleteTimer()
 {
   gameTimers.DeleteTimer(TimerHandle());
 }

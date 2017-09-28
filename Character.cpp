@@ -454,7 +454,7 @@ bool FingerprintExists(ui32 fingerprint)
 // *********************************************************
 //   TAG0139be
 void AddCharacter(i16 charID)
-{//(void)
+{//()
   dReg D0, D4, D5, D6;
   aReg A2;
   CHARDESC *pcA3;
@@ -802,7 +802,7 @@ switchbreak:
 // *********************************************************
 //   TAG014676
 void BringCharacterToLife(ui16 chIdx)
-{//(void)
+{//()
   dReg D0, D7;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1227,7 +1227,7 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 // *********************************************************
 //   TAG014de0
 void DrawCharacterState(i32 chIdx) // Character box at top of screen                                //
-{//(void)
+{//()
   static dReg D0, D1, D4;
   static bool inventoryOpen;
   static ui16 charFlags;
@@ -1934,7 +1934,7 @@ RN RemoveCharacterPossession(i32 chIdx,i32 possessionIndex)
 // *********************************************************
 //   TAG015c4c
 void AddCharacterPossession(i32 chIdx,RN object,i32 place)
-{//(void)
+{//()
   //dReg D4;
   OBJ_NAME_INDEX objNID4;
   CHARDESC *pcA3;
@@ -2498,7 +2498,7 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
 // *********************************************************
 //   TAG016be8
 void DropAllPossessions(i32 chIdx)
-{//(void)
+{//()
   dReg D4, D6;
   RN objD5;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2524,7 +2524,7 @@ void DropAllPossessions(i32 chIdx)
 // *********************************************************
 //   TAG016c5a
 void KillCharacter(i32 chIdx)
-{//(void)
+{//()
   dReg D5, D6;
   RN objD4, objD7;
   //DB10    *DB10A2;
@@ -2903,7 +2903,7 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
 
 
 
-void  CHARDESC::InitializePossessions(void)
+void  CHARDESC::InitializePossessions()
 {
   int i;
   for (i=0; i<30; i++)
@@ -3105,7 +3105,7 @@ void ShowChestContents(RN objChest, DB9 *pChest, i16 P3)
 //
 // *********************************************************
 //   TAG017da4
-void RepackChest(void) //Put displayed items back into chest.
+void RepackChest() //Put displayed items back into chest.
 { //We got here when we removed a chest from hand in stats screen.
   dReg D4, D5;
   RN   objD6, objD7;
@@ -3386,11 +3386,11 @@ class CUSTOMPHRASE
 {
   char *m_address;
   public:
-    CUSTOMPHRASE(void){m_address = NULL;};
-    ~CUSTOMPHRASE(void){Clear();};
-    void Clear(void){if(m_address!=NULL)UI_free(m_address);m_address=NULL;};
+    CUSTOMPHRASE(){m_address = NULL;};
+    ~CUSTOMPHRASE(){Clear();};
+    void Clear(){if(m_address!=NULL)UI_free(m_address);m_address=NULL;};
     void Set(char *a){Clear();m_address=(char *)UI_malloc(strlen(a)+1,MALLOC091);strcpy(m_address,a);};
-    char *Get(void){return m_address;};
+    char *Get(){return m_address;};
 };
 
 const char*  descriptivePhrases[10]; //pnt_72[6];
@@ -3398,7 +3398,7 @@ CUSTOMPHRASE customPhrases[10];
 ui32         phraseMask;
 i32          phraseColors[10];
 
-void CleanupCustomPhrases(void)
+void CleanupCustomPhrases()
 {
   int i;
   for (i=0; i<10; i++) customPhrases[i].Clear();
@@ -3833,7 +3833,7 @@ void ModifyDescription(i32 locrInt, i32 index, i32 color)
 // *********************************************************
 //
 // *********************************************************
-void TAG0189a8(void)
+void TAG0189a8()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   d.DisplayResurrectChestOrScroll = 5;
@@ -3846,7 +3846,7 @@ void TAG0189a8(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG0189d4(void)
+void TAG0189d4()
 {
   dReg D0;
   RN objD7;
@@ -3962,11 +3962,11 @@ struct FEEDPARAMETERS
   ui32    location;
   i32     antiMagicAdjust;
   i32     antiFireAdjust;
-  void Clear(void);
+  void Clear();
 };
 
 
-void FEEDPARAMETERS::Clear(void)
+void FEEDPARAMETERS::Clear()
 {
   performFeeding       = false;
   characterIndex       = 0xffffffff;
@@ -4001,8 +4001,8 @@ void FEEDPARAMETERS::Clear(void)
 //
 // *********************************************************
 //   TAG018afc
-RESTARTABLE _FeedCharacter(void)
-{ //(void)
+RESTARTABLE _FeedCharacter()
+{ //()
   //We got here when I fed a character some bones. (But
   // they turned out to be not consumable.)
   static dReg D0, D1, D4;
@@ -4499,7 +4499,7 @@ RESTARTABLE _FeedCharacter(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG019036(void)   // Click on eye with empty hand
+void TAG019036()   // Click on eye with empty hand
 {
   dReg D0, D4, D5, D6, D7;
   aReg A0;
@@ -4659,7 +4659,7 @@ void CharacterPortraitToStatusBox(i32 chIdx)
 //
 // *********************************************************
 RESTARTABLE _TAG019fac(const i32 clickX, const i32 clickY)
-{//(void)
+{//()
   static dReg D7;
   RESTARTMAP
     RESTART(1)
@@ -4742,7 +4742,7 @@ RESTARTABLE _TAG019fac(const i32 clickX, const i32 clickY)
 //
 // *********************************************************
 //  TAG01ac26
-bool ItemHasChargesLeft(void)
+bool ItemHasChargesLeft()
 {
 	// Determines whether the item has enough charges (true if ready,
 	// false if drained)
@@ -4884,8 +4884,8 @@ tag01b018:
 // *********************************************************
 //
 // *********************************************************
-void TAG01b1c0(void)
-{//(void)
+void TAG01b1c0()
+{//()
   CHARDESC *pChar;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   // Check somebody selecting attack option
@@ -4902,7 +4902,7 @@ void TAG01b1c0(void)
 // *********************************************************
 //   TAG01b1f8
 void PrepareAttack(i16 chIdx)
-{//(void)
+{//()
 	// This function look for the object in hand and pops up
   // object`s options (CHOP, SWING, ...).
   // It also draws the blue square around the right hand.
@@ -5094,7 +5094,7 @@ tag01b5d0:
 // *********************************************************
 
 //   TAG01b880
-void DrawMovementButtons(void)
+void DrawMovementButtons()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   STHideCursor(HC8);//TAG002fd2
@@ -5105,8 +5105,8 @@ void DrawMovementButtons(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG02076e(void)
-{ //(void)
+void TAG02076e()
+{ //()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (d.PartySleeping) return;
   STHideCursor(HC9);
@@ -5146,7 +5146,7 @@ void TAG022a60(i16 P1,ui8 *P2)
   ExpandGraphic(A2, (ui8 *)A3, 0, 0);
 }
 
-void CHARDESC::SaveToWings(void)
+void CHARDESC::SaveToWings()
 {
   // Our plan is to write the 800-byte character struct to
   // expool in the form of eight 25-word records each
@@ -5337,7 +5337,7 @@ void RemoveCharacter(int chIdx)
 }
 
 
-void RedrawEverything(void)
+void RedrawEverything()
 {
   i32 i;
   for (i=0; i<d.NumCharacter; i++)

@@ -34,19 +34,19 @@ class MISCTABLE
 {
   MISCENTRY *miscEntry;
 public:
-  MISCTABLE(void) {miscEntry = NULL;};
-  ~MISCTABLE(void) {DeAllocate();};
-  void DeAllocate(void)
+  MISCTABLE() {miscEntry = NULL;};
+  ~MISCTABLE() {DeAllocate();};
+  void DeAllocate()
   {
     if (miscEntry!=NULL) UI_free(miscEntry); 
     miscEntry=NULL;
   };
-  void Allocate(void);
+  void Allocate();
   void Print(FILE *f);
   void MarkLocation(RN obj, i32 level, i32 x, i32 y, i32 container);
 };
 
-void MISCTABLE::Allocate(void)
+void MISCTABLE::Allocate()
 {
   i32 i;
   DB10 *pDB10;
@@ -172,7 +172,7 @@ void MarkBackpackLocations()
   };
 }
 
-void MarkQueuedMonsterPossessionLocations(void)
+void MarkQueuedMonsterPossessionLocations()
 {
   //i32 i;
   RN obj, poss;
@@ -215,27 +215,27 @@ class TARGETS
   i32 *m_targets;
   i32 m_allocated;
 public:
-  TARGETS(void);
-  ~TARGETS(void);
-  void Clear(void);
+  TARGETS();
+  ~TARGETS();
+  void Clear();
   void Add(i32 typ, i32 sl, i32 dx, i32 sy, i32 tl, i32 tx, i32 ty);
   i32 Search(i32 indx, i32 tl, i32 tx, i32 ty,
             i32 *type, i32 *level, i32 *x, i32 *y);
 };
 
-TARGETS::TARGETS(void)
+TARGETS::TARGETS()
 {
   m_numTarget=0;
   m_allocated=0;
   m_targets=NULL;
 }
 
-TARGETS::~TARGETS(void)
+TARGETS::~TARGETS()
 {
   Clear();
 }
 
-void TARGETS::Clear(void)
+void TARGETS::Clear()
 {
   if (m_targets!=NULL) UI_free(m_targets);
   m_targets=NULL;
@@ -364,7 +364,7 @@ void GetText(char *result, i32 index)
   i32 bitnum, LOCAL_4;
   char SUBST28 = '/'; //What to substitute for code decimal 28.
   char *LOCAL_8;
-  char *A2 = (char *)(d.compressedText + d.indirectTextIndex[index]);
+  char *A2 = (char *)(d.compressedText.data() + d.indirectTextIndex[index]);
   dReg D0, D4, D7;
   LOCAL_4 = 0;
   D7W = 1;
@@ -2065,7 +2065,7 @@ void DumpTimers(FILE *f)
   ui16 *que;
   n = gameTimers.FirstAvailTimer();
   que = (ui16 *)UI_malloc(2*n, MALLOC002);
-  memcpy(que, gameTimers.m_timerQueue, 2*n);
+  memcpy(que, gameTimers.m_timerQueue.data(), 2*n);
   fprintf(f,"\n\nActive Timer Entries - Current time is %d - Number of entries = %d\n\n",
                           d.Time, n);
   fprintf(f,"level  x    y     time  function\n");
@@ -2078,7 +2078,7 @@ void DumpTimers(FILE *f)
   UI_free(que);
 }
 
-void SorryEncrypted(void)
+void SorryEncrypted()
 {
   UI_MessageBox("This function is disabled\n"
                 "for encrypted dungeons.",
@@ -2134,7 +2134,7 @@ void DumpPalettes(FILE *f)
   };
 }
 
-void AsciiDump(void)
+void AsciiDump()
 {
   if (   (encipheredDataFile != NULL)
       || simpleEncipher)
