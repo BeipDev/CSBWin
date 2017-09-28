@@ -21,20 +21,20 @@ extern bool overlayActive;
 i32 timerTypeModifier[3]; // set/clear/toggle
 
 void info(const char *msg, unsigned int n);
-void CleanupGraphics(void);
-void CloseTraceFile(void);
+void CleanupGraphics();
+void CloseTraceFile();
 void CustomBackgrounds(i32 x, i32 y, i32 facing, i32 roomNum);
-void ClearOverlayPalette(void);
+void ClearOverlayPalette();
 bool IsTextScrollArea(int, int);
-i32  TextWidth(void);
+i32  TextWidth();
 
 
 void TraceTimer(TIMER *pTimer, i32 index, const char *msg);
 void RecordfileOpen(bool open);
-void RecordFile_Close(void);
+void RecordFile_Close();
 void RecordFile_Record(MouseQueueEnt *MQ);
 void RecordFile_Record(const char *line);
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 pnt GetExternalPortraitAddress(i32 index);
 void QueueDSASwitchAction(
                    i32 delay,        //
@@ -78,7 +78,7 @@ void _MessageBox(const char *msg)
   UI_MessageBox(msg,NULL,MESSAGE_OK);
 }
 
-void Terminate(void)
+void Terminate()
 {
   die(0);
 };
@@ -150,8 +150,8 @@ class PRINTQUEUE
 private:
   PRINTENTRY *m_firstEnt;
 public:
-  PRINTQUEUE(void) {m_firstEnt = NULL;};
-  ~PRINTQUEUE(void)
+  PRINTQUEUE() {m_firstEnt = NULL;};
+  ~PRINTQUEUE()
   {
     while (m_firstEnt != NULL)
     {
@@ -161,7 +161,7 @@ public:
     };
   };
   void Queue(i32 color, i16 type, const char *text);
-  PRINTENTRY *GetEntry(void);
+  PRINTENTRY *GetEntry();
 };
 
 void PRINTQUEUE::Queue(i32 color, i16 type, const char *text)
@@ -188,7 +188,7 @@ void PRINTQUEUE::Queue(i32 color, i16 type, const char *text)
   };
 }
 
-PRINTENTRY *PRINTQUEUE::GetEntry(void)
+PRINTENTRY *PRINTQUEUE::GetEntry()
 {
   PRINTENTRY *temp;
   if (m_firstEnt == NULL) return NULL;
@@ -299,7 +299,7 @@ i32 programDescriptor[] = {
 
 ui8 LScreenBase[320][210]; // Extra room at end for ???
 
-void SetButtonPointers(void)
+void SetButtonPointers()
 {
   d.pButn18970[0][0] = d.Buttons18624;
   d.pButn18970[0][1] = d.Buttons18660;
@@ -311,16 +311,16 @@ void SetButtonPointers(void)
   d.pButn18970[1][3] = d.Buttons18936;
 }
 
-DBank::DBank(void)
+DBank::DBank()
 {
   memset (this,0,sizeof (*this));
 }
 
-DBank::~DBank(void)
+DBank::~DBank()
 {
 }
 
-void DBank::Initialize(void) // TAG00332a
+void DBank::Initialize() // TAG00332a
 {
   int k;
   k = sizeof(*this);
@@ -533,9 +533,9 @@ void DBank::SetDerivedGraphicCacheIndex(i32 graphicNum, i32 index)
   if ((index == -1) && (graphicNum > 3)) pwDerivedGraphicSizes[graphicNum] = 0;
 }
 
-void SetSupervisorMode(void) {}
+void SetSupervisorMode() {}
 
-void ClearSupervisorMode(void) {}
+void ClearSupervisorMode() {}
 
 void HangIfZero(i16 P1)
 {
@@ -543,9 +543,9 @@ void HangIfZero(i16 P1)
     die(0,"HangIfZero");
 }
 
-void DisableCursor(void) {}
+void DisableCursor() {}
 
-i32 GetAvailMemory(void)
+i32 GetAvailMemory()
 {
   return 2000000 - 400000;// 550000;//510000;//1000000;
   // We no longer need the 843144 bytes that used to be
@@ -584,7 +584,7 @@ void DebugMain(char *msg)
 
 //   TAG00068e
 RESTARTABLE _MainLoop(const CSB_UI_MESSAGE * /*msg*/)
-{//(void)
+{//()
   static dReg D0, D1;
   static PRINTENTRY *pPrintEntry;
   RESTARTMAP
@@ -783,7 +783,7 @@ tag0007c8:
 // *********************************************************
 //   TAG000850
 void LoadPartyLevel(const i32 level)
-{//(void)
+{//()
   dReg D0;
   //i32  LOCAL_1;
   //i8   LOCAL_2[6];
@@ -891,7 +891,7 @@ tag000c32:
 
 ui32 VBLCount = 0;
 ui32 VBLInterruptCount = 0;
-void vblInterrupt(void) // TAG000c3a
+void vblInterrupt() // TAG000c3a
 {
 // Vertical Blank Handler
   dReg D0, D1, D2, D3, D4, D5;
@@ -1099,7 +1099,7 @@ tag000dbe:
 
 
 
-void TAG000ec6(void)
+void TAG000ec6()
 {
 //////;;;;;;;;;;;;;;;;;;;;;;;;;;;; Set some user interrupt vectors
 ////
@@ -1179,7 +1179,7 @@ i16 ApplyLimits(i32 min,i32 x,i32 max)
 
 ui32 numRandomCalls = 0;
 
-i32 STRandom(void) //TAG001030
+i32 STRandom() //TAG001030
 {
   dReg D0;
   numRandomCalls++;
@@ -1199,7 +1199,7 @@ i32 STRandom(i32 num)
 }
 
 //  TAG001050
-ui8 STRandomBool(void)
+ui8 STRandomBool()
 { // Zero or One
   numRandomCalls++;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1208,7 +1208,7 @@ ui8 STRandomBool(void)
 }
 
 //  TAG001074
-ui8 STRandom0_3(void)
+ui8 STRandom0_3()
 {
   numRandomCalls++;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1216,7 +1216,7 @@ ui8 STRandom0_3(void)
   return (UI8)((d.RandomNumber>>8) & 3);
 }
 
-void TAG0010ae(void)
+void TAG0010ae()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   dReg D7;
@@ -1271,8 +1271,8 @@ OBJ_NAME_INDEX ObjectAtLocation(i32 bodyLocation)
 }
 /*
 //           TAG0018f6
-void RemoveTimedOutText(void)
-{//(void)
+void RemoveTimedOutText()
+{//()
   //static dReg D0, D5, D6;
   //static RectPos LOCAL_8;
   dReg D0, D5, D6;
@@ -1315,8 +1315,8 @@ void RemoveTimedOutText(void)
 
 /*
 //           TAG001992
-RESTARTABLE _CreateNewTextRow(void)
-{//(void)
+RESTARTABLE _CreateNewTextRow()
+{//()
   static dReg D7;
   RESTARTMAP
     RESTART(1)
@@ -1359,12 +1359,12 @@ LINEQUEUE::LINEQUEUE(i32 maxLines)
   m_lastText = NULL;
 }
 
-LINEQUEUE::~LINEQUEUE(void)
+LINEQUEUE::~LINEQUEUE()
 {
   Cleanup();
 }
 
-void LINEQUEUE::Cleanup(void)
+void LINEQUEUE::Cleanup()
 {
   PIECE_OF_TEXT *next;
   while (m_firstText != NULL)
@@ -1376,7 +1376,7 @@ void LINEQUEUE::Cleanup(void)
   m_firstText = NULL;
 }
 
-i32 LINEQUEUE::MaxPrintLinesCount(void)
+i32 LINEQUEUE::MaxPrintLinesCount()
 {
   if (m_firstText == NULL) return -1;
   // We assume that the printLinesCount cannot decrease.
@@ -1409,7 +1409,7 @@ void LINEQUEUE::AddText(i32 row, i32 column, i32 color, const char *text, i32 pr
   };
 }
 
-void LINEQUEUE::DiscardFirst(void)
+void LINEQUEUE::DiscardFirst()
 {
   PIECE_OF_TEXT *result;
   if (m_firstText == NULL) return;
@@ -1419,26 +1419,26 @@ void LINEQUEUE::DiscardFirst(void)
   UI_free(result);
 }
 
-SCROLLING_TEXT::SCROLLING_TEXT(void)
+SCROLLING_TEXT::SCROLLING_TEXT()
     :m_pastLines(NUMOLDLINE),m_currentLines(4),m_futureLines(NUMFUTURELINE)
 {
   i32 i;
   for (i=0; i<4; i++) m_printLinesCount[i] = -1;
 }
 
-SCROLLING_TEXT::~SCROLLING_TEXT(void)
+SCROLLING_TEXT::~SCROLLING_TEXT()
 {
   Cleanup();
 }
 
-void SCROLLING_TEXT::Cleanup(void)
+void SCROLLING_TEXT::Cleanup()
 {
   m_pastLines.Cleanup();
   m_currentLines.Cleanup();
   m_futureLines.Cleanup();
 }
 
-void SCROLLING_TEXT::DiscardText(void)
+void SCROLLING_TEXT::DiscardText()
 {
   i32 i, top;
   Cleanup();
@@ -1476,8 +1476,8 @@ void SCROLLING_TEXT::SetPrintPosition(i32 column, i32 row)
 
 
 //           TAG0018f6
-void SCROLLING_TEXT::RemoveTimedOutText(void)
-{//(void)
+void SCROLLING_TEXT::RemoveTimedOutText()
+{//()
   //static dReg D0, D5, D6;
   //static RectPos LOCAL_8;
   dReg D0, D5, D6;
@@ -1516,7 +1516,7 @@ void SCROLLING_TEXT::RemoveTimedOutText(void)
   //RETURN;
 }
 
-void SCROLLING_TEXT::ClockTick(void)
+void SCROLLING_TEXT::ClockTick()
 {
   PIECE_OF_TEXT *pPiece;
   i32 row;
@@ -1581,7 +1581,7 @@ void SCROLLING_TEXT::CreateNewTextRow(i32 printLinesCount)
   m_futureLines.AddText(-1,0,0,"",printLinesCount); // Push lines 1, 2,and 3 up to 0, 1, and 2
 }
 
-void SCROLLING_TEXT::ScrollUp(void)
+void SCROLLING_TEXT::ScrollUp()
 {
   i32 i;
   ClearMemory((ui8 *)d.newTextLine, 1120);
@@ -1656,7 +1656,7 @@ void QuePrintLines(i32 color, const char *text)
     printQueue.Queue(color,1,text); //That was easy!
 }
 
-int TextWidth(void)
+int TextWidth()
 {
 #ifdef _MSVC_CE2002ARM
   if (overlappingText) return 240;
@@ -1672,7 +1672,7 @@ int TextWidth(void)
 // *********************************************************
 //   TAG001aa8
 void PrintLines(const i32 color, const char *Text)
-{//(void)
+{//()
   i32 lastPrintCol;
   dReg D0, D6;
   i8  LOCAL_56[54];
@@ -1741,7 +1741,7 @@ void PrintLines(const i32 color, const char *Text)
 //
 // *********************************************************
 //   TAG001c02
-void PrintLinefeed(void)
+void PrintLinefeed()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   QuePrintLines(0, (char *)d.Byte1830);
@@ -1765,7 +1765,7 @@ void TextOutToScreen(i32 xPixel,i32 yPixel,i32 color,i32 P4, const char* P5, boo
                   translate);
 }
 
-void TAG001c6e(void)
+void TAG001c6e()
 {
   dReg D7;
   //i16 saveD7 = D7W;
@@ -1784,7 +1784,7 @@ void TAG001c6e(void)
 
 
 /*
-void TAG0020ca(void)
+void TAG0020ca()
 {
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1803,7 +1803,7 @@ void TAG0020ca(void)
 }
 */
 
-void KeyclickOff(void) //TAG002164
+void KeyclickOff() //TAG002164
 {
   aReg A0;
   pnt LOCAL_4;
@@ -1908,7 +1908,7 @@ void QueueSound(i32 soundNum,i32 mapX,i32 mapY,i32 deltaTime)
 }
 
 //   TAG002336
-void StartQueuedSound(void)
+void StartQueuedSound()
 {
   SOUND *psA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1940,7 +1940,7 @@ void StartQueuedSound(void)
   };
 }
 
-void TAG0023b0(void)
+void TAG0023b0()
 {
   //aReg A3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2027,7 +2027,7 @@ void CreateObjectCursor(pnt P1)
   STShowCursor(HC23);
 }
 
-void TAG002572(void)
+void TAG002572()
 {
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2051,7 +2051,7 @@ void TAG002572(void)
 }
 
 void TAG0025a6(i32 P1)
-{//(void)
+{//()
   dReg D0, D4, D5, D6, D7;
   aReg A2;
   RectPos *rectPosA3;
@@ -2152,7 +2152,7 @@ void TAG0025a6(i32 P1)
   };
 }
 
-void TAG002818(void) // called by VBL handler
+void TAG002818() // called by VBL handler
 {// Mouse cursor has moved out of the champion alignment area of the screen.
  // ( The upper right corner )
   dReg D6, D7;
@@ -2195,7 +2195,7 @@ void TAG002818(void) // called by VBL handler
 }
 
 //   TAG00289a
-void RemoveCursor(void) // called by VBL handler
+void RemoveCursor() // called by VBL handler
 { // restore area under cursor
   Instrumentation(icntRemoveCursor);
   for (i32 i=0; i<18; i++)
@@ -2206,7 +2206,7 @@ void RemoveCursor(void) // called by VBL handler
   };
 }
 
-void CreateCursorBitmap(void) // TAG00295e
+void CreateCursorBitmap() // TAG00295e
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   dReg D0, D1, D4, D5, D6, D7;
@@ -2396,7 +2396,7 @@ tag002c8c:
 //
 // *********************************************************
 //   TAG002c9a
-void DrawCursor(void) // called by VBL handler
+void DrawCursor() // called by VBL handler
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   dReg D0,D1,D2,D3,D4,D5,D6,D7;
@@ -2638,7 +2638,7 @@ tag002eb4:
 }
 
 
-void TAG00306c(void)
+void TAG00306c()
 {
   NotImplemented(0x306c);
 }
@@ -2901,7 +2901,7 @@ void ReadWallBitmaps(i16 newWallGraphicSet)
 // *********************************************************
 //   TAG0042da
 void MarkViewportUpdated(i16 MultiplePalettes)
-{ //(void)
+{ //()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (MultiplePalettes == 2)
   {
@@ -3047,7 +3047,7 @@ void MirrorGraphicToViewport(i32 graphic, RectPos *rectpos)
             10);
 }
 
-void TAG00456c(void)
+void TAG00456c()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if ((ui16)d.Word1842 < 5)
@@ -3094,11 +3094,11 @@ class WALL_DEC_CACHE
   ui32 m_index;
   ui8 *m_bitmap;
 public:
-  WALL_DEC_CACHE(void){m_index=0xffffffff;m_bitmap=NULL;};
-  ~WALL_DEC_CACHE(void){if(m_bitmap!=NULL)UI_free(m_bitmap);};
+  WALL_DEC_CACHE(){m_index=0xffffffff;m_bitmap=NULL;};
+  ~WALL_DEC_CACHE(){if(m_bitmap!=NULL)UI_free(m_bitmap);};
   ui32 AllocateDerivedGraphic(ui32 index, DECORATION_DESC *pRect);
   ui8 *GetDerivedGraphicAddress(ui32 /*index*/){return m_bitmap;};
-  void Cleanup(void){if(m_bitmap!=NULL)UI_free(m_bitmap);m_bitmap=NULL;};
+  void Cleanup(){if(m_bitmap!=NULL)UI_free(m_bitmap);m_bitmap=NULL;};
 };
 
 
@@ -3118,7 +3118,7 @@ ui32 WALL_DEC_CACHE::AllocateDerivedGraphic(ui32 index, DECORATION_DESC *pRect)
 
 
 WALL_DEC_CACHE wallDecCache;
-void CleanupWallDecorations(void)
+void CleanupWallDecorations()
 {
   wallDecCache.Cleanup();
 }
@@ -3746,11 +3746,11 @@ DECORATION_DESC *ReadFloorDecoration(i32 id)
 //  ui32 m_index;
 //  i8  *m_bitmap;
 //public:
-//  FLOOR_DEC_CACHE(void){m_index=0xffffffff;m_bitmap=NULL;};
-//  ~FLOOR_DEC_CACHE(void){if(m_bitmap!=NULL)UI_free(m_bitmap);};
+//  FLOOR_DEC_CACHE(){m_index=0xffffffff;m_bitmap=NULL;};
+//  ~FLOOR_DEC_CACHE(){if(m_bitmap!=NULL)UI_free(m_bitmap);};
 //  ui32 AllocateDerivedGraphic(ui32 index, DECORATION_DESC *pRect);
 //  i8 *GetDerivedGraphicAddress(ui32 /*index*/){return m_bitmap;};
-//  void Cleanup(void){if(m_bitmap!=NULL)UI_free(m_bitmap);m_bitmap=NULL;};
+//  void Cleanup(){if(m_bitmap!=NULL)UI_free(m_bitmap);m_bitmap=NULL;};
 //};
 
 
@@ -3770,7 +3770,7 @@ DECORATION_DESC *ReadFloorDecoration(i32 id)
 
 
 //FLOOR_DEC_CACHE floorDecCache;
-//void CleanupFloorDecorations(void)
+//void CleanupFloorDecorations()
 //{
 //  floorDecCache.Cleanup();
 //}
@@ -4509,7 +4509,7 @@ void TAG00907e(void (*  func)(i32,i32,i32), //8
 //
 }
 */
-void TAG009110(void)
+void TAG009110()
 {
   HopefullyNotNeeded(0x6ef9);
   /*
@@ -5262,7 +5262,7 @@ void RemoveObjectFromRoom(RN object,const LOCATIONREL& locr)
 
 
 
-void TextTooLongMessage(void)
+void TextTooLongMessage()
 {
   static bool message = false;
   if (!message)
@@ -6140,7 +6140,7 @@ void DetachItem16(i32 P1)
   pi16A3->word0 = -1;
 }
 
-void TAG00bd40(void)
+void TAG00bd40()
 {
   i32 i=0;
   while (d.ITEM16QueLen != 0)
@@ -6155,7 +6155,7 @@ void TAG00bd40(void)
 }
 
 //   TAG00bd70
-void ProcessMonstersOnLevel(void)
+void ProcessMonstersOnLevel()
 { // I don't know what 'process' means.  :-(
   dReg D0;
   RN *prnA2;
@@ -6201,7 +6201,7 @@ void ProcessMonstersOnLevel(void)
 //
 // *********************************************************
 //   TAG00be06
-void InitializeItem16(void)
+void InitializeItem16()
 {
   i32 i;
   if (d.gameState != GAMESTATE_ResumeSavedGame) d.MaxITEM16 = 60;
@@ -6249,7 +6249,7 @@ i16 TAG011594(i16 chIdx,
 }
 
 void TAG0115ee(i32 chIdx, i32 byte6)
-{ //(void)
+{ //()
   //Called by timer 11 when byte 6 not zero
   dReg D0, D5, D6, D7;
   CHARDESC *pcA3;
@@ -6273,7 +6273,7 @@ void TAG0115ee(i32 chIdx, i32 byte6)
 //
 // **********************************************************
 //    TAG011664
-void MarkAllPortraitsChanged(void)
+void MarkAllPortraitsChanged()
 {
   i32 i;
   for (i=0; i<d.NumCharacter; i++)
@@ -6286,8 +6286,8 @@ void MarkAllPortraitsChanged(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG0138ec(void)
-{//(void)
+void TAG0138ec()
+{//()
   dReg D7;
   RN objD5;
   CHARDESC *pcA3;
@@ -6380,8 +6380,8 @@ void TAG0138ec(void)
 }
 
 //   TAG011692
-bool ProcessTimers(void) // Parameter ignored, I think.
-{//(void)
+bool ProcessTimers() // Parameter ignored, I think.
+{//()
   dReg D0;
   TIMERTYPE function;
   i32 param;
@@ -6614,7 +6614,7 @@ void PortraitTranslateDisable(
 
 //          TAG014368
 RESTARTABLE _ResurrectReincarnateCancel(const i32 button)
-{//(void)
+{//()
   static dReg D0, D1, D5, D6, D7;
   static const char* A0;
   static DB3      *DB3A2;
@@ -6823,8 +6823,8 @@ RESTARTABLE _ResurrectReincarnateCancel(const i32 button)
 //
 // *********************************************************
 //   TAG015396
-void DrawAllCharacterState(void)
-{//(void)
+void DrawAllCharacterState()
+{//()
   static i32 i;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //What if we simply don't do this????NotImplemented(0x99977a);//wvbl(_1_);
@@ -6837,7 +6837,7 @@ void DrawAllCharacterState(void)
 
 //   TAG0156c4
 void ObjectToCursor(RN object,i16 P2)
-{//(void)
+{//()
   	// If object is non-NULL then it is put into the
     // hand and its weight is accounted for.
     // The hand must be empty when you call this!!!  Else
@@ -6926,7 +6926,7 @@ i16 GetCharacterToDamage(i32 attackerX, i32 attackerY , i32 attackerAbsPos)
 // *********************************************************
 //   TAG015e0c
 void HandleClothingClick(i32 button)
-{//(void)
+{//()
   dReg D0, D6, D7;
   RN objD4, objD5;
   //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7044,8 +7044,8 @@ i16 TimeToMove(CHARDESC *pChar)
 //
 // *********************************************************
 //   TAG0169a8
-void WakeUp(void)
-{//(void)
+void WakeUp()
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   d.clockTick = 1;
   d.PartySleeping = 0;
@@ -7081,8 +7081,8 @@ i16 SearchFootprints(i32 mapX, i32 mapY)
 }
 
 //   TAG016e54
-void DisplayCharacterDamage(void)
-{//(void)
+void DisplayCharacterDamage()
+{//()
   dReg D0, D4, D5, D6, D7;
   const char* A0;
   TIMER *ptA2;
@@ -7209,7 +7209,7 @@ void DisplayCharacterDamage(void)
 
 //   TAG017274
 void PoisonCharacter(i32 chIdx,i32 P2)
-{//(void)
+{//()
   CHARDESC  *pch_14;
   TIMER    timer;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -7239,7 +7239,7 @@ void PoisonCharacter(i32 chIdx,i32 P2)
 }
 
 //   TAG017fa8
-void SelectPaletteForLightLevel(void)
+void SelectPaletteForLightLevel()
 {
   dReg D0, D4, D5, D6;
   RN objD0;
@@ -7336,8 +7336,8 @@ void SelectPaletteForLightLevel(void)
 }
 
 //   TAG018124
-void NinetySecondUpdate(void)
-{ //(void)
+void NinetySecondUpdate()
+{ //()
   // Decrement bits 10-13 of weapon types 4, 5, 6, and 7
   dReg D0, D3, D5, D6, D7;
   OBJ_NAME_INDEX objNID4;
@@ -7387,7 +7387,7 @@ void NinetySecondUpdate(void)
 }
 
 //   TAG019018
-void QuitPressingMouth(void)
+void QuitPressingMouth()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   TAG0189d4();
@@ -7396,8 +7396,8 @@ void QuitPressingMouth(void)
 }
 
 //   TAG019264
-void QuitPressingEye(void)
-{//(void)
+void QuitPressingEye()
+{//()
   RN objD7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   DrawSmallIcon(objNI_Special_d, 12, 13);//Eye back to normal.
@@ -7417,7 +7417,7 @@ void QuitPressingEye(void)
 // *********************************************************
 //   TAG0192f4
 void ShowHideInventory(i32 chIdx)
-{//(void)
+{//()
   //
   // if (pressingEye or pressingMouth) return;
   // if (chIdx is dead) return;
@@ -7529,7 +7529,7 @@ i16 TAG0194c0(pnt)
 }
 
 //   TAG01953a
-void DiscardAllInput(void)
+void DiscardAllInput()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   while (UI_CONSTAT()!=0) UI_DIRECT_CONIN();
@@ -7578,7 +7578,7 @@ i16 SearchButtonList(btn *ent,i32 x,i32 y,i32 buttons) //TAG019570
   return D0W;
 }
 
-void OnMouseUnClick(void)
+void OnMouseUnClick()
 {
   i32 numEnt;
   d.MouseInterlock = 1;
@@ -7697,7 +7697,7 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
 
 
 //   TAG0196b6
-void CauseFakeMouseClick(void)
+void CauseFakeMouseClick()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (d.FakeMouseClick != 0)
@@ -7714,7 +7714,7 @@ RESTARTABLE _FlashButton(const i32 x1,
                          const i32 x2,
                          const i32 y1,
                          const i32 y2)
-{//(void)
+{//()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -7731,7 +7731,7 @@ RESTARTABLE _FlashButton(const i32 x1,
 
 //   TAG0197f6
 void TraverseStairway(i32 UpOrDown, bool setFacing)
-{ //(void)
+{ //()
   // non-zero =decrement level = up
   i32 x, y;
   i16 newPartyLevel, newPartyFacing;
@@ -7852,7 +7852,7 @@ void CallPartyMoveFilter(PARTYMOVEDATA *pmd)
 
 //   TAG01986c
 RESTARTABLE _TurnParty(const i32 direction)
-{ //(void)
+{ //()
   // 1 = left
   // 2 = right
   static dReg D0, D7;
@@ -7942,7 +7942,7 @@ RESTARTABLE _TurnParty(const i32 direction)
 // *********************************************************
 //   TAG01992e
 MOVEBUTN *MoveParty(const i32 button)
-{//(void)
+{//()
   // 01 Turn Left
   // 02 Turn Right
   // 03 Move forward
@@ -8356,7 +8356,7 @@ MOVEBUTN *MoveParty(const i32 button)
 //
 // *********************************************************
 void TAG019c34(i32 button,i32 clickX, i32 clickY)
-{//(void)
+{//()
   dReg D5, D6, D7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   D7W = sw(clickX);
@@ -8388,7 +8388,7 @@ void TAG019c34(i32 button,i32 clickX, i32 clickY)
 // *********************************************************
 //   TAG019cb2
 void SetHandOwner(i32 chIdx)
-{//(void)
+{//()
   dReg D1, D6;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8498,7 +8498,7 @@ void TAG0196da(i32 key)
 //
 // *********************************************************
 RESTARTABLE _TAG01a6ea(const i32 mouseX, const i32 mouseY)
-{//(void)
+{//()
   static dReg D0, D4, D5, D6, D7;
   RESTARTMAP
     RESTART(1)
@@ -8539,7 +8539,7 @@ RESTARTABLE _TAG01a6ea(const i32 mouseX, const i32 mouseY)
 //
 // *********************************************************
 //   TAG01a77c
-void DisplaySleepScreen(void)
+void DisplaySleepScreen()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   Flood(d.pViewportBMP, 0, 1904);
@@ -8558,8 +8558,8 @@ void DisplaySleepScreen(void)
 //
 // *********************************************************
 //   TAG0197d2
-void WaitForButtonFlash(void)
-{//(void)
+void WaitForButtonFlash()
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   Instrumentation(icntTAG0197d2);
   while (d.FlashButnActive != 0)
@@ -8716,7 +8716,7 @@ const char *ActionNameFilter(const char *defaultName, i32 charIndex, i32 actionN
 //
 // *********************************************************
 //   TAG01b098
-void DrawLegalAttackTypes(void)
+void DrawLegalAttackTypes()
 {
 	// This function just draws clicked item`s options in the place of
 	// four hands.
@@ -8796,8 +8796,8 @@ void DrawLegalAttackTypes(void)
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG01b29a(void)
-{//(void)
+RESTARTABLE _TAG01b29a()
+{//()
   static dReg D0, D1, D7;
   static CHARDESC *pcA3=NULL;
   RESTARTMAP
@@ -8932,7 +8932,7 @@ void TAG01b408(i16 P1)
 }
 
 //   TAG01b8ae
-void ReadSpellGraphic(void)
+void ReadSpellGraphic()
 {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ReadAndExpandGraphic(
@@ -8961,7 +8961,7 @@ void DrawSpellMenuCharacters(i16 P1)
 }
 
 void TAG01b990(i16 button)
-{//(void)
+{//()
   dReg D0, D1, D5, D6, D7;
   aReg A0;
   CHARDESC *pcA3;
@@ -9202,8 +9202,8 @@ i16 ReadUnscrambleBlock(ui8 *P1)
 //
 // *********************************************************
 //   TAG01f140
-RESTARTABLE _DisplayChaosStrikesBack(void)
-{//(void)
+RESTARTABLE _DisplayChaosStrikesBack()
+{//()
   static dReg D0, D5, D6, D7;
   static aReg A2, A3;
   static PALETTE  LOCAL_340;
@@ -9376,8 +9376,8 @@ RESTARTABLE _DisplayChaosStrikesBack(void)
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
-{//(void)
+RESTARTABLE _OpenPrisonDoors() //TAG01f47a
+{//()
   static dReg D7;
   static aReg A0, A1, A3;
   static ui8 *LOCAL_4, *LOCAL_8;
@@ -9456,8 +9456,8 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG01f746(void)
-{//(void)
+RESTARTABLE _TAG01f746()
+{//()
   static aReg A0;
   static RectPos dstPos;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -9547,8 +9547,8 @@ RESTARTABLE _TAG01f746(void)
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG01f5ea(void)
-{//(void)
+RESTARTABLE _TAG01f5ea()
+{//()
   static dReg D7;
   static aReg A0;
   static LEVELDESC LOCAL_170;
@@ -9626,8 +9626,8 @@ i32 AllocateExpandGraphic(i16 graphicNum, ui8 **address) // TAG01f6fe
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG01f928(void)
-{//(void)
+RESTARTABLE _TAG01f928()
+{//()
   static dReg D0;
   static i16 LOCAL_2=0;
   RESTARTMAP
@@ -9657,18 +9657,18 @@ class ATARIMEM
   // aids quiet.
   ui8 *m_mem;
 public:
-  ATARIMEM(void) {m_mem=NULL;};
-  ~ATARIMEM(void) {if (m_mem!=NULL) UI_free (m_mem);};
+  ATARIMEM() {m_mem=NULL;};
+  ~ATARIMEM() {if (m_mem!=NULL) UI_free (m_mem);};
   ui8 *mem(i32 size)
   {
     if (m_mem!=NULL) UI_free(m_mem);
     m_mem = (ui8 *)UI_malloc(size, MALLOC111);
     return m_mem;
   };
-  void Cleanup(void);
+  void Cleanup();
 };
 
-void ATARIMEM::Cleanup(void)
+void ATARIMEM::Cleanup()
 {
   if (m_mem != NULL) UI_free(m_mem);
   m_mem = NULL;
@@ -9677,14 +9677,14 @@ void ATARIMEM::Cleanup(void)
 
 ATARIMEM AtariMem;
 
-void AtariMemCleanup(void)
+void AtariMemCleanup()
 {
   AtariMem.Cleanup();
 }
 
 
 //   TAG020286
-void InitializeHeap(void)
+void InitializeHeap()
 {
   dReg D0, D5,D6,D7;
   aReg A0, A1;
@@ -9704,7 +9704,7 @@ void InitializeHeap(void)
 }
 
 //   TAG020466
-void CountFloppyDrives(void)
+void CountFloppyDrives()
 {
   dReg D7;
   //i32 saveD6=D6, saveD7=D7;
@@ -9736,7 +9736,7 @@ i8 data20577[] = "CSBGAMEx.BAK";
 // *********************************************************
 //   TAG0204bc
 RESTARTABLE _SelectSaveGame(const i32 P1, const i32 checkExist, i32 alwaysDate)
-{//(void)
+{//()
   const ui64 unknownTime = ui64(-1); //0xffffffffffffffff;
   static dReg D0;
   static aReg A0, A1;
@@ -9931,8 +9931,8 @@ tag020766:
 // *********************************************************
 //
 // *********************************************************
-void TAG0207cc(void)
-{//(void)
+void TAG0207cc()
+{//()
   dReg D7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (d.PartySleeping)
@@ -10049,7 +10049,7 @@ void fixItem26(MONSTERDESC *pmtDesc)
   pmtDesc->word20 = LE16(pmtDesc->word20);
 };
 
-void SwapGraphic0x231(void)
+void SwapGraphic0x231()
 {
   SwapWordsInButtonList(d.Buttons17796); // Fix littleEndian problem
   SwapWordsInButtonList(d.Buttons17760); // Fix littleEndian problem
@@ -10088,7 +10088,7 @@ void SwapGraphic0x231(void)
 
 
 //   TAG0208b4
-void ReadTablesFromGraphicsFile(void)
+void ReadTablesFromGraphicsFile()
 {
   dReg           D0, D1, D3, D4, D5, D6, D7;
   aReg           A0;
@@ -10443,7 +10443,7 @@ void ReadTablesFromGraphicsFile(void)
   //D4=saveD4;D5=saveD5;D6=saveD6;D7=saveD7;A2=saveA2;A3=saveA3;
 }
 
-void TAG020fbc(void)
+void TAG020fbc()
 {
 //  dReg D6;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10457,8 +10457,8 @@ void TAG020fbc(void)
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG021028(void)
-{ //(void)
+RESTARTABLE _TAG021028()
+{ //()
   static dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   static i16 LOCAL_2;
@@ -10550,7 +10550,7 @@ RESTARTABLE _TAG021028(void)
   RETURN
 }
 
-void DisableTraceIfEnciphered(void)
+void DisableTraceIfEnciphered()
 {
   CSB_UI_MESSAGE csbMessage;
   if (  (encipheredDataFile == NULL)
@@ -10647,14 +10647,14 @@ RESTARTABLE _GameSetup(i32 showPrisonDoor)
 }
 
 #ifdef MIDI
-void playmidi(void);
+void playmidi();
 #endif
 // *********************************************************
 //
 // *********************************************************
 //   TAG0211a0
-RESTARTABLE _ShowPrisonDoor(void)
-{//(void)
+RESTARTABLE _ShowPrisonDoor()
+{//()
   static dReg D7;
   RESTARTMAP
     RESTART(1)
@@ -11060,7 +11060,7 @@ tagReturn:
 
 
 
-void checkMemory(void)
+void checkMemory()
 {
   pnt prevblk=NULL;
   pnt blk = firstMemoryBlock;
@@ -11185,7 +11185,7 @@ void InitializeCaches(ui8 *memStart, i32 memSize, ui8 *P3, i32 /*P4*/)
   //A3 = saveA3;
 }
 
-void TAG021cd8(void)
+void TAG021cd8()
 {
 //  dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11283,11 +11283,11 @@ ui16 GetGraphicDecompressedSize(i32 P1) //(022d7a)
 // *********************************************************
 //
 #ifdef MIDI
-void playmidi(void);
+void playmidi();
 #endif
 // *********************************************************
 RESTARTABLE _StartCSB(const CSB_UI_MESSAGE * /*msg*/) //
-{//(void)
+{//()
   static aReg A4, A5;
   RESTARTMAP
     RESTART(1)
@@ -11331,10 +11331,10 @@ RESTARTABLE _StartCSB(const CSB_UI_MESSAGE * /*msg*/) //
   RETURN;
 }
 #ifdef MIDI
-void playmidi(void);
+void playmidi();
 #endif
 
-RESTARTABLE _AskWhatToDo(void)
+RESTARTABLE _AskWhatToDo()
 {//(i32)
   RESTARTMAP
     RESTART(1)

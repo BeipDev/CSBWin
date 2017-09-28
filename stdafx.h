@@ -63,7 +63,7 @@
 #endif
 
 #ifdef _MSVC_CE2002ARM
-void ec(void);
+void ec();
 #define EC ec();
 #define CEtry _try {
 #define CEexception(n) } _except(per=GetExceptionInformation(),CaptureExceptionInfo(), 1){PrintExceptionInfo();PostQuitMessage(1); };

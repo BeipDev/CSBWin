@@ -102,7 +102,7 @@ ui8 fourBitPixels[64000];
 bool screenAlreadyUnpacked;
 
 
-pnt logbase(void);
+pnt logbase();
 bool screenInconsistent = true;
 
 RECT g_rcClient{0, 0, 1, 1}; // The rect that the DM screen is mapped to in the window
@@ -113,7 +113,7 @@ bool IsTextScrollArea(i32, i32)
   return false;
 }
 
-void SwapTextZOrder(void)
+void SwapTextZOrder()
 {
   return;
 }
@@ -290,14 +290,14 @@ void createPalette16(i16 *palette)
 
 bool ForcedScreenDraw = false;
 
-void ForceScreenDraw(void)
+void ForceScreenDraw()
 {
   ForcedScreenDraw = true;
 }
 
 ui32 unpack[256];
 
-void BuildUnpackTable(void)
+void BuildUnpackTable()
 {
   static bool finished = false;
   ui32 m, i;
@@ -751,7 +751,7 @@ void DumpWindow(FILE *f)
 #endif
 
 /*
-void DumpImages(void)
+void DumpImages()
 {
   static ui64 prevTime = 0;
   static int count = 0;
@@ -788,7 +788,7 @@ void DumpImages(void)
 ui8 prevScreen[32000];
 
 bool pc1, pc2;
-void display (void){
+void display (){
   static i32 numDisplay = 0;
   static bool initialized = false;
   int areaChangedCount;

@@ -12,8 +12,8 @@
 #include "Data.h"
 
 void SmartDiscardTrace(FILE *f);
-void DSAInstrumentation_Dump(void);
-void CloseTraceFile(void);
+void DSAInstrumentation_Dump();
+void CloseTraceFile();
 void UnlinkFile(const char *name);
 
 
@@ -28,7 +28,7 @@ extern i32 VBLMultiplier;
 extern bool neophyteSkills;
 extern bool RecordCommandOption;
 extern bool NoRecordCommandOption;
-bool OpenTraceFile(void);
+bool OpenTraceFile();
 extern ui32 numRandomCalls;
 extern bool playback_71;
 
@@ -48,11 +48,11 @@ class TABLE
   i32 *m_table;
   i32 m_used;
   i32 m_allocated;
-  void MakeRoom(void);
+  void MakeRoom();
 public:
   TABLE(i32 size);
-  ~TABLE(void);
-  void Clear(void);
+  ~TABLE();
+  void Clear();
   void Add(i32 a, i32 b);
   void Add(i32 a, i32 b, i32 c);
   void Get(i32 index, i32 *a, i32 *b);
@@ -72,19 +72,19 @@ TABLE::TABLE(i32 size)
   m_allocated = 3;
 }
 
-void TABLE::Clear(void)
+void TABLE::Clear()
 {
   m_used = 0;
   m_allocated = 3;
 }
 
-TABLE::~TABLE(void)
+TABLE::~TABLE()
 {
   if (m_table != NULL) UI_free(m_table);
   m_table = NULL;
 }
 
-void TABLE::MakeRoom(void)
+void TABLE::MakeRoom()
 { // Ensure at least one entry available.
   if (m_used < m_allocated) return;
   m_allocated = m_allocated * 5 / 4 + 1;
@@ -149,7 +149,7 @@ TABLE tableTXYFR(2);
 
 
 
-void PLAYFILE::Open(void)
+void PLAYFILE::Open()
 {
   char versionLine[200];
   m_file = OPEN(PlayfileName, "r");
@@ -198,7 +198,7 @@ void PLAYFILE::Open(void)
   OnMouseSwitchAction(0); // Say that all mouse buttons are up.
 };
 
-void PLAYFILE::Close(void)
+void PLAYFILE::Close()
 {
   if (m_file >= 0)
   {
@@ -209,13 +209,13 @@ void PLAYFILE::Close(void)
   m_time = -1;
 }
 
-bool PLAYFILE::IsOpen(void)
+bool PLAYFILE::IsOpen()
 {
  if (m_file < 0) return false;
  return true;
 }
 
-void PLAYFILE::ReadEOF(void)
+void PLAYFILE::ReadEOF()
 {
   //Force file close with next Play().
   m_forceClose = true;
@@ -802,7 +802,7 @@ void PLAYFILE::Backspace(MouseQueueEnt *
 
 
 PLAYFILE PlayFile;
-bool PlayfileIsOpen(void) {return PlayFile.IsOpen();};
+bool PlayfileIsOpen() {return PlayFile.IsOpen();};
 void PlayfileOpen(bool open)
 {
   if (open)
@@ -817,7 +817,7 @@ void PlayfileOpen(bool open)
 
 
 
-void RECORDFILE::PreOpen(void)
+void RECORDFILE::PreOpen()
 {
   // We write the first lines into memory.  Then later
   // the file may be opened for real and these lines will
@@ -826,7 +826,7 @@ void RECORDFILE::PreOpen(void)
   //Record(DM_rules ? "#DMRules\n" : "#NoDMRules\n");
 };
 
-void RECORDFILE::Open(void)
+void RECORDFILE::Open()
 {
   // We write the first lines into memory.  Then later
   // the file may be opened for real and these lines will
@@ -952,7 +952,7 @@ void RECORDFILE::Open(void)
   };
 };
 
-void RECORDFILE::Close(void)
+void RECORDFILE::Close()
 {
   if (m_fileNum >= 0) CLOSE(m_fileNum);
   m_fileNum = -1;
@@ -1072,29 +1072,29 @@ void RECORDFILE::Comment(const char *comment)
 }
 
 
-bool RecordfileIsOpen(void) {return RecordFile.IsOpen();};
+bool RecordfileIsOpen() {return RecordFile.IsOpen();};
 void RecordfileOpen(bool open)
 {
   if (open) RecordFile.Open();
   else RecordFile.Close();
 }
 
-void RecordfilePreOpen(void)
+void RecordfilePreOpen()
 {
   RecordFile.PreOpen();
 }
 
 
-bool IsPlayFileOpen(void)                   {return PlayFile.IsOpen();}
+bool IsPlayFileOpen()                   {return PlayFile.IsOpen();}
 bool PlayFile_Play(MouseQueueEnt *MQ)       {return PlayFile.Play(MQ);}
-void PlayFile_Close(void)                   {PlayFile.Close();}
+void PlayFile_Close()                   {PlayFile.Close();}
 void PlayFile_Backspace(MouseQueueEnt *MQ)  {PlayFile.Backspace(MQ);}
-void PlayFile_ReadEOF(void)                 {PlayFile.ReadEOF();}
-bool PlayFile_IsEOF(void)                   {return PlayFile.IsEOF();}
+void PlayFile_ReadEOF()                 {PlayFile.ReadEOF();}
+bool PlayFile_IsEOF()                   {return PlayFile.IsEOF();}
 
-void RecordFile_Open(void)                  {RecordFile.Open();};
-void RecordFile_Close(void)                 {RecordFile.Close();}
-bool IsRecordFileRecording(void)            {return RecordFile.IsRecording();}
+void RecordFile_Open()                  {RecordFile.Open();};
+void RecordFile_Close()                 {RecordFile.Close();}
+bool IsRecordFileRecording()            {return RecordFile.IsRecording();}
 void RecordFile_Record(MouseQueueEnt *MQ)   {RecordFile.Record(MQ);}
 void RecordFile_Record(const char *l)    {RecordFile.Record(l);}
 void RecordFile_Record(int x, int y, int z) {RecordFile.Record(x, y, z);}

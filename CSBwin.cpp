@@ -16,7 +16,7 @@
 
 bool GetVideoRectangle(i32, RECT *);
 void FreeIfNonNULL(void **pointer);
-void DumpImages(void);
+void DumpImages();
 
 
 i32 trace = -1;
@@ -25,8 +25,8 @@ bool overlappingText = false;
 extern i32 screenSize;
 extern bool BeginRecordOK;
 extern bool ItemsRemainingOK;
-extern bool PlayfileIsOpen(void);
-extern bool RecordfileIsOpen(void);
+extern bool PlayfileIsOpen();
+extern bool RecordfileIsOpen();
 extern bool TimerTraceActive;
 extern bool AttackTraceActive;
 extern bool AITraceActive;
@@ -215,7 +215,7 @@ i32 WINAPI WinMain(HINSTANCE hInstance ,
 	return msg.wParam;
 }
 
-void ProcessCommandLine(void)
+void ProcessCommandLine()
 {
   char *lpCmdLine;
   char *pCol, *command;
@@ -354,7 +354,7 @@ BOOL InitInstance(HINSTANCE hInstance, i32 nCmdShow)
 i32 delta[60];
 i32 prevms = -1;
 i32 slot;
-void display(void);
+void display();
 extern ui32 VBLInterruptCount;
 extern ui32 CheckVBLCount;
 extern ui32 STBLTCount;

@@ -10,14 +10,14 @@
 #include "Data.h"
 
 
-void MD5Init(void);
+void MD5Init();
 void MD5Update(ui8 *data, ui32 len);
 void MD5Final(ui8 *digest);
-void CleanupCustomPhrases(void);
-void CleanupTranslations(void);
-void DSAInstrumentation_Dump(void);
-void FILETABLECleanup(void);
-bool IsRecordFileRecording(void);
+void CleanupCustomPhrases();
+void CleanupTranslations();
+void DSAInstrumentation_Dump();
+void FILETABLECleanup();
+bool IsRecordFileRecording();
 
 extern ui32 numRandomCalls;
 extern char *PlayfileName;
@@ -28,7 +28,7 @@ extern bool fullscreenRequested;
 extern bool RecordCommandOption;
 extern bool NoRecordCommandOption;
 extern char *finalEditText;
-void AtariMemCleanup(void);
+void AtariMemCleanup();
 
 #define MaxTraceFiles 100
 i16   TraceFile  = -1;
@@ -114,7 +114,7 @@ void AllocateTempBitmap(int size)
 }
 
 
-void ClearOverlayPalette(void)
+void ClearOverlayPalette()
 {
   int i, intensity;
   //ui16 result[512];
@@ -143,13 +143,13 @@ void ClearOverlayPalette(void)
   //fwrite(result,2,512,f);
   //fclose(f);
 }
-void CloseTraceFile(void)
+void CloseTraceFile()
 {
   if (TraceFile >= 0) CLOSE(TraceFile);
   TraceFile = -1;
 }
 
-void CloseGraphicTraceFile(void)
+void CloseGraphicTraceFile()
 {
   CLOSE(GraphicTraceFile);
   GraphicTraceFile = -1;
@@ -157,7 +157,7 @@ void CloseGraphicTraceFile(void)
 
 void SmartDiscardTrace(FILE *f);
 
-bool OpenTraceFile(void)
+bool OpenTraceFile()
 {//Return true if file successfully.
   i32 i=0, f;
   bool result = false;
@@ -204,7 +204,7 @@ bool OpenTraceFile(void)
 };
 
 
-bool OpenGraphicTraceFile(void)
+bool OpenGraphicTraceFile()
 {//Return true if file successfully.
   GraphicTraceFile = OPEN("GraphicTrace.txt","w");
   if (GraphicTraceFile < 0) return false;
@@ -326,7 +326,7 @@ bool GetVideoRectangle(i32 i, RECT *rect)
 }
 
 /*
-SDLIST::~SDLIST(void)
+SDLIST::~SDLIST()
 {
   SD *temp;
   while (psd != NULL)
@@ -356,7 +356,7 @@ SD *SDLIST::newSD(char *name,
   return temp;
 }
 
-SD *SDLIST::First(void)
+SD *SDLIST::First()
 {
   return psd;
 }
@@ -431,7 +431,7 @@ const char *dbNames[16] =
   "Clouds"        //15
 };
 
-DATABASES::DATABASES (void)
+DATABASES::DATABASES ()
 {
   i32 i;
   for (i=0; i<16; i++)
@@ -441,7 +441,7 @@ DATABASES::DATABASES (void)
   };
 }
 
-DATABASES::~DATABASES (void)
+DATABASES::~DATABASES ()
 {
   i32 i;
   for (i=0; i<16; i++) DeAllocate(i);
@@ -515,7 +515,7 @@ RN::RN(RNVAL i)
 };
 
 
-bool RN::checkIndirectIndex(void) const
+bool RN::checkIndirectIndex() const
 {
   if (    (indirectIndex < dataMapLength)
        && (indirectIndex > 0) )return true;
@@ -540,7 +540,7 @@ void RN::CreateSpell(i32 n)
   indirectIndex = (ui16)(0xff80 + n);
 }
 
-ui8 RN::GetSpellType(void)
+ui8 RN::GetSpellType()
 {
   if (indirectIndex < 0xff80)
   {
@@ -550,7 +550,7 @@ ui8 RN::GetSpellType(void)
   return (ui8)(indirectIndex & 0x7f);
 }
 
-bool RN::NonMaterial(void)
+bool RN::NonMaterial()
 {
   DBTYPE dbType;
   DB4 *pDB_4;
@@ -565,7 +565,7 @@ bool RN::NonMaterial(void)
 
 
 //   TAG009308
-OBJ_DESC_INDEX  RN::DescIndex(void) const
+OBJ_DESC_INDEX  RN::DescIndex() const
 {
   //UNKNOWN *unkA3;
   i32 DBType;
@@ -609,7 +609,7 @@ OBJ_DESC_INDEX  RN::DescIndex(void) const
 //
 // *********************************************************
 //         TAG001188
-OBJ_NAME_INDEX RN::NameIndex(void) const
+OBJ_NAME_INDEX RN::NameIndex() const
 {
   dReg D0;
   OBJ_NAME_INDEX objNID7;
@@ -683,7 +683,7 @@ OBJ_NAME_INDEX RN::NameIndex(void) const
 
 
 
-bool RN::IsAKey(void) const
+bool RN::IsAKey() const
 {
   OBJ_NAME_INDEX objNI;
   if ( dbType() != dbMISC ) return false;
@@ -693,7 +693,7 @@ bool RN::IsAKey(void) const
   return true;
 }
 
-bool RN::Levitating(void)
+bool RN::Levitating()
 {
   DBTYPE dbType;
   DB4 *pDB_4;
@@ -705,7 +705,7 @@ bool RN::Levitating(void)
   return d.MonsterDescriptor[pDB_4->monsterType()].levitating();
 }
 
-ui8 RN::VerticalSize(void)
+ui8 RN::VerticalSize()
 {
   DBTYPE dbType;
   DB4 *pDB_4;
@@ -717,12 +717,12 @@ ui8 RN::VerticalSize(void)
   return d.MonsterDescriptor[pDB_4->monsterType()].verticalSize();
 }
 
-const RN DBCOMMON::link(void)
+const RN DBCOMMON::link()
 {
   return m_link;
 }
 
-RN *DBCOMMON::pLink(void)
+RN *DBCOMMON::pLink()
 {
   return &m_link;
 }
@@ -1193,121 +1193,121 @@ bool DBCOMMON::IsDBType(DBTYPE dbtype)
   return db.IsDBType(this, dbtype);
 }
 
-DB0 *DBCOMMON::CastToDB0(void)
+DB0 *DBCOMMON::CastToDB0()
 {
   ASSERT(IsDBType(dbDOOR),"door");
   return (DB0 *)this;
 }
 
-DB1 *DBCOMMON::CastToDB1(void)
+DB1 *DBCOMMON::CastToDB1()
 {
   ASSERT(IsDBType(dbTELEPORTER),"teleporter");
   return (DB1 *)this;
 }
 
-DB2 *DBCOMMON::CastToDB2(void)
+DB2 *DBCOMMON::CastToDB2()
 {
   ASSERT(IsDBType(dbTEXT),"text");
   return (DB2 *)this;
 }
 
-DB3 *DBCOMMON::CastToDB3(void)
+DB3 *DBCOMMON::CastToDB3()
 {
   ASSERT(IsDBType(dbACTUATOR),"actuator");
   return (DB3 *)this;
 }
 
-DB4 *DBCOMMON::CastToDB4(void)
+DB4 *DBCOMMON::CastToDB4()
 {
   ASSERT(IsDBType(dbMONSTER),"monster");
   return (DB4 *)this;
 }
 
-DB5 *DBCOMMON::CastToDB5(void)
+DB5 *DBCOMMON::CastToDB5()
 {
   ASSERT(IsDBType(dbWEAPON),"weapon");
   return (DB5 *)this;
 }
 
-DB6 *DBCOMMON::CastToDB6(void)
+DB6 *DBCOMMON::CastToDB6()
 {
   ASSERT(IsDBType(dbCLOTHING),"clothing");
   return (DB6 *)this;
 }
 
-DB7 *DBCOMMON::CastToDB7(void)
+DB7 *DBCOMMON::CastToDB7()
 {
   ASSERT(IsDBType(dbSCROLL),"scroll");
   return (DB7 *)this;
 }
 
-DB8 *DBCOMMON::CastToDB8(void)
+DB8 *DBCOMMON::CastToDB8()
 {
   ASSERT(IsDBType(dbPOTION),"potion");
   return (DB8 *)this;
 }
 
-DB9 *DBCOMMON::CastToDB9(void)
+DB9 *DBCOMMON::CastToDB9()
 {
   ASSERT(IsDBType(dbCHEST),"chest");
   return (DB9 *)this;
 }
 
-DB10 *DBCOMMON::CastToDB10(void)
+DB10 *DBCOMMON::CastToDB10()
 {
   ASSERT(IsDBType(dbMISC),"misc");
   return (DB10 *)this;
 }
 
-DB11 *DBCOMMON::CastToDB11(void)
+DB11 *DBCOMMON::CastToDB11()
 {
   ASSERT(IsDBType(dbEXPOOL),"expool");
   return (DB11 *)this;
 }
 
-DB14 *DBCOMMON::CastToDB14(void)
+DB14 *DBCOMMON::CastToDB14()
 {
   ASSERT(IsDBType(dbMISSILE),"missile");
   return (DB14 *)this;
 }
 
-DB15 *DBCOMMON::CastToDB15(void)
+DB15 *DBCOMMON::CastToDB15()
 {
   ASSERT(IsDBType(dbCLOUD),"cloud");
   return (DB15 *)this;
 }
 
-void DBCOMMON::swapLink(void)
+void DBCOMMON::swapLink()
 {
   m_link.swap();
 }
 
-void DB0::swap(void)
+void DB0::swap()
 {
   swapLink();
   word2 = LE16(word2);
 }
 
-void DB1::swap(void)
+void DB1::swap()
 {
   swapLink();
   word2 = LE16(word2); // x, y, flags
   word4 = LE16(word4); // level
 }
 
-void DB2::swap(void)
+void DB2::swap()
 {
   swapLink();
   word2 = LE16(word2); // x, y, flags
 }
 
-void DB2::Clear(void)
+void DB2::Clear()
 {
   m_link = RNeof;
   word2 = 0;
 }
 
-void DB3::Clear(void)
+void DB3::Clear()
 {
   m_link = RNeof;
   word2 = 0;
@@ -1316,7 +1316,7 @@ void DB3::Clear(void)
   word8 = 0;
 }
 
-void DB3::swap(void)
+void DB3::swap()
 {
   swapLink();
   word2 = LE16(word2); // x, y, flags
@@ -1324,7 +1324,7 @@ void DB3::swap(void)
   word6 = LE16(word6);
 }
 
-void DB3::MakeBig(void)
+void DB3::MakeBig()
 {
   word8 = 0;
   if (actuatorType() != 47) return; //If not DSA
@@ -1333,12 +1333,12 @@ void DB3::MakeBig(void)
   word4 &= 0x3fff;
 }
 
-ui32 DB3::ParameterA(void)
+ui32 DB3::ParameterA()
 {
   return (ui16)word4 | ((word8 & 3) << 16);
 }
 
-ui32 DB3::ParameterB(void)
+ui32 DB3::ParameterB()
 {
   return (ui16)word6 | ((word8 & 0x0c) << 14);
 }
@@ -1355,7 +1355,7 @@ void DB3::ParameterB(ui32 v)
   word8 = (ui16)((word8 & 0xfff3) | ((v >> 14) & 0x0c));
 }
 
-void DB4::swap(void)
+void DB4::swap()
 {
   swapLink();
   possession2.swap();
@@ -1379,7 +1379,7 @@ void DB4::groupIndex(ui32 i)
 };
 
 
-void DB4::Clear(void)
+void DB4::Clear()
 {
   m_link = RNeof;
   possession2 = RNeof;
@@ -1392,70 +1392,70 @@ void DB4::Clear(void)
   word14 = 0;
 }
 
-void DB5::swap(void)
+void DB5::swap()
 {
   swapLink();
   word2  = LE16(word2);
 }
 
-void DB5::Clear(void)
+void DB5::Clear()
 {
   m_link = RNeof;
   word2 = 0;
 }
 
-void DB6::swap(void)
+void DB6::swap()
 {
   swapLink();
   word2  = LE16(word2);
 }
 
-void DB6::Clear(void)
+void DB6::Clear()
 {
   m_link = RNeof;
   word2 = 0;
 }
 
 
-void DB7::swap(void)
+void DB7::swap()
 {
   swapLink();
   m_RNtext.LittleEndian();
   m_word4  = LE16(m_word4);
 }
 
-void DB8::Clear(void)
+void DB8::Clear()
 {
   m_link = RNeof;
   word2 = 0;
 }
 
-void DB8::swap(void)
+void DB8::swap()
 {
   swapLink();
   word2  = LE16(word2);
 }
 
-void DB9::swap(void)
+void DB9::swap()
 {
   swapLink();
   m_contents.swap();
   m_word4 = LE16(m_word4);
 }
 
-void DB10::swap(void)
+void DB10::swap()
 {
   swapLink();
   word2  = LE16(word2);
 }
 
-void DB10::Clear(void)
+void DB10::Clear()
 {
   m_link = RNeof;
   word2 = 0;
 }
 
-void DB11::swap(void)
+void DB11::swap()
 {
   int i;
   swapLink();
@@ -1466,14 +1466,14 @@ void DB11::swap(void)
   };
 }
 
-void DB14::swap(void)
+void DB14::swap()
 {
   swapLink();
   m_obj2.swap();
   m_timerIndex  = LE16(m_timerIndex);
 }
 
-void DB14::Clear(void)
+void DB14::Clear()
 {
   m_link = RNeof;
   m_obj2 = RNeof;
@@ -1482,29 +1482,29 @@ void DB14::Clear(void)
   m_timerIndex = 0;
 }
 
-void DB15::swap(void)
+void DB15::swap()
 {
   swapLink();
   word2  = LE16(word2);
 }
 
-void DB15::Clear(void)
+void DB15::Clear()
 {
   m_link = RNeof;
   word2 = 0;
 }
 
 
-EXPOOL::EXPOOL(void)
+EXPOOL::EXPOOL()
 {
   m = NULL;
 }
 
-EXPOOL::~EXPOOL(void)
+EXPOOL::~EXPOOL()
 {
 }
 
-void EXPOOL::Setup(void)
+void EXPOOL::Setup()
 {
   if (db.NumEntry(dbEXPOOL) == 0)
   {
@@ -1522,7 +1522,7 @@ void EXPOOL::Setup(void)
 }
 
 
-void EXPOOL::Cleanup(void)
+void EXPOOL::Cleanup()
 {
   m = NULL;
 }
@@ -1574,7 +1574,7 @@ i32 EXPOOL::Read(ui32 key, ui32 *record, ui32 max)
   return -1;
 }
 
-bool EXPOOL::IsOpen(void)
+bool EXPOOL::IsOpen()
 {
   return m!=NULL;
 }
@@ -1707,19 +1707,19 @@ void ATTRIBUTE::Minimum(i32 value)
   ubMinimum = ub(value);
 }
 
-ui8 ATTRIBUTE::Maximum(void)
+ui8 ATTRIBUTE::Maximum()
 {
   if (ubMaximum > 240) return 0; //It went negative
   return ubMaximum;
 }
 
-ui8 ATTRIBUTE::Minimum(void)
+ui8 ATTRIBUTE::Minimum()
 {
   if (ubMinimum > 240) return 0; //It went negative
   return ubMinimum;
 }
 
-ui8 ATTRIBUTE::Current(void)
+ui8 ATTRIBUTE::Current()
 {
   if (ubCurrent > 240) return 0; //It went negative
   return ubCurrent;
@@ -1772,7 +1772,7 @@ const char *nextTracePrefix(const char *trace)
   return trace==NULL?NULL:trace-2;
 }
 
-void DUNGEONDATINDEX::Swap(void)
+void DUNGEONDATINDEX::Swap()
 {
   i32 i;
   sentinel = LE16(sentinel);
@@ -1996,7 +1996,7 @@ void FreeIfNonNULL(void **pointer)
   };
 }
 
-void CleanupGraphics(void);
+void CleanupGraphics();
 void Cleanup(bool programTermination)
 {
   int i;

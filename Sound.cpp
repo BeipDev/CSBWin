@@ -367,9 +367,9 @@ class SOUNDER
   char *m_toFree;
   i32   m_attenuation[MAXWAVE];
 public:
-  SOUNDER(void) {m_toFree=NULL;i32 i;for(i=0;i<MAXWAVE;i++)m_wave[i]=NULL;};
-  ~SOUNDER(void) {Cleanup();};
-  void Cleanup(void)
+  SOUNDER() {m_toFree=NULL;i32 i;for(i=0;i<MAXWAVE;i++)m_wave[i]=NULL;};
+  ~SOUNDER() {Cleanup();};
+  void Cleanup()
   {
     i32 i;
     if (m_toFree!=NULL) UI_free(m_toFree);
@@ -390,7 +390,7 @@ public:
     }
   };
   void Sound(char *wave, i32 attenuation);
-  i32 CheckQueue(void);
+  i32 CheckQueue();
   void AddWave(char *wave, i32 attenuation);
 #ifdef _MSVC_CE2002ARM
   char *Resample(char *wave);
@@ -471,7 +471,7 @@ char *SOUNDER::Resample(char *wave)
 
 #endif
 
-i32 SOUNDER::CheckQueue(void)
+i32 SOUNDER::CheckQueue()
 {
   //If any sounds are waiting try to see if we can
   //play them now.  Return number waiting in queue.
@@ -757,7 +757,7 @@ i32 SoundFilter(i32 soundNumber, i32 highVolume, const LOCATIONREL *soundLocr)
 }
 
 
-i32 CheckSoundQueue(void)
+i32 CheckSoundQueue()
 {
   return sounder.CheckQueue();
 }
@@ -786,7 +786,7 @@ void TAG001e16(i16 P1)
 // sound timer interrupts.  I think it operates at
 // about 8 KHz.
 // *********************************************************
-void TAG001e50(void)
+void TAG001e50()
 {
   dReg D6, D7;
   pnt pD7;
@@ -967,14 +967,14 @@ PlayResource("soundName");
 
 
 
-SOUNDDATA::SOUNDDATA(void)
+SOUNDDATA::SOUNDDATA()
 {
   m_sound = NULL;
   m_soundNum = -1;
   m_size = -1;
 };
 
-SOUNDDATA::~SOUNDDATA(void)
+SOUNDDATA::~SOUNDDATA()
 {
   Cleanup();
 }
@@ -1026,7 +1026,7 @@ bool SOUNDDATA::ReadSound(i32 soundNum)
 
 
 
-void SOUNDDATA::Cleanup(void)
+void SOUNDDATA::Cleanup()
 {
   if (m_sound != NULL)
   {

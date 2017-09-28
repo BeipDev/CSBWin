@@ -25,7 +25,7 @@
 #endif
 
 void info(char *, unsigned int);
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 
 extern unsigned char *encipheredDataFile;
 void RC4_prepare_key(unsigned char *key_data_ptr, 
@@ -98,7 +98,7 @@ ui16 _uw(i32 i, i32 line, char *file)
 
 FILETABLE fileTable[maxFilesOpen];
 
-void FILETABLECleanup(void)
+void FILETABLECleanup()
 {
   int i;
   for (i=0; i<maxFilesOpen; i++)
@@ -108,14 +108,14 @@ void FILETABLECleanup(void)
 }
 
 
-FILETABLE::FILETABLE(void)
+FILETABLE::FILETABLE()
 {
   m_enciphered = false;
   m_file = NULL;
   m_fileName = NULL;
 }
 
-void FILETABLE::Cleanup(void)
+void FILETABLE::Cleanup()
 {
   if (m_file != NULL) fclose(m_file);
   m_file = NULL;
@@ -124,7 +124,7 @@ void FILETABLE::Cleanup(void)
 }
 
 
-FILETABLE::~FILETABLE(void)
+FILETABLE::~FILETABLE()
 {
   Cleanup();
 }
@@ -149,7 +149,7 @@ void FILETABLE::SetFile(FILE *f, const char *fileName)
 
 }
 
-ICOUNTS::ICOUNTS(void)
+ICOUNTS::ICOUNTS()
 {
   for (i32 i=0; i<numInstrumentation; i++)
     m_InstrumentationCounts[i] = 0;
@@ -339,7 +339,7 @@ char staticDTA[44];
 
 pnt currentDTA = (pnt)staticDTA;
 
-pnt GETDTA(void)
+pnt GETDTA()
 {
   return currentDTA;
 }
@@ -349,7 +349,7 @@ void SETDTA(pnt P1)
   currentDTA = P1;
 }
 
-void xbtimer(i16 /*timer*/,i16 /*control*/ ,i16 /*data*/,void (* /*f*/)(void))
+void xbtimer(i16 /*timer*/,i16 /*control*/ ,i16 /*data*/,void (* /*f*/)())
 { // TRAP 14 #31
   HopefullyNotNeeded(0x0612);
 }
@@ -377,7 +377,7 @@ i16 giaccess(i32 /*data*/,i32/* Register*/)
   return 0;
 }
 
-i16 drvmap(void) //TRAP #13
+i16 drvmap() //TRAP #13
 {
   return 3;
 }
@@ -398,7 +398,7 @@ void jenabint(i16 /*P1*/)
 //i32 saveIndex = 0;
 //i32 rgsv[200];
 
-void Invalidate(void)
+void Invalidate()
 {
   Instrumentation(icntInvalidate);
   UI_Invalidate();
@@ -538,7 +538,7 @@ i32 dist[100];
 ui32 CheckVBLCount = 0;
 
 extern void LIN_Invalidate();
-void checkVBL(void)
+void checkVBL()
 {
   bool forceVBL = false;
   static ui64 prevTime(0), curTime(0);
@@ -660,12 +660,12 @@ RESTARTABLE _wvbl(const CSB_UI_MESSAGE *pMsg)
   RETURN;
 }
 
-void ClearViewport(void)
+void ClearViewport()
 {
   memset(d.pViewportBMP,0,15232);
 }
 
-void RevealViewport(void)
+void RevealViewport()
 {
   static i16 changer;
   aReg A0, A1;
@@ -911,10 +911,10 @@ class AT
 {
 public:
   i32 activeTable[st_Last-st_First+1];
-  AT(void);
+  AT();
 };
 
-AT::AT(void)
+AT::AT()
 {
   memset(activeTable,0,sizeof (AT));
 }
@@ -930,7 +930,7 @@ void Deactivate(i32 state)
   at.activeTable[state] = 0;
 }
 
-void _RETURN(void)
+void _RETURN()
 {
   ASSERT(numState != 0,"numState");
   numState--;

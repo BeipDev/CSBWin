@@ -14,9 +14,9 @@
 //extern CDC *OnDrawDC;
 
 void info(char *, unsigned int);
-void CleanupAltMonCache(void);
-void CleanupWallDecorations(void);
-//void CleanupFloorDecorations(void);
+void CleanupAltMonCache();
+void CleanupWallDecorations();
+//void CleanupFloorDecorations();
 extern FILETABLE fileTable[maxFilesOpen];
 extern char *helpMessage;
 extern bool overlayActive;
@@ -51,15 +51,15 @@ ui8 *m_logScreenBase;
 ui8 *m_physAllocated; // The buffer we allocated
 ui8 *m_logAllocated;  // The buffer we allocated
 public:
-  SCREEN(void);
-  ~SCREEN(void);
-  ui8 *physbase(void);
-  ui8 *logbase(void);
+  SCREEN();
+  ~SCREEN();
+  ui8 *physbase();
+  ui8 *logbase();
   void physbase(ui8 *newphys);
   void logbase(ui8 *newlog);
 };
 
-SCREEN::SCREEN(void)
+SCREEN::SCREEN()
 {
   m_physAllocated = NULL;
   m_logAllocated = NULL;
@@ -67,7 +67,7 @@ SCREEN::SCREEN(void)
   m_logScreenBase = NULL;
 }
 
-SCREEN::~SCREEN(void)
+SCREEN::~SCREEN()
 {
   if (m_physAllocated != NULL) UI_free (m_physAllocated);
   m_physScreenBase = NULL;
@@ -77,7 +77,7 @@ SCREEN::~SCREEN(void)
   m_logAllocated = NULL;
 }
 
-ui8 *SCREEN::physbase(void)
+ui8 *SCREEN::physbase()
 {
   if (m_physScreenBase == NULL)
   {
@@ -98,7 +98,7 @@ void SCREEN::physbase(ui8* newphys)
   m_physScreenBase = newphys;
 }
 
-ui8 *SCREEN::logbase(void)
+ui8 *SCREEN::logbase()
 {
   if (m_logScreenBase == NULL)
   {
@@ -134,12 +134,12 @@ void setscreen(ui8 *log,ui8 *phys,i16 /*res*/)
   if ((i32)log != -1) screen.logbase(log);
 }
 
-ui8 *physbase(void)
+ui8 *physbase()
 {
   return screen.physbase();
 }
 
-ui8 *logbase(void)
+ui8 *logbase()
 {
   return screen.logbase();
 }
@@ -153,7 +153,7 @@ void SetDLogicalBase(ui8 *b)
 
 
 /*
-void VerifyGraphicFreeList(void)
+void VerifyGraphicFreeList()
 {
   ITEMQ *pCur, *pNext;
   pCur = d.pgUnused;
@@ -1517,11 +1517,11 @@ class OUTBUF
   char *outbuf;
   i32 outcol;
 public:
-  OUTBUF(void){outbuf=NULL;outcol=0;};
-  ~OUTBUF(void){if(outbuf!=NULL)UI_free(outbuf);outbuf=NULL;};
+  OUTBUF(){outbuf=NULL;outcol=0;};
+  ~OUTBUF(){if(outbuf!=NULL)UI_free(outbuf);outbuf=NULL;};
   void addch(char c);
-  char  prevch(void){return outbuf[outcol-1];};
-  char *buf(void){return outbuf;};
+  char  prevch(){return outbuf[outcol-1];};
+  char *buf(){return outbuf;};
 };
 
 
@@ -1761,7 +1761,7 @@ void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize) // TAG021af2
 // *********************************************************
 //
 // *********************************************************
-void openGraphicsFile(void) // TAG021d36
+void openGraphicsFile() // TAG021d36
 {
   i32 m, n;
   ui32 o;
@@ -1822,7 +1822,7 @@ void openGraphicsFile(void) // TAG021d36
 // *********************************************************
 //
 // *********************************************************
-void closeGraphicsFile(void) //TAG021d76
+void closeGraphicsFile() //TAG021d76
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ASSERT(d.Word23244 > 1,"word23244");
@@ -1837,7 +1837,7 @@ void closeGraphicsFile(void) //TAG021d76
 // *********************************************************
 //
 // *********************************************************
-void OpenCSBgraphicsFile(void)
+void OpenCSBgraphicsFile()
 {
   ui32 m, n, o;
   static bool errorMsg = false;
@@ -1917,7 +1917,7 @@ void info(char *msg, unsigned int n)
 // *********************************************************
 //
 // *********************************************************
-void ReadGraphicsIndex(void) // TAG021d9a
+void ReadGraphicsIndex() // TAG021d9a
 {
   dReg D0, D3, D6;
   bool success = false;
@@ -2136,7 +2136,7 @@ void DeleteGraphic(i32 graphicNum)
 */
 }
 
-void CleanupGraphics(void)
+void CleanupGraphics()
 {
   int i;
   if (d.GraphicHandle >= 0)
@@ -2303,7 +2303,7 @@ ITEMQ *GetExpandedGraphicBuffer(i32 size)
 //
 // *********************************************************
 #ifdef _DEBUG
-void verifyppq(void)
+void verifyppq()
 {
   ITEMQ *current, *next;
   bool foundSecondPart=false;
@@ -2338,7 +2338,7 @@ void verifyppq(void)
 //
 // *********************************************************
 //   TAG022720
-void ClearGraphicList2(void)
+void ClearGraphicList2()
 {
   dReg D7;
   ITEMQ *pqA3;
@@ -2931,7 +2931,7 @@ void TAG022eec(i32 code,pnt *pDest)
 
 
 
-OVERLAYDATA::OVERLAYDATA(void)
+OVERLAYDATA::OVERLAYDATA()
 {
   m_overlay = NULL;
   m_overlayPalette = NULL;
@@ -2939,12 +2939,12 @@ OVERLAYDATA::OVERLAYDATA(void)
   m_overlayNumber = -1;
 };
 
-OVERLAYDATA::~OVERLAYDATA(void)
+OVERLAYDATA::~OVERLAYDATA()
 {
   Cleanup();
 }
 
-void OVERLAYDATA::Allocate(void)
+void OVERLAYDATA::Allocate()
 {
   if (m_overlay == NULL) 
         m_overlay = (ui8 *)UI_malloc(136*224,MALLOC077);
@@ -2955,7 +2955,7 @@ void OVERLAYDATA::Allocate(void)
 }
 
 
-void OVERLAYDATA::Cleanup(void)
+void OVERLAYDATA::Cleanup()
 {
   if (m_overlay != NULL)
   {
@@ -3090,7 +3090,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
   };
 }
 
-OVLDECODE::OVLDECODE(ui32 GetCodeword(void))
+OVLDECODE::OVLDECODE(ui32 GetCodeword())
 {
   m_getCodeword = GetCodeword;
   m_codes = (ui32 *)UI_malloc(4*512,MALLOC075);
@@ -3106,19 +3106,19 @@ OVLDECODE::OVLDECODE(ui32 GetCodeword(void))
   m_a = 0;
 }
 
-OVLDECODE::~OVLDECODE(void)
+OVLDECODE::~OVLDECODE()
 {
   if (m_codes != NULL) UI_free(m_codes);
   if (m_chars != NULL) UI_free(m_chars);
   if (m_stack != NULL) UI_free(m_stack);
 }
 
-void OVLDECODE::EnlargeStack(void)
+void OVLDECODE::EnlargeStack()
 {
   NotImplemented(0xf864);
 }
 
-void OVLDECODE::EnlargeTable(void)
+void OVLDECODE::EnlargeTable()
 {
   m_maxTableLen *= 2;
   m_codes = (ui32 *)UI_realloc(m_codes, 4*m_maxTableLen, MALLOC080);
@@ -3193,7 +3193,7 @@ bool OVLDECODE::GetBytes(void *buf, ui32 num)
 
 
 ui32 *nextCode;
-ui32 GetCodeword(void)
+ui32 GetCodeword()
 {
   return *(nextCode++);
 }

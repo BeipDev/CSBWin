@@ -38,7 +38,7 @@ extern i32 dsaFilterLeaveCount;
 
 
 void DSAInstrumentation_Dump();
-void ReadTranslationFile(void);
+void ReadTranslationFile();
 void RecordFile_Record(const char *line);
 
 struct SNDHEAD
@@ -63,13 +63,13 @@ struct SNDHEAD
 };
 
 
-void Statistics(void);
+void Statistics();
 void EnqueMouseClick(i32, i32, i32);
 void  TAG001afe(i32, i32, i32);
 //i32 AddSD(char *, i32, float, float, float);
 void ItemsRemaining(i32 mode);
 char *parentFolder(char *folderName, char *endName);
-bool PlayfileIsOpen(void);
+bool PlayfileIsOpen();
 bool GetVideoRectangle(i32, RECT *);
 ui32 dumpWindow = 0;
 bool annotationPlaced = false;
@@ -97,16 +97,16 @@ extern i32 keyboardMode;
 extern i32 trace;
 void PlayfileOpen(bool);
 void RecordfileOpen(bool);
-void RecordfilePreOpen(void);
+void RecordfilePreOpen();
 extern bool BeginRecordOK;
 extern bool TimerTraceActive;
 extern bool AttackTraceActive;
 extern bool RepeatGame;
 extern i32 NoSpeedLimit;
-bool OpenTraceFile(void);
-void CloseTraceFile(void);
-bool OpenGraphicTraceFile(void);
-void CloseGraphicTraceFile(void);
+bool OpenTraceFile();
+void CloseTraceFile();
+bool OpenGraphicTraceFile();
+void CloseGraphicTraceFile();
 extern bool g_cursorIsShowing;
 extern bool RecordCommandOption;
 extern bool NoRecordCommandOption;
@@ -144,13 +144,13 @@ i32 keyQueueLen=3;
 i32 keyQueue[3];
 
 #ifdef _MSVC_INTEL //004
-DSAListDialog::DSAListDialog(void)
+DSAListDialog::DSAListDialog()
 {
   //m_initialText = NULL;
   //m_finalText = NULL;
 }
 
-DSAListDialog::~DSAListDialog(void)
+DSAListDialog::~DSAListDialog()
 {
 }
 
@@ -349,7 +349,7 @@ LRESULT CALLBACK DSAListCallback(
 
 
 
-i32 DSAListDialog::DoModal(void)
+i32 DSAListDialog::DoModal()
 {
   i32 result;
   bool saveCursorShowing;
@@ -371,13 +371,13 @@ i32 DSAListDialog::DoModal(void)
 #endif //004
 
 
-EditDialog::EditDialog(void)
+EditDialog::EditDialog()
 {
   m_initialText = NULL;
   m_finalText = NULL;
 }
 
-EditDialog::~EditDialog(void)
+EditDialog::~EditDialog()
 {
 }
 
@@ -491,7 +491,7 @@ LRESULT CALLBACK EditTextCallback(
 }
 
 
-i32 EditDialog::DoModal(void)
+i32 EditDialog::DoModal()
 {
   i32 result;
   bool saveCursorShowing;
@@ -516,12 +516,12 @@ private:
   i32 m_numkey;
   i32 *m_xlate;
 public:
-  KEYXLATE(void)
+  KEYXLATE()
   {
     m_numkey=0;
     m_xlate=NULL;
   };
-  ~KEYXLATE(void)
+  ~KEYXLATE()
   {
     if (m_xlate!=NULL) UI_free(m_xlate);
     m_xlate = NULL;
@@ -737,7 +737,7 @@ static void _strupr(char *str) {
     }
 }
 #endif //009
-void ReadConfigFile(void)
+void ReadConfigFile()
 {
   char buf[501];
   i16 f;
@@ -866,7 +866,7 @@ extern ui32 TImER;
 
 
 
-i32 UI_DisableAllMessages(void)
+i32 UI_DisableAllMessages()
 {
   i32 oldmask = messageMask;
   messageMask = 0;
@@ -1370,13 +1370,13 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags)
 
 
 
-i32 UI_CONSTAT(void)
+i32 UI_CONSTAT()
 {
   if (keyQueueStart != keyQueueEnd) return 1;
   return 0; // No console input available
 }
 
-i32 UI_DIRECT_CONIN(void)
+i32 UI_DIRECT_CONIN()
 { //We should wait for a keystroke.  But we don't.  It is
   // up to you to be sure that input exists before
   // calling DIRECT_CONIN.
@@ -1416,7 +1416,7 @@ void Win32_SoundMixer_Play(BYTE *pWave, DWORD dwBytes);
 void Win32_SoundMixer_Shutdown();
 #endif //019
 
-void UI_StopSound(void)
+void UI_StopSound()
 {
   sndPlaySound(NULL,SND_SYNC);
 }
@@ -1429,19 +1429,19 @@ class PlayDirectSound
   bool m_initialized;
   bool m_failed;
 public:
-  PlayDirectSound(void);
-  ~PlayDirectSound(void);
+  PlayDirectSound();
+  ~PlayDirectSound();
   bool Play(char *wave);
   void Shutdown();
 };
 
-PlayDirectSound::PlayDirectSound(void)
+PlayDirectSound::PlayDirectSound()
 {
   m_initialized = false;
   m_failed = false;
 }
 
-PlayDirectSound::~PlayDirectSound(void)
+PlayDirectSound::~PlayDirectSound()
 {
   Shutdown();
 }
@@ -1462,7 +1462,7 @@ bool PlayDirectSound::Play(char *wave)
   return true;
 }
 
-void PlayDirectSound::Shutdown(void)
+void PlayDirectSound::Shutdown()
 {
   if (m_initialized & !m_failed)
   {
@@ -1502,28 +1502,28 @@ class MYDIRECTSOUND
   IDirectSoundBuffer *m_soundBuffers[64];
   i32                 m_numBuffersActive;
 public:
-  MYDIRECTSOUND(void);
-  ~MYDIRECTSOUND(void);
-  bool Initialize(void); //Allocate DirectSound object
-  void Clean(void);      //Release completed buffers.
-  void Shutdown(void);   //Release DirectSound object
+  MYDIRECTSOUND();
+  ~MYDIRECTSOUND();
+  bool Initialize(); //Allocate DirectSound object
+  void Clean();      //Release completed buffers.
+  void Shutdown();   //Release DirectSound object
   bool Play(const char *wave, i32 attenuation); //Play a single sound.
 };
 
 
-MYDIRECTSOUND::MYDIRECTSOUND(void)
+MYDIRECTSOUND::MYDIRECTSOUND()
 {
   m_directSound = NULL;
   m_failed = false;
   m_comInitialized = false;
 }
 
-MYDIRECTSOUND::~MYDIRECTSOUND(void)
+MYDIRECTSOUND::~MYDIRECTSOUND()
 {
   Shutdown();
 }
 
-bool MYDIRECTSOUND::Initialize(void)
+bool MYDIRECTSOUND::Initialize()
 {
   HRESULT result;
   WAVEFORMATEX fmt;
@@ -1589,7 +1589,7 @@ bool MYDIRECTSOUND::Initialize(void)
   return true;
 }
 
-void MYDIRECTSOUND::Shutdown(void)
+void MYDIRECTSOUND::Shutdown()
 {
   i32 i;
   if (m_directSound != NULL)
@@ -1609,7 +1609,7 @@ void MYDIRECTSOUND::Shutdown(void)
   };
 }
 
-void MYDIRECTSOUND::Clean(void)
+void MYDIRECTSOUND::Clean()
 {
   i32 i;
   i32 status;
@@ -1716,13 +1716,13 @@ class MIDI
 {
   bool isOpen;
 public:
-  void OpenMediaFile(void);
-  void ClosePlayer(void);
-  void PlayMIDI(void);
-  void PlayMediaFile(void);
+  void OpenMediaFile();
+  void ClosePlayer();
+  void PlayMIDI();
+  void PlayMediaFile();
 };
 
-void MIDI::OpenMediaFile(void)
+void MIDI::OpenMediaFile()
 {
    HWND handle = 0;
    int status;
@@ -1757,7 +1757,7 @@ void MIDI::ClosePlayer()
 }
 
 
-void MIDI::PlayMIDI(void)
+void MIDI::PlayMIDI()
 {
   OpenMediaFile();
   PlayMediaFile();
@@ -1765,7 +1765,7 @@ void MIDI::PlayMIDI(void)
 
 MIDI midi;
 
-void playmidi(void)
+void playmidi()
 {
   midi.PlayMIDI();
 }
@@ -1860,13 +1860,13 @@ void UI_PlaySound(char *wave, i32 flags)
 #endif //023 TARGET_OS_MAC
 
 #ifdef TARGET_OS_MAC //024 
-void UI_ClearScreen(void)
+void UI_ClearScreen()
 {
 }
 #endif //024
 
 #ifdef _LINUX //025
-void UI_ClearScreen(void)
+void UI_ClearScreen()
 {
   //nothing;
   UI_Invalidate();
@@ -1875,7 +1875,7 @@ void UI_ClearScreen(void)
 
 
 #ifdef _MSVC_INTEL //026
-void UI_ClearScreen(void)
+void UI_ClearScreen()
 {
   RedrawWindow(hWnd,NULL,NULL,RDW_ERASE|RDW_INVALIDATE);
 }
@@ -2125,7 +2125,7 @@ char *parentFolder(char *fileName, char *endname)
 }
 
 #ifdef _MSVC_INTEL //033
-i64 UI_GetSystemTime(void)
+i64 UI_GetSystemTime()
 {
   // Cumulative milliseconds since 1980 (or whenever..not important)
   SYSTEMTIME st;
@@ -2165,14 +2165,14 @@ FILE *UI_fopen(const char *name, const char *flags)
 ui8 *allocatedMemoryList = NULL;
 ui32 listLength = 0;
 
-void AllocationError(void)
+void AllocationError()
 {
   UI_MessageBox("Cannot allocate memory","Fatal error",MESSAGE_OK);
   die(0xdab6);
 };
 
 #ifdef _DEBUG //035o
-void CheckAllAllocated(void)
+void CheckAllAllocated()
 {
   static i32 callcount = 0;
   ui8 *current, *end;
@@ -2301,7 +2301,7 @@ void UI_free(void *buf)
 #endif //041
 }
 
-void UI_CheckMemoryLeaks(void)
+void UI_CheckMemoryLeaks()
 {
   if (listLength != 0)
   {
@@ -2330,19 +2330,19 @@ void UI_CheckMemoryLeaks(void)
 
 #if !defined(_LINUX) //043
 
-LISTING::LISTING(void)
+LISTING::LISTING()
 {
   m_listing = (char *)malloc(1);
   *m_listing = 0;
 }
 
-void LISTING::Clear(void)
+void LISTING::Clear()
 {
   free(m_listing);
   m_listing = NULL;
 }
 
-LISTING::~LISTING(void)
+LISTING::~LISTING()
 {
   Clear();
 }
@@ -2364,7 +2364,7 @@ void LISTING::AddText(const char *line)
   strcpy(m_listing+len, line);
 }
 
-void LISTING::NewLine(void)
+void LISTING::NewLine()
 {
   AddText("\015\012");
 }

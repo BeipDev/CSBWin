@@ -13,11 +13,11 @@
 extern i32 VBLperTimer;
 
 void info(char *, unsigned int);
-void SwapTextZOrder(void);
+void SwapTextZOrder();
 void RecordFile_Record(i32 x, i32 y, i32 z);
-bool IsPlayFileOpen(void);
-bool PlayFile_IsEOF(void);
-void PlayFile_ReadEOF(void);
+bool IsPlayFileOpen();
+bool PlayFile_IsEOF();
+void PlayFile_ReadEOF();
 bool PlayFile_Play(MouseQueueEnt *MQ);
 void PlayFile_Backspace(MouseQueueEnt *MQ);
 void RecordFile_Record(MouseQueueEnt *MQ);
@@ -207,7 +207,7 @@ void CreateTimer(TIMERTYPE function,
 // *********************************************************
 //   TAG012ac0
 void SkillIncreaser(i32 skillNumber, i32 adjustment, i32 P3)
-{//(void)
+{//()
   dReg D7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (P3 != 0)
@@ -239,7 +239,7 @@ void PerformLocalAction(i16 localActionType,
                         i32 mapX, 
                         i32 mapY, 
                         i32 mapPos)
-{ //(void)
+{ //()
   //Actuator with bit 11 set in word4
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (localActionType == 10)
@@ -609,7 +609,7 @@ i16 TouchWall(i32 mapX,i32 mapY,i32 touchedPosition)
 //
 //*********************************************************
 // TAG01576a
-RN RemoveObjectFromHand(void)
+RN RemoveObjectFromHand()
 {//(RN)
   dReg D1;
   CHARDESC *pcA0;
@@ -773,8 +773,8 @@ i16 ThrowObjectInHand(i16 LeftOrRight,bool record, i32 x, i32 y, i32 f)
 //
 //*********************************************************
 //   TAG01a0c2
-void TouchWallF1(void)
-{//(void)
+void TouchWallF1()
+{//()
   i32 touchedX;
   i32 touchedY;
   touchedX = d.partyX;
@@ -792,7 +792,7 @@ void TouchWallF1(void)
 //
 //*********************************************************
 void TAG01a148(i16 P1)
-{//(void)
+{//()
   dReg D0, D1, D5, D6, D7;
   OBJ_NAME_INDEX objNID0;
   RN objD4;
@@ -846,7 +846,7 @@ void TAG01a148(i16 P1)
 //*********************************************************
 //   TAG01a228
 void DropObject(i16 pos)
-{//(void)
+{//()
   // 0 = this room left, 1= this room right
   // 2 =                 3 = 
   // 4 = niche
@@ -1029,7 +1029,7 @@ i16 TestInRectangle(ui8 *rectangle,i32 clickX, i32 clickY)
 //*********************************************************
 //   TAG01a436
 void HandleClickInViewport(i32 clickX, i32 clickY)
-{//(void)
+{//()
   dReg D0, D1, D5;
   DBCOMMON *dbA3;
   DB0      *DB0A3;
@@ -1251,7 +1251,7 @@ tag01a69a:
 }
 
 
-bool mouseQueueIsEmpty(void)
+bool mouseQueueIsEmpty()
 {
   return ((d.MouseQEnd + 1)%MOUSEQLEN) == d.MouseQStart;
 }

@@ -190,10 +190,10 @@ class SDLIST
 { // A class so destructor will release memory
   SD *psd;
 public:
-  SDLIST(void) { psd=NULL; };
-  ~SDLIST(void);
+  SDLIST() { psd=NULL; };
+  ~SDLIST();
   SD *newSD(char *,i32,float,float,float);
-  SD *First(void);
+  SD *First();
   SD *Next(SD *ent);
 };
 */
@@ -230,16 +230,16 @@ public:
 
 
 struct DBank {
-  DBank(void);
-  ~DBank(void);
-  void Initialize(void);
+  DBank();
+  ~DBank();
+  void Initialize();
   friend class GameTimers;
-  void AllocateDerivedGraphicCacheIndex(void);
+  void AllocateDerivedGraphicCacheIndex();
   i16  GetDerivedGraphicCacheIndex(i32 graphicNum);
   void SetDerivedGraphicCacheIndex(i32 graphicNum, i32 index);
   void SetDerivedGraphicSize(i32 graphicNum, i32 size);
   ui16 GetDerivedGraphicSize(i32 graphicNum);
-  void AllocateDerivedGraphicsSizesBuffer(void);
+  void AllocateDerivedGraphicsSizesBuffer();
   i32 unusedLong23326;    //  Static memory remaining size.
   ui8 *Pointer23322;  // Start of remainder of static memory.
   ui8 *Pointer23318;  // Next available memory location.  Increments as memory allocated.
@@ -529,7 +529,7 @@ struct DBank {
     // it appears that the use of the pointers has
     // been 'NOP'ed out.
   void (*pFunc23236)(i32 P1);
-  void (*pFunc23232)(void);
+  void (*pFunc23232)();
   i16 Unused23228;  //Always zero.  I removed it.Word23228;
   i16 Word23226;
   i16 OnMouseSwitchActionLock;//Word23224; // Test/Set for Mouse interrupt
@@ -826,17 +826,17 @@ struct DBank {
   i16 unused13000; //numTimer;//13000; // ++/-- counter
   i16 unused12990; //MaxTimers;//12990; //# items in Pointer12994 and 12998 array?
   public:
-  //  i16 FirstAvailTimer(void){return firstAvailTimer;};
+  //  i16 FirstAvailTimer(){return firstAvailTimer;};
   //  void FirstAvailTimer(i32 v){firstAvailTimer=(i16)v;};
-  //  void IncrementFirstAvailTimer(void){firstAvailTimer++;};
-  //  i16 NumTimer(void) {return numTimer;};
+  //  void IncrementFirstAvailTimer(){firstAvailTimer++;};
+  //  i16 NumTimer() {return numTimer;};
   //  void NumTimer(i16 v) {numTimer=v;};
-  //  void DecrementNumTimer(void){numTimer--;};
-  //  void IncrementNumTimer(void){numTimer++;};
+  //  void DecrementNumTimer(){numTimer--;};
+  //  void IncrementNumTimer(){numTimer++;};
   //  TIMER *pTimer(i32 index) {return Timers + index;};
   //  i16 TimerQue(i32 index) {return timerQue[index];};
   //  void TimerQue(i32 index, i16 val){timerQue[index]=val;};
-  //  i16 MaxTimer(void){return MaxTimers;};
+  //  i16 MaxTimer(){return MaxTimers;};
   //  void MaxTimer(i32 v){MaxTimers=(i16)v;};
   pnt Pointer12988[6];
 
@@ -1525,13 +1525,13 @@ class TIMER_SEARCH;
 class GameTimers
 {
   friend class TIMER_SEARCH;
-  friend RESTARTABLE _ReadEntireGame(void);
+  friend RESTARTABLE _ReadEntireGame();
 //  friend void AdjustTimerPosition(i32 timerPosition);
 //  friend void DeleteTimer(i32 timerIndex);
 //  friend i16 SetTimer(TIMER *pNewTimer);
   friend void DumpTimers(FILE *f);
-  friend RESTARTABLE _DisplayDiskMenu(void);
-  friend i16 ReadDatabases(void);
+  friend RESTARTABLE _DisplayDiskMenu();
+  friend i16 ReadDatabases();
   HTIMER  *m_timerQueue;
   HTIMER  *m_searchList;
   TIMER *m_timers;
@@ -1544,33 +1544,33 @@ class GameTimers
   //i16    m_FirstAvailTimerLoading;
   //i16    m_numTimersLoading;
 public:
-  GameTimers(void);
-  ~GameTimers(void);
-  void InitializeTimers(void);
-  void Cleanup(void);
+  GameTimers();
+  ~GameTimers();
+  void InitializeTimers();
+  void Cleanup();
   void Allocate(i32 numEnt);
-  void ConvertToSequencedTimers(void);
-  void ConvertToExtendedTimers(void);
+  void ConvertToSequencedTimers();
+  void ConvertToExtendedTimers();
   void GetNextTimerEntry(TIMER *P1, ui32 *index);
-  bool CheckForTimerEvent(void);
+  bool CheckForTimerEvent();
 private:
-  inline i32 NumTimer(void){return m_numTimer;};
+  inline i32 NumTimer(){return m_numTimer;};
   inline void NumTimer(i32 numTimer){m_numTimer=(i16)numTimer;};
   //void DecrementNumTimer();
   //void IncrementNumTimer();
   i16 FindTimerPosition(HTIMER P1);
   //void AdjustTimerPosition(i32 timerPosition);
-  bool CheckTimers(void);
-  ui16 TimerSequence(void)const{return m_timerSequence;};
+  bool CheckTimers();
+  ui16 TimerSequence()const{return m_timerSequence;};
   void TimerSequence(ui16 sequence){m_timerSequence = sequence;};
-  inline HTIMER FirstAvailTimer(void){return m_firstAvailTimer;};
+  inline HTIMER FirstAvailTimer(){return m_firstAvailTimer;};
   inline void FirstAvailTimer(HTIMER firstAvailTimer){m_firstAvailTimer=(HTIMER)firstAvailTimer;};
-  //void IncrementFirstAvailTimer(void);
+  //void IncrementFirstAvailTimer();
   //void TimerQueue(i32 index, HTIMER value);
-  ui16 *TimerQueue(void){return m_timerQueue;}; // Point to first word of timer queue
-  //TIMER *Timers(void){return m_timers;}; // {return d.Timers;};
-  inline i32 MaxTimer(void) const {return m_maxTimers;};
-  i32 CreateSearchList(void); // Returns length of list.
+  ui16 *TimerQueue(){return m_timerQueue;}; // Point to first word of timer queue
+  //TIMER *Timers(){return m_timers;}; // {return d.Timers;};
+  inline i32 MaxTimer() const {return m_maxTimers;};
+  i32 CreateSearchList(); // Returns length of list.
 public:
   //void AdjustTimerPriority(TIMER_SEARCH& timerSearch);
   void AdjustTimerPriority(HTIMER hTimer);
@@ -1579,15 +1579,15 @@ public:
   //void DeleteTimer(TIMER_SEARCH& timerSearch);
   void DeleteTimer(HTIMER timerIndex, const char *tag = NULL);
   HTIMER SetTimer(TIMER *pNewTimer);
-  void swapTimerQue(void)
+  void swapTimerQue()
   {
     for (i32 i=0; i<m_maxTimers; i++)
       m_timerQueue[i]=LE16(m_timerQueue[i]);
   };
-  void Clear(void){m_numTimer=0; m_firstAvailTimer=0;};
-  //i16 MaxTimersLoading(void){return m_MaxTimersLoading;};
-  //i16 FirstAvailTimerLoading(void){return m_FirstAvailTimerLoading;};
-  //i16 numTimersLoading(void){return m_numTimersLoading;};
+  void Clear(){m_numTimer=0; m_firstAvailTimer=0;};
+  //i16 MaxTimersLoading(){return m_MaxTimersLoading;};
+  //i16 FirstAvailTimerLoading(){return m_FirstAvailTimerLoading;};
+  //i16 numTimersLoading(){return m_numTimersLoading;};
   //void MaxTimersLoading(i32 v){m_MaxTimersLoading=(i16)v;};
   //void FirstAvailTimerLoading(i32 v){m_FirstAvailTimerLoading=(i16)v;};
   //void numTimersLoading(i32 v){m_numTimersLoading=(i16)v;};
@@ -1601,16 +1601,16 @@ class TIMER_SEARCH
 private:
   i32 m_index;
   i32 m_numEntry;
-  i16 FindQPos(void);
+  i16 FindQPos();
 public:
-  TIMER_SEARCH(void){m_index=-1;m_numEntry=gameTimers.CreateSearchList();};
-  ~TIMER_SEARCH(void){gameTimers.m_searchActive=false;};
-  bool FindNextTimer(void);
-  inline TIMER *TimerAddr(void)const{return gameTimers.pTimer(gameTimers.m_searchList[m_index]);};
-  inline HTIMER TimerHandle(void) const {return gameTimers.m_searchList[m_index];};
-  void AdjustTimerPriority(void);
-  void DeleteTimer(void);
-  //inline ui16 TimerQueueIndex(void) const {return m_timerQueueIndex;};
+  TIMER_SEARCH(){m_index=-1;m_numEntry=gameTimers.CreateSearchList();};
+  ~TIMER_SEARCH(){gameTimers.m_searchActive=false;};
+  bool FindNextTimer();
+  inline TIMER *TimerAddr()const{return gameTimers.pTimer(gameTimers.m_searchList[m_index]);};
+  inline HTIMER TimerHandle() const {return gameTimers.m_searchList[m_index];};
+  void AdjustTimerPriority();
+  void DeleteTimer();
+  //inline ui16 TimerQueueIndex() const {return m_timerQueueIndex;};
 };
 
 
@@ -1640,13 +1640,13 @@ private:
   PIECE_OF_TEXT *m_firstText, *m_lastText;
 public:
   LINEQUEUE(i32 maxLines);
-  ~LINEQUEUE(void);
-  void Cleanup(void);
+  ~LINEQUEUE();
+  void Cleanup();
   void AddText(i32 row, i32 column, i32 color, const char *text, i32 printLinesCount);
-  bool IsEmpty(void){return m_firstText==NULL;};
-  PIECE_OF_TEXT *Peek(void){return m_firstText;};
-  void DiscardFirst(void);
-  i32 MaxPrintLinesCount(void);
+  bool IsEmpty(){return m_firstText==NULL;};
+  PIECE_OF_TEXT *Peek(){return m_firstText;};
+  void DiscardFirst();
+  i32 MaxPrintLinesCount();
 };
 
 class SCROLLING_TEXT
@@ -1655,22 +1655,22 @@ private:
   LINEQUEUE m_pastLines;
   LINEQUEUE m_currentLines;
   LINEQUEUE m_futureLines;
-  void ScrollUp(void);
-  void RemoveTimedOutText(void);
+  void ScrollUp();
+  void RemoveTimedOutText();
   i32       m_printLinesCount[4];
 public:
-  SCROLLING_TEXT(void);
-  ~SCROLLING_TEXT(void);
-  void Cleanup(void);
+  SCROLLING_TEXT();
+  ~SCROLLING_TEXT();
+  void Cleanup();
   void Serialize(FILE *f, bool saving); // saving versus loading
-  void vbl(void);
-  void ClockTick(void);
+  void vbl();
+  void ClockTick();
   void ResetTime(i32 newTime);
   void SetPrintPosition(i32 column, i32 row);
   void Printf(i32 color, const char* text, i32 printLinesCount);
   void CreateNewTextRow(i32 printLinesCount);
   void SetNewSpeed(i32 oldSpeed, i32 newSpeed);
-  void DiscardText(void);
+  void DiscardText();
 };
 
 extern SCROLLING_TEXT scrollingText;
@@ -1882,7 +1882,7 @@ private:                                      //DSA
   ui32 cmdCode:6; //DSACOMMAND                //DSA
   i32          unused:10;                     //DSA
 public:                                       //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
       {return (DSACOMMAND)cmdCode;};          //DSA
 };                                            //DSA
                                               //DSA
@@ -1901,22 +1901,22 @@ private:                                      //DSA
     COMMANDCODE  = DSACMD_MESSAGE             //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
         {return nextState==-MAXSTATE;};       //DSA
-  ui32 Delay(void){return delay;};            //DSA
+  ui32 Delay(){return delay;};            //DSA
   void Delay(ui32 dly){delay=dly;};               //DSA
-  MESSAGETYPE MsgType(void)                   //DSA
+  MESSAGETYPE MsgType()                   //DSA
         {return (MESSAGETYPE)msgType;};       //DSA
   void MsgType(MESSAGETYPE m){msgType=m;};    //DSA
-  TARGETTYPE Target(void)                     //DSA
+  TARGETTYPE Target()                     //DSA
         {return (TARGETTYPE)target;};         //DSA
   void Target(TARGETTYPE t){target=t;};       //DSA
   bool StateFits(i32 r)                       //DSA
         {return abs(r)<MAXSTATE;};            //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -1933,21 +1933,21 @@ private:                                      //DSA
     COMMANDCODE   = DSACMD_COPYTELEPORTER     //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
         {return nextState==-MAXSTATE;};       //DSA
   bool StateFits(i32 r)                       //DSA
         {return abs(r)<MAXSTATE;};            //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  TARGETTYPE TargetFrom(void)                 //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  TARGETTYPE TargetFrom()                 //DSA
         {return (TARGETTYPE)targetfrom;};     //DSA
   void TargetFrom(TARGETTYPE t)               //DSA
         {targetfrom=t;};                      //DSA
-  TARGETTYPE TargetTo(void)                   //DSA
+  TARGETTYPE TargetTo()                   //DSA
         {return (TARGETTYPE)targetto;};       //DSA
   void TargetTo(TARGETTYPE t){targetto=t;};   //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -1977,16 +1977,16 @@ enum                                          //DSA
   COMMANDCODE   = DSACMD_LOAD                 //DSA
 };                                            //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
       {return nextState==-MAXSTATE;};         //DSA
   bool StateFits(i32 r)                       //DSA
       {return abs(r)<=MAXSTATE;};             //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  ui32 Where(void){return where;};            //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  ui32 Where(){return where;};            //DSA
   void Where(ui32 w){where=w;};               //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2004,16 +2004,16 @@ enum                                          //DSA
   COMMANDCODE   = DSACMD_STORE                //DSA
 };                                            //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
       {return nextState==-MAXSTATE;};         //DSA
   bool StateFits(i32 r)                       //DSA
       {return abs(r)<=MAXSTATE;};             //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  ui32 Where(void){return where;};            //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  ui32 Where(){return where;};            //DSA
   void Where(ui32 w){where=w;};               //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2033,18 +2033,18 @@ private:                                      //DSA
     OVERRIDE_P  = 1                           //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
         {return nextState==-MAXSTATE;};       //DSA
-  ui32 What(void){return what;};              //DSA
+  ui32 What(){return what;};              //DSA
   void What(ui32 w){what=w;};                 //DSA
-  ui32 Value(void){return value;};            //DSA
+  ui32 Value(){return value;};            //DSA
   void Value(ui32 v){value=v;};               //DSA
   bool StateFits(i32 r)                       //DSA
         {return abs(r)<=MAXSTATE;};           //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -2059,14 +2059,14 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_NOOP                 //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
         {return nextState==-MAXSTATE;};       //DSA
   bool StateFits(i32 r)                       //DSA
         {return abs(r)<=MAXSTATE;};           //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -2083,18 +2083,18 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_JUMP                 //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  i32 Row(void){return row;};                 //DSA
+  i32 Row(){return row;};                 //DSA
   void Row(i32 r){row=r;};                    //DSA
-  i32 Column(void){return column;};           //DSA
+  i32 Column(){return column;};           //DSA
   void Column(i32 c){column=c;};              //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
         {return nextState==-MAXSTATE;};       //DSA
   bool StateFits(i32 r)                       //DSA
         {return abs(r)<MAXSTATE;};            //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -2112,18 +2112,18 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_GOSUB                //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  i32 Row(void){return row;};                 //DSA
+  i32 Row(){return row;};                 //DSA
   void Row(i32 r){row=r;};                    //DSA
-  i32 Column(void){return column;};           //DSA
+  i32 Column(){return column;};           //DSA
   void Column(i32 c){column=c;};              //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
         {return nextState==-MAXSTATE;};       //DSA
   bool StateFits(i32 r)                       //DSA
         {return abs(r)<=MAXSTATE;};           //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -2144,23 +2144,23 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_QUESTION             //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IfColumn(void){return ifColumn!=0;};   //DSA
+  bool IfColumn(){return ifColumn!=0;};   //DSA
   void IfColumn(bool b){ifColumn=b?1:0;};     //DSA
-  i32 IfCmd(void){return ifCMD;};             //DSA
+  i32 IfCmd(){return ifCMD;};             //DSA
   void IfCmd(i32 n){ifCMD=n;};                //DSA
-  bool ElseColumn(void)                       //DSA
+  bool ElseColumn()                       //DSA
               {return elseColumn!=0;};        //DSA
   void ElseColumn(bool b){elseColumn=b?1:0;}; //DSA
-  i32 ElseCmd(void){return elseCMD;};         //DSA
+  i32 ElseCmd(){return elseCMD;};         //DSA
   void ElseCmd(i32 n){elseCMD=n;};            //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
               {return nextState==-MAXSTATE;}; //DSA
   bool StateFits(i32 r)                       //DSA
               {return abs(r)<MAXSTATE;};      //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2177,14 +2177,14 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_EQUAL                //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
           {return nextState==-MAXSTATE;};     //DSA
   bool StateFits(i32 r)                       //DSA
           {return abs(r)<MAXSTATE;};          //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2201,14 +2201,14 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_CASE                 //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
           {return nextState==-MAXSTATE;};     //DSA
   bool StateFits(i32 r)                       //DSA
           {return abs(r)<MAXSTATE;};          //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2229,18 +2229,18 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_VARIABLEFETCH        //DSA
   };                                          //DSA
 public:                                       //DSA
-  int NextState(void){return nextState;};     //DSA
+  int NextState(){return nextState;};     //DSA
   void NextState(int n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
     {return nextState==-MAXSTATE;};           //DSA
   bool StateFits(int r)                       //DSA
     {return abs(r)<MAXSTATE;};                //DSA
-  void SetMaxState(void)                      //DSA
+  void SetMaxState()                      //DSA
     {nextState=MAXSTATE;};                    //DSA
-  unsigned int Index(void){return index;};    //DSA
+  unsigned int Index(){return index;};    //DSA
   void Index(unsigned int n){index=n;};       //DSA
   void CmdCode(DSACOMMAND cmd){cmdCode=cmd;}; //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return(DSACOMMAND)(cmdCode=COMMANDCODE);  //DSA
   };                                          //DSA
@@ -2259,16 +2259,16 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_VARIABLESTORE        //DSA
   };                                          //DSA
 public:                                       //DSA
-  int NextState(void){return nextState;};     //DSA
+  int NextState(){return nextState;};     //DSA
   void NextState(int n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
     {return nextState==-MAXSTATE;};           //DSA
   bool StateFits(int r)                       //DSA
     {return abs(r)<MAXSTATE;};                //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  unsigned int Index(void){return index;};    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  unsigned int Index(){return index;};    //DSA
   void Index(unsigned int n){index=n;};       //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2287,18 +2287,18 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_GLOBALFETCH          //DSA
   };                                          //DSA
 public:                                       //DSA
-  int NextState(void){return nextState;};     //DSA
+  int NextState(){return nextState;};     //DSA
   void NextState(int n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
     {return nextState==-MAXSTATE;};           //DSA
   bool StateFits(int r)                       //DSA
     {return abs(r)<MAXSTATE;};                //DSA
-  void SetMaxState(void)                      //DSA
+  void SetMaxState()                      //DSA
     {nextState=MAXSTATE;};                    //DSA
-  unsigned int Index(void){return index;};    //DSA
+  unsigned int Index(){return index;};    //DSA
   void Index(unsigned int n){index=n;};       //DSA
   void CmdCode(DSACOMMAND cmd){cmdCode=cmd;}; //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return(DSACOMMAND)(cmdCode=COMMANDCODE);  //DSA
   };                                          //DSA
@@ -2317,16 +2317,16 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_GLOBALSTORE          //DSA
   };                                          //DSA
 public:                                       //DSA
-  int NextState(void){return nextState;};     //DSA
+  int NextState(){return nextState;};     //DSA
   void NextState(int n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
     {return nextState==-MAXSTATE;};           //DSA
   bool StateFits(int r)                       //DSA
     {return abs(r)<MAXSTATE;};                //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  unsigned int Index(void){return index;};    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  unsigned int Index(){return index;};    //DSA
   void Index(unsigned int n){index=n;};       //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2345,16 +2345,16 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_AMPERSAND            //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
       {return nextState==-MAXSTATE;};         //DSA
   bool StateFits(i32 r)                       //DSA
       {return abs(r)<MAXSTATE;};              //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  STKOP SubCode(void){return (STKOP)subCode;};//DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  STKOP SubCode(){return (STKOP)subCode;};//DSA
   void SubCode(STKOP n){subCode=n;};          //DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  DSACOMMAND CmdCode()                    //DSA
   {return (DSACOMMAND)(cmdCode=COMMANDCODE);};//DSA
 };                                            //DSA
                                               //DSA
@@ -2369,14 +2369,14 @@ private:                                      //DSA
     COMMANDCODE = DSACMD_FETCH                //DSA
   };                                          //DSA
 public:                                       //DSA
-  i32 NextState(void){return nextState;};     //DSA
+  i32 NextState(){return nextState;};     //DSA
   void NextState(i32 n){nextState=n;};        //DSA
-  bool IsMaxState(void)                       //DSA
+  bool IsMaxState()                       //DSA
           {return nextState==-MAXSTATE;};     //DSA
   bool StateFits(i32 r)                       //DSA
           {return abs(r)<MAXSTATE;};          //DSA
-  void SetMaxState(void){nextState=MAXSTATE;};//DSA
-  DSACOMMAND CmdCode(void)                    //DSA
+  void SetMaxState(){nextState=MAXSTATE;};//DSA
+  DSACOMMAND CmdCode()                    //DSA
   {                                           //DSA
     return (DSACOMMAND)(cmdCode=COMMANDCODE); //DSA
   };                                          //DSA
@@ -2412,14 +2412,14 @@ class DSAAction                               //DSA
   i32         m_numPgmWords;                  //DSA
   ui16       *m_program;                      //DSA
 public:                                       //DSA
-  DSAAction(void);                            //DSA
-  ~DSAAction(void);                           //DSA
-  i32 Column(void){return m_column;};         //DSA
+  DSAAction();                            //DSA
+  ~DSAAction();                           //DSA
+  i32 Column(){return m_column;};         //DSA
   void Column(i32 column){m_column = column;};//DSA
-  void Write(void);                           //DSA
-  void Read(void);                            //DSA
-  ui16 *Program(void){return m_program;};     //DSA                   //DSA
-  i32  ProgramSize(void)                      //DSA
+  void Write();                           //DSA
+  void Read();                            //DSA
+  ui16 *Program(){return m_program;};     //DSA                   //DSA
+  i32  ProgramSize()                      //DSA
   {                                           //DSA
     return m_numPgmWords;                     //DSA
   };                                          //DSA
@@ -2430,11 +2430,11 @@ class DSAState                                //DSA
   i32         m_numAction;                    //DSA
   DSAAction **m_pActions;                     //DSA
 public:                                       //DSA
-  DSAState(void);                             //DSA
-  ~DSAState(void);                            //DSA
+  DSAState();                             //DSA
+  ~DSAState();                            //DSA
   bool operator !=(DSAState&);                //DSA
-  void Write(void);                           //DSA
-  void Read(void);                            //DSA
+  void Write();                           //DSA
+  void Read();                            //DSA
   ui16 *Program(i32 column);                  //DSA
   i32  ProgramSize(i32 column);               //DSA
 };                                            //DSA
@@ -2449,26 +2449,26 @@ class DSA                                     //DSA
   i32        m_firstDisplayedState;           //DSA
   DSAState **m_pStates;                       //DSA
 public:                                       //DSA
-  DSA(void);                                  //DSA
-  ~DSA(void);                                 //DSA
-  char *Description(void)                     //DSA
+  DSA();                                  //DSA
+  ~DSA();                                 //DSA
+  char *Description()                     //DSA
   {                                           //DSA
     return m_description;                     //DSA
   };                                          //DSA
-  ui8 GroupID(void){return m_groupID;};       //DSA
-  i32 LocalState(void)                        //DSA
+  ui8 GroupID(){return m_groupID;};       //DSA
+  i32 LocalState()                        //DSA
   {                                           //DSA
     return m_localState;                      //DSA
   };                                          //DSA
-  i32 State(void){return m_state;};           //DSA
-  bool IsMaster(void)                         //DSA
+  i32 State(){return m_state;};           //DSA
+  bool IsMaster()                         //DSA
   {                                           //DSA
     return m_localState!=3;                   //DSA
   };                                          //DSA
   void State(i32 s){m_state = (ui16)s;};      //DSA
-  i32 NumState(void){return m_numState;};     //DSA
-  void Write(void);                           //DSA
-  void Read(void);                            //DSA
+  i32 NumState(){return m_numState;};     //DSA
+  void Write();                           //DSA
+  void Read();                            //DSA
   DSAState *StatePointer(i32 stateNum);       //DSA
 };                                            //DSA
                                               //DSA
@@ -2480,25 +2480,25 @@ class DSAINDEX                                //DSA
   bool m_isLoaded;   //Are DSAs loaded?       //DSA
   i32  m_traceOverride; //-1=NONE; 256=ALL    //DSA 
 public:                                       //DSA
-  DSAINDEX(void);                             //DSA
-  ~DSAINDEX(void);                            //DSA
+  DSAINDEX();                             //DSA
+  ~DSAINDEX();                            //DSA
   DSA *GetDSA(i32 index);                     //DSA
   void SetDSA(i32 index, DSA *dsa);           //DSA
-  void Cleanup(void);                         //DSA
-  void SaveTracing(void);                     //DSA
+  void Cleanup();                         //DSA
+  void SaveTracing();                     //DSA
   void RestoreTracing(ui32 *pArray);          //DSA
-  void ReadTracing(void);                     //DSA
-  void WriteTracing(void);                    //DSA
+  void ReadTracing();                     //DSA
+  void WriteTracing();                    //DSA
   void IsLoaded(bool b){m_isLoaded=b;};       //DSA
-  bool IsLoaded(void){return m_isLoaded;};    //DSA
+  bool IsLoaded(){return m_isLoaded;};    //DSA
   bool IsTracing(i32 dsaIndex);               //DSA
   void SetTracing(i32 dsaIndex);              //DSA
-  void NoTracing(void);                       //DSA
-  void AllTracing(void);                      //DSA
-  bool AnyTraceActive(void);                  //DSA
+  void NoTracing();                       //DSA
+  void AllTracing();                      //DSA
+  bool AnyTraceActive();                  //DSA
   void TraceOverride(i32 t)                   //DSA
         {m_traceOverride=t;};                 //DSA
-  i32  TraceOverride(void)                    //DSA
+  i32  TraceOverride()                    //DSA
         {return m_traceOverride;};            //DSA   
 };                                            //DSA
 extern DSAINDEX DSAIndex;                     //DSA

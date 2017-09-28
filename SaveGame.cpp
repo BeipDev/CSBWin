@@ -50,11 +50,11 @@ i32 LoadLong(pnt addr);
 void RecordFile_Record(const char *line);
 void RecordFile_Record(i32 x, i32 y, i32 z);
 void RecordFile_Record(MouseQueueEnt *MQ);
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 bool PlayFile_Play(MouseQueueEnt *MQ);
-bool IsRecordFileRecording(void);
-void RecordFile_Open(void);
-void RecordFile_Close(void);
+bool IsRecordFileRecording();
+void RecordFile_Open();
+void RecordFile_Close();
 
 
 struct GAMEBLOCK1
@@ -162,7 +162,7 @@ void BO(ui16& word)
   word = LE16(word);
 }
 
-void SwapDataIndexMap(void)
+void SwapDataIndexMap()
 {
   i32 i;
   for (i=0; i<dataMapLength; i++)
@@ -171,7 +171,7 @@ void SwapDataIndexMap(void)
   };
 }
 
-void SwapIndirectTextIndex(void)
+void SwapIndirectTextIndex()
 {
   i32 i;
   for (i=0; i<d.dungeonDatIndex->NumWordsInTextArray(); i++)
@@ -269,7 +269,7 @@ i32 WriteGameInfo(i32 handle, i32 size)
   return size;
 }
 
-void ClearDSALevelIndex(void)
+void ClearDSALevelIndex()
 {
   i32 i,j;
   for (i=0; i<64; i++)
@@ -478,7 +478,7 @@ void swapBlock2(GAMEBLOCK2 *b)
   BO(b->TimerSequence);        //180
 }
 
-void swapITEM16s(void)
+void swapITEM16s()
 { // Fix byte order in ITEM16 entries
   i32 i;
   for (i=0; i<d.MaxITEM16; i++)
@@ -520,7 +520,7 @@ void swapCharacter(i32 i)
   pc->shieldStrength = LE16(pc->shieldStrength);
 }
 
-void swapPointer10454(void)
+void swapPointer10454()
 {
   for (i32 i=0; i<d.numColumnPointers; i++)
     d.objectListIndex[i] = LE16(d.objectListIndex[i]);
@@ -533,7 +533,7 @@ void swapPRN10464(i32 num)
 }
 
 
-void swapCharacterData(void)
+void swapCharacterData()
 {
   i32 i;
   for (i=0; i<4; i++) swapCharacter(i);
@@ -543,7 +543,7 @@ void swapCharacterData(void)
 }
 
 #ifdef _DEBUG
-void recomputeLoads(void)
+void recomputeLoads()
 {
   i32 p, c;
   for (c=0; c<d.NumCharacter; c++)
@@ -562,7 +562,7 @@ void recomputeLoads(void)
 #endif
 
 
-void swapTimers(void)
+void swapTimers()
 {
   TIMER_SEARCH timerSearch;
   //for (i32 i=0; i<d.MaxTimer(); i++)
@@ -752,7 +752,7 @@ i16 ScrambleAndWrite(i16 *pwbuf)
 
 
 
-ui16 countDSAs(void)
+ui16 countDSAs()
 {
   i32 i;
   ui16 numDSA = 0;
@@ -814,7 +814,7 @@ struct BlockDesc
 //
 // *********************************************************
 // TAG001de4c
-RESTARTABLE _DisplayDiskMenu(void)
+RESTARTABLE _DisplayDiskMenu()
 {//void
   static dReg D0, D1, D5, D6, D7;
   static aReg A3;
@@ -1432,7 +1432,7 @@ void CheckMonster(RN obj)
   };
 }
 
-void CheckMonsters(void)
+void CheckMonsters()
 {
   i32 numLevel, width, height;
   i32 level, x, y;
@@ -1457,7 +1457,7 @@ void CheckMonsters(void)
   };
 }
 
-void CheckCelltypes(void)
+void CheckCelltypes()
 {
   i32 numLevel, level, x, y;
   i32 width, height;
@@ -1492,7 +1492,7 @@ void CheckCelltypes(void)
   };
 }
 
-void ExtendPortraits(void)
+void ExtendPortraits()
 {
   i32 i;
   i32 numEnt;
@@ -1525,7 +1525,7 @@ static str1eb18 b;  // Our local variables
 //
 // *********************************************************
 //          TAG01eb18
-RESTARTABLE _ReadEntireGame(void)
+RESTARTABLE _ReadEntireGame()
 {//i16
   static dReg D0, D1, D5, D6, D7;
   static dReg saveD0;
@@ -2217,7 +2217,7 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
   };
 }
 
-void ConvertTimers(void)
+void ConvertTimers()
 {
   TIMER_SEARCH timerSearch;
   //for (i32 i=0; i<d.MaxTimer(); i++)
@@ -2243,7 +2243,7 @@ void ConvertTimers(void)
   };
 }
 
-void ConvertCharacters(void)
+void ConvertCharacters()
 {
   i32 i, j;
   for (i=0; i<d.NumCharacter; i++)
@@ -2472,8 +2472,8 @@ class SAFEMEM
 {
 public:
   ui16 *p;
-  SAFEMEM(void){p=NULL;};
-  ~SAFEMEM(void){if (p!=NULL) UI_free(p);};
+  SAFEMEM(){p=NULL;};
+  ~SAFEMEM(){if (p!=NULL) UI_free(p);};
 };
 
 
@@ -2514,7 +2514,7 @@ void MakeBigActuators()
 //
 // *********************************************************
 //  TAG01e552
-i16 ReadDatabases(void)
+i16 ReadDatabases()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   dReg D0, D1, D3, D4, D5, D6;

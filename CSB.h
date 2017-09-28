@@ -186,12 +186,12 @@ class SKIN_CACHE
   ui8 *defaultSkins;
   i32  Load(i32 level, i32 x);
 public:
-  SKIN_CACHE(void){m_level=-1;defaultSkins=NULL;};
-  ~SKIN_CACHE(void){};
+  SKIN_CACHE(){m_level=-1;defaultSkins=NULL;};
+  ~SKIN_CACHE(){};
   ui8  GetSkin(i32 level, i32 x, i32 y);
   void SetSkin(i32 level, i32 x, i32 y, i8 skinNum);
   ui8  GetDefaultSkin(i32 level);
-  void Cleanup(void){if (defaultSkins!=NULL)UI_free(defaultSkins);defaultSkins=NULL;m_level=-1;};
+  void Cleanup(){if (defaultSkins!=NULL)UI_free(defaultSkins);defaultSkins=NULL;m_level=-1;};
 };
 
 extern SKIN_CACHE skinCache;
@@ -203,8 +203,8 @@ class TEMPORARY_MEMORY
 {
 public:
   ui8 *m;
-  TEMPORARY_MEMORY(void){m=NULL;};
-  ~TEMPORARY_MEMORY(void){if(m!=NULL)UI_free(m);};
+  TEMPORARY_MEMORY(){m=NULL;};
+  ~TEMPORARY_MEMORY(){if(m!=NULL)UI_free(m);};
 };
 
 i16  CLOSE(i32 handle);
@@ -212,9 +212,9 @@ class TEMPORARY_FILE
 {
 public:
   i32 f;
-  TEMPORARY_FILE(void){f=-1;};
-  ~TEMPORARY_FILE(void){Cleanup();};
-  void Cleanup(void){if(f>=0)CLOSE(f);f=-1;};
+  TEMPORARY_FILE(){f=-1;};
+  ~TEMPORARY_FILE(){Cleanup();};
+  void Cleanup(){if(f>=0)CLOSE(f);f=-1;};
 };
 
 class OVERLAYDATA
@@ -226,13 +226,13 @@ public:
   i16  *m_table;
   i32  m_p1, m_p2, m_p3, m_p4;
   bool m_change;
-  OVERLAYDATA(void);
-  ~OVERLAYDATA(void);
+  OVERLAYDATA();
+  ~OVERLAYDATA();
   bool ReadOverlay(i32 overlayNumber);
-  void Mirror(void);
+  void Mirror();
   void CreateOverlayTable(i16 *palettte, bool useOverlay);
-  void Allocate(void);
-  void Cleanup(void);
+  void Allocate();
+  void Cleanup();
 };
 extern OVERLAYDATA currentOverlay;
 
@@ -242,11 +242,11 @@ public:
   i32  m_soundNum;
   i32  m_size;    // Size of m_sound.
   ui8 *m_sound;   // The uncompressed PCM data
-  SOUNDDATA(void);
-  ~SOUNDDATA(void);
+  SOUNDDATA();
+  ~SOUNDDATA();
   bool ReadSound(i32 soundNum);
   void Allocate(i32 numSample);
-  void Cleanup(void);
+  void Cleanup();
   char *Decode(i32 volume); //Allocate memory and create an internal .wav file
 };
 extern SOUNDDATA currentSound;
@@ -264,7 +264,7 @@ public:
 
 class OVLDECODE
 {
-  ui32 (*m_getCodeword)(void);
+  ui32 (*m_getCodeword)();
   ui32 *m_codes;
   ui8  *m_chars;
   ui32  m_bitsRemaining;
@@ -276,11 +276,11 @@ class OVLDECODE
   ui32  m_stklen;
   ui32  m_maxstack;
   ui32  m_a, m_b, m_c, m_ch;
-  void  EnlargeStack(void);
-  void  EnlargeTable(void);
+  void  EnlargeStack();
+  void  EnlargeTable();
 public:
-  OVLDECODE(ui32 getCodeword(void));
-  ~OVLDECODE(void);
+  OVLDECODE(ui32 getCodeword());
+  ~OVLDECODE();
   bool GetBytes(void *buf, ui32 num);
 };
 
@@ -380,9 +380,9 @@ private:
   i32  CreateBackgroundGraphic(ui32 graphicID, 
                                ui32 graphicSize);
 public:
-  BACKGROUND_LIB(void);
-  ~BACKGROUND_LIB(void);
-  void Cleanup(void);
+  BACKGROUND_LIB();
+  ~BACKGROUND_LIB();
+  void Cleanup();
   //ui8  *GetSkins(i32 level); //levelwidth * level height
   ui16 *GetSkinDef(ui32 skinNum,
                    ui32 minimumSize,
@@ -427,14 +427,14 @@ struct LOCATIONREL
   i32 y;
   i32 p;
 public:
-  LOCATIONREL(void){l=-1;};
+  LOCATIONREL(){l=-1;};
   LOCATIONREL(i32 L, i32 X, i32 Y, i32 P=0)
   {
     l=L; x=X; y=Y; p=P;
   };
-  ui32 Integer(void) const; //Pack in a single 18-bit integer.
+  ui32 Integer() const; //Pack in a single 18-bit integer.
   LOCATIONREL *Integer(i32 i); //Unpack from 18-bit integer.
-  bool IsValid(void) const;
+  bool IsValid() const;
 };
 
 
@@ -451,10 +451,10 @@ class MONSTERMOVEFILTERCACHE
   MONSTERMOVEFILTERLOCATION mmfloc[64];
   MONSTERMOVEFILTERLOCATION global;
 public:
-  MONSTERMOVEFILTERCACHE(void);
-  ~MONSTERMOVEFILTERCACHE(void);
+  MONSTERMOVEFILTERCACHE();
+  ~MONSTERMOVEFILTERCACHE();
   MONSTERMOVEFILTERLOCATION *GetLocation(i32 level);
-  void Clear(void);
+  void Clear();
 };
 
 extern MONSTERMOVEFILTERCACHE monsterMoveFilterCache;
@@ -536,7 +536,7 @@ class ICOUNTS
 {
 public:
   i32 m_InstrumentationCounts[numInstrumentation];
-  ICOUNTS(void);
+  ICOUNTS();
 };
 
 #define Instrumentation(i) InstrumentationCounts.m_InstrumentationCounts[i]++;
@@ -655,7 +655,7 @@ private:
   i16 m_objectType; //OBJECTTYPE /cannot access directly because
                     //VC++ wants to allocate 32 bits.
 public:
-  OBJ_NAME_INDEX objectType(void) {return (OBJ_NAME_INDEX)m_objectType;};
+  OBJ_NAME_INDEX objectType() {return (OBJ_NAME_INDEX)m_objectType;};
   void objectType(OBJ_NAME_INDEX obj) {m_objectType=(i16)obj;};
 };
 
@@ -793,26 +793,26 @@ class DBCOMMON
   friend void ConvertListOfObjects(RN *, bool,i32 level, i32 x, i32 y);
 //public:
   RN   m_link;
-  void swapLink(void);
+  void swapLink();
 public:
-  const RN link(void);
-  RN *pLink(void);
+  const RN link();
+  RN *pLink();
   void link(RN rn);
   bool IsDBType(DBTYPE);
-  class DB0 *CastToDB0(void);
-  class DB1 *CastToDB1(void);
-  class DB2 *CastToDB2(void);
-  class DB3 *CastToDB3(void);
-  class DB4 *CastToDB4(void);
-  class DB5 *CastToDB5(void);
-  class DB6 *CastToDB6(void);
-  class DB7 *CastToDB7(void);
-  class DB8 *CastToDB8(void);
-  class DB9 *CastToDB9(void);
-  class DB10 *CastToDB10(void);
-  class DB11 *CastToDB11(void);
-  class DB14 *CastToDB14(void);
-  class DB15 *CastToDB15(void);
+  class DB0 *CastToDB0();
+  class DB1 *CastToDB1();
+  class DB2 *CastToDB2();
+  class DB3 *CastToDB3();
+  class DB4 *CastToDB4();
+  class DB5 *CastToDB5();
+  class DB6 *CastToDB6();
+  class DB7 *CastToDB7();
+  class DB8 *CastToDB8();
+  class DB9 *CastToDB9();
+  class DB10 *CastToDB10();
+  class DB11 *CastToDB11();
+  class DB14 *CastToDB14();
+  class DB15 *CastToDB15();
 };
 
 class DB0:public DBCOMMON
@@ -827,20 +827,20 @@ class DB0:public DBCOMMON
              //bit 8 = Can open with axe
              //bits 9-15 ????
              // 0400 means reflect/rotate image randomly to cause appearance of movement
-  void swap(void);
+  void swap();
 public:
-  const ui8 doorType(void)   {return (UI8)(word2 & 1);};
+  const ui8 doorType()   {return (UI8)(word2 & 1);};
   void doorType(i32 d){word2=(ui16)((word2&0xfffe)|(d&1));};
     // Each level can have two door types.
-  const i32 ornateness(void){return (word2>>1) & 0xf;};
+  const i32 ornateness(){return (word2>>1) & 0xf;};
   void ornateness(i32 o){word2=(ui16)((word2&0xffe1)|((o&0xf)<<1));};
-  const ui8 mode(void)   {return (UI8)((word2>>5) & 1);}; //up/down
+  const ui8 mode()   {return (UI8)((word2>>5) & 1);}; //up/down
   void mode(bool b){word2=(ui16)(b?(word2|0x0020):(word2&0xffdf));}; //up/down
-  const bool canOpenWithFireball(void)    {return (word2>>7) & 1;};
+  const bool canOpenWithFireball()    {return (word2>>7) & 1;};
   void canOpenWithFireball(bool b){word2=(ui16)(b?(word2|0x0080):(word2&0xff7f));};
-  const bool canOpenWithAxe(void) {return (word2>>8) & 1;};
+  const bool canOpenWithAxe() {return (word2>>8) & 1;};
   void canOpenWithAxe(bool b){word2=(ui16)(b?(word2|0x0100):(word2&0xffef));};
-  const ui8 doorSwitch(void) {return (UI8)((word2>>6) & 1);};
+  const ui8 doorSwitch() {return (UI8)((word2>>6) & 1);};
   void doorSwitch(bool b){word2=(ui16)(b?(word2|0x0040):(word2&0xffbf));};
 };
 
@@ -850,7 +850,7 @@ class DB1:public DBCOMMON
 { //Teleporter
   friend void DumpDB1(FILE *f, RN object, CELLFLAG /*cf*/);
   friend class DATABASES;
-  void swap(void);
+  void swap();
 private:
   i16 word2;    // bits 0-4   = mapX
                 // bits 5-9   = mapY
@@ -863,19 +863,19 @@ private:
                 // bit 15     = audible buzz
   i16 word4;    // bits 8-15  = level
 public:
-  i32 destX(void) const {return BITS0_4(word2);};
+  i32 destX() const {return BITS0_4(word2);};
   void destX(ui32 x) {SETWBITS0_4(word2,x);};
-  i32 destY(void) const {return BITS5_9(word2);};
+  i32 destY() const {return BITS5_9(word2);};
   void destY(ui32 y) {SETWBITS5_9(word2,y);};
-  ui8 destLevel(void) const {return BITS8_15(word4);};
+  ui8 destLevel() const {return BITS8_15(word4);};
   void destLevel(ui32 l) {SETWBITS8_15(word4,l);};
-  ui8 rotation(void) const {return BITS10_11(word2);};
+  ui8 rotation() const {return BITS10_11(word2);};
   void rotation(i32 r) {SETWBITS10_11(word2,r);};
-  ui8 facingMode(void) const {return BITS12_12(word2);};
+  ui8 facingMode() const {return BITS12_12(word2);};
   void facingMode(ui32 f) {SETWBITS12_12(word2,f);};
-  ui8 what(void) const {return BITS13_14(word2);};
+  ui8 what() const {return BITS13_14(word2);};
   void what(ui32 w) {SETWBITS13_14(word2,w);};
-  ui8 audible(void) const {return BITS15_15(word2);};
+  ui8 audible() const {return BITS15_15(word2);};
   void audible(ui32 w) {SETWBITS15_15(word2,w);};
   void copyTeleporter(DB1 *pSrc)
   {
@@ -889,12 +889,12 @@ class DB2:public DBCOMMON  // Text
   i16 word2;  // bit 0 = Show
               // bits 3-15
   friend class DATABASES;
-  void swap(void);
+  void swap();
 public:
-  void Clear(void);
-  bool show(void) {return BITS0_0(word2) != 0;};
+  void Clear();
+  bool show() {return BITS0_0(word2) != 0;};
   void show(bool s) {SETWBITS0_0(word2,s?1:0);};
-  i32 index(void) {return BITS3_15(word2);};
+  i32 index() {return BITS3_15(word2);};
   void index(i32 i) {SETWBITS3_15(word2,i);};
 };
 
@@ -928,7 +928,7 @@ class DB3:public DBCOMMON  // An actuator (pressure pad, keyhole, etc.)
 {
   friend void DumpDB3(FILE *, RN, i32, i32, i32, CELLFLAG);
   friend class DATABASES;
-  void swap(void);
+  void swap();
 private:
   i16 word2;  // bits 0-6 = Actuator Type
               //    0 = Do nothing
@@ -1021,53 +1021,53 @@ private:
 private:
   i16 word8;
 public:
-  void Clear(void);
-  i16 delay(void) {return (i16)BITS7_10(word4);};
-  i16 targetX(void) {ASSERT((word4&0x800)==0, "No Target");return (i16)BITS6_10(word6);};
-  i16 targetY(void) {ASSERT((word4&0x800)==0, "No Target");return (i16)BITS11_15(word6);};
-  i16 targetPos(void) {ASSERT((word4&0x800)==0,"No Target");return (i16)BITS4_5(word6);};
-  i16 localActionType(void) {ASSERT((word4&0x800)!=0,"No Target");return (i16)BITS4_15(word6);};
-  i16 audible(void) {return (i16)BITS6_6(word4);};
-  ACTUATORACTION action(void) {return ACTUATORACTION(BITS3_4(word4));};
-  i16 onceOnly(void) {return (i16)BITS2_2(word4);};
-  bool normallyClosed(void) {return BITS5_5(word4)!=0;};
-  i16 localActionOnly(void) {return (i16)BITS11_11(word4);};
-  ui16 value(void) {return BITS7_15(word2);};
+  void Clear();
+  i16 delay() {return (i16)BITS7_10(word4);};
+  i16 targetX() {ASSERT((word4&0x800)==0, "No Target");return (i16)BITS6_10(word6);};
+  i16 targetY() {ASSERT((word4&0x800)==0, "No Target");return (i16)BITS11_15(word6);};
+  i16 targetPos() {ASSERT((word4&0x800)==0,"No Target");return (i16)BITS4_5(word6);};
+  i16 localActionType() {ASSERT((word4&0x800)!=0,"No Target");return (i16)BITS4_15(word6);};
+  i16 audible() {return (i16)BITS6_6(word4);};
+  ACTUATORACTION action() {return ACTUATORACTION(BITS3_4(word4));};
+  i16 onceOnly() {return (i16)BITS2_2(word4);};
+  bool normallyClosed() {return BITS5_5(word4)!=0;};
+  i16 localActionOnly() {return (i16)BITS11_11(word4);};
+  ui16 value() {return BITS7_15(word2);};
   void value(i32 val) {SETWBITS7_15(word2,val);};
-  i16 actuatorType(void) {return (i16)BITS0_6(word2);};
+  i16 actuatorType() {return (i16)BITS0_6(word2);};
   void actuatorType(i32 type){SETWBITS0_6(word2,type);};
   void actuatorTypeOR(i32 bits){word2 |= bits;};
-  i16 wallGraphicOrdinal(void) {return (i16)BITS12_15(word4);};
-  i32 disableTime(void) {return BITS8_15(word6);}; //Monster Generator
+  i16 wallGraphicOrdinal() {return (i16)BITS12_15(word4);};
+  i32 disableTime() {return BITS8_15(word6);}; //Monster Generator
   void disableTime(i32 t){SETWBITS8_15(word6,t);};
-  i32 hitPointMultiplier(void) {return BITS4_7(word6);};//Monster Generator
+  i32 hitPointMultiplier() {return BITS4_7(word6);};//Monster Generator
            //If zero then level experience multiplier is used
-  i32 energyRemaining(void) {return BITS4_11(word6);};
-  ui8 andOrEdge(void){return BITS0_2(word6);};
-  bool drawAsSize4(void){return BITS0_0(word6)!=0;};
-  ui8 DSAstate(void){return BITS12_15(word2);};
+  i32 energyRemaining() {return BITS4_11(word6);};
+  ui8 andOrEdge(){return BITS0_2(word6);};
+  bool drawAsSize4(){return BITS0_0(word6)!=0;};
+  ui8 DSAstate(){return BITS12_15(word2);};
   void DSAstate(ui8 s){SETWBITS12_15(word2,s);};
-  ui8 DSAselector(void){return BITS7_11(word2);};
-  ui32 ParameterA(void);
+  ui8 DSAselector(){return BITS7_11(word2);};
+  ui32 ParameterA();
   void ParameterA(ui32 v);
-  ui32 ParameterB(void);
+  ui32 ParameterB();
   void ParameterB(ui32 v);
-  bool BlockDisables(void){return BITS8_8(word4)!=0;};
+  bool BlockDisables(){return BITS8_8(word4)!=0;};
   void BlockDisables(bool b){SETWBITS8_8(word4,b?1:0);};
-  ui16 SetResponses(void){return BITS6_11(word6);};
+  ui16 SetResponses(){return BITS6_11(word6);};
   void SetResponses(ui16 v){SETWBITS6_11(word6,v);};
-  ui16 ClearResponses(void){return BITS0_5(word6);};
+  ui16 ClearResponses(){return BITS0_5(word6);};
   void ClearResponses(ui16 v){SETWBITS0_5(word6,v);};
-  ui16 ToggleResponses(void){return BITS0_5(word4);};
+  ui16 ToggleResponses(){return BITS0_5(word4);};
   void ToggleResponses(ui16 v){SETWBITS0_5(word4,v);};
-  ui16 DisableMessage(void){return BITS6_7(word4);};
+  ui16 DisableMessage(){return BITS6_7(word4);};
   void DisableMessage(ui16 v){SETWBITS6_7(word4,v);};
-  ui16 State(void){return BITS9_11(word4);};
+  ui16 State(){return BITS9_11(word4);};
   void State(ui16 v){SETWBITS9_11(word4,v);};
-  ui16 Position(void){return BITS12_13(word6);};
+  ui16 Position(){return BITS12_13(word6);};
   void Position(ui16 v){SETWBITS12_13(word6,v);};
-  void ClearUnusedPor(void){SETWBITS14_15(word6,0);};
-  void MakeBig(void);//Reformat to 10-byte size.
+  void ClearUnusedPor(){SETWBITS14_15(word6,0);};
+  void MakeBig();//Reformat to 10-byte size.
 };
 
 
@@ -1075,7 +1075,7 @@ public:
 class DB4:public DBCOMMON // Monsters??
 {
   friend class DATABASES;
-  void swap(void);
+  void swap();
   RN   possession2; // Swapped when read
                // //I think this is a list of possessions.
 private:
@@ -1110,39 +1110,39 @@ private:
                 //        when we generate a monster.
                 // Bit 14 means poisoned.  Only DSAs use this.
 public:
-  MONSTERTYPE monsterType(void) {return (MONSTERTYPE)(uByte4&0x1f);};
+  MONSTERTYPE monsterType() {return (MONSTERTYPE)(uByte4&0x1f);};
   void monsterType(i32 m) {ASSERT(m<27,"Illegal Monster Type");uByte4=(ui8)((m&0x1f)|(uByte4&0xe0));};
-  i32 alternateGraphics(void){return (uByte4>>5)&0x7;};
+  i32 alternateGraphics(){return (uByte4>>5)&0x7;};
   void alternateGraphics(i32 g){uByte4=(ui8)((uByte4&0x1f)|((g&7)<<5));};
-  RN possession(void) {return possession2;};
-  RN *pPossession(void) {return &possession2;};
-  ui16 important(void){return BITS10_10(word14);};
+  RN possession() {return possession2;};
+  RN *pPossession() {return &possession2;};
+  ui16 important(){return BITS10_10(word14);};
   void important(i32 i){SETWBITS10_10(word14,i);};
-  i32 facing(void){return BITS8_9(word14);};
+  i32 facing(){return BITS8_9(word14);};
   void facing(i32 f){SETWBITS8_9(word14,f);};
-  ui16 numMonM1(void){return BITS5_6(word14);};
+  ui16 numMonM1(){return BITS5_6(word14);};
   void numMonM1(i32 n){SETWBITS5_6(word14,n);};
-  bool invisible(void){return invisibleMonsters&&BITS11_11(word14);};
+  bool invisible(){return invisibleMonsters&&BITS11_11(word14);};
   void invisible(bool b){SETWBITS11_11(word14,b?1:0);};
-  bool drawAsSize4(void){return drawAsSize4Monsters&&BITS12_12(word14);};
+  bool drawAsSize4(){return drawAsSize4Monsters&&BITS12_12(word14);};
   void drawAsSize4(bool b){SETWBITS12_12(word14,b?1:0);};
-  bool Unique(void){return drawAsSize4Monsters&&BITS13_13(word14)!=0;};
+  bool Unique(){return drawAsSize4Monsters&&BITS13_13(word14)!=0;};
   void Unique(bool b){SETWBITS13_13(word14,b?1:0);};
-  bool Poisoned(void){return drawAsSize4Monsters&&BITS14_14(word14)!=0;};
+  bool Poisoned(){return drawAsSize4Monsters&&BITS14_14(word14)!=0;};
   void Poisoned(bool b){SETWBITS14_14(word14,b?1:0);};
-  STATE_OF_FEAR fear(void){return (STATE_OF_FEAR)BITS0_3(word14);};
+  STATE_OF_FEAR fear(){return (STATE_OF_FEAR)BITS0_3(word14);};
   void fear(STATE_OF_FEAR f){SETWBITS0_3(word14,f);};
   void possession(RN object) {possession2 = object;};
-  ui8 groupIndex(void) {return uByte5;};
+  ui8 groupIndex() {return uByte5;};
   void groupIndex(ui32 i);
-  void Clear(void);
+  void Clear();
 };
 
 class DB5:public DBCOMMON
 {
   friend class DATABASES;
   friend void DumpDB5(FILE *f, RN object, i32 /*level*/);
-  void swap(void);
+  void swap();
   i16 word2; //<bits 0-6> = weapon Type
              //             + 23 = Object Index
              // bit 7 = ??? (important item???)
@@ -1152,27 +1152,27 @@ class DB5:public DBCOMMON
              // bit 14 = Broken
              // bit 15 = torch Type
 public:
-  WEAPONTYPE  weaponType(void){return (WEAPONTYPE)BITS0_6(word2);};
+  WEAPONTYPE  weaponType(){return (WEAPONTYPE)BITS0_6(word2);};
   void weaponType(WEAPONTYPE w){SETWBITS0_6(word2,w);};
-  i32 cursed(void) {return BITS8_8(word2);};
+  i32 cursed() {return BITS8_8(word2);};
   void cursed(i32 c) {SETWBITS8_8(word2,c);};
-  i32 poisoned(void) {return BITS9_9(word2);};
+  i32 poisoned() {return BITS9_9(word2);};
   void poisoned(bool b) {SETWBITS9_9(word2,b?1:0);};
-  ui8 charges(void){return BITS10_13(word2);};
+  ui8 charges(){return BITS10_13(word2);};
   void charges(i32 n) {SETWBITS10_13(word2,n);};
-  i32 broken(void) {return BITS14_14(word2);};
+  i32 broken() {return BITS14_14(word2);};
   void broken(bool b) {SETWBITS14_14(word2,b?1:0);};
-  bool important(void){return BITS7_7(word2)!=0;};
+  bool important(){return BITS7_7(word2)!=0;};
   void important(bool i) {SETWBITS7_7(word2,i?1:0);};
-  i32 litTorch(void) {return BITS15_15(word2);};
+  i32 litTorch() {return BITS15_15(word2);};
   void litTorch(i32 n) {SETWBITS15_15(word2, n);};
-  void Clear(void);
+  void Clear();
 };
 
 class DB6:public DBCOMMON  //Sandals, robe, shield
 {
   friend class DATABASES;
-  void swap(void);
+  void swap();
   friend void DumpDB6(FILE *f, RN object, i32 /*level*/);
   i16 word2; //<bits 0-6>  = clothing type
              // bit 7 = ??? (important item???)
@@ -1180,16 +1180,16 @@ class DB6:public DBCOMMON  //Sandals, robe, shield
              //<bits 9-12> = charges remaining
              // bit 13 = broken
 public:
-  i32 clothingType(void) {return BITS0_6(word2);};
+  i32 clothingType() {return BITS0_6(word2);};
   void clothingType(CLOTHINGTYPE c){SETWBITS0_6(word2,c);};
-  bool important(void) {return (word2 & 0x80) != 0;};
-  i32 charges(void) {return BITS9_12(word2);};
+  bool important() {return (word2 & 0x80) != 0;};
+  i32 charges() {return BITS9_12(word2);};
   void charges(i32 n) {SETWBITS9_12(word2, n);};
-  i32 cursed(void) {return BITS8_8(word2);};
+  i32 cursed() {return BITS8_8(word2);};
   void cursed(i32 c) {SETWBITS8_8(word2, c);};
-  i32 broken(void) {return BITS13_13(word2);};
+  i32 broken() {return BITS13_13(word2);};
   void broken(bool b) {SETWBITS13_13(word2,b?1:0);};
-  void Clear(void);
+  void Clear();
 };
 
 class DB7:public DBCOMMON
@@ -1198,20 +1198,20 @@ class DB7:public DBCOMMON
 // old Scroll  i16 m_word2; //swapped when read
 // old Scroll             // bits 0-9 = text index
 // old Scroll             // bits 10-15 = ????
-  void swap(void);
+  void swap();
   RN m_RNtext;
   ui16 m_word4; // Bit 0 = open
                 // Bits 1-15 unused
 public:
-  DB7(void);
-// old Scroll  i32 textIndex(void) {return BITS0_9(m_word2);};
-// old Scroll  i32 b10_15(void) {return BITS10_15(m_word2);};
+  DB7();
+// old Scroll  i32 textIndex() {return BITS0_9(m_word2);};
+// old Scroll  i32 b10_15() {return BITS10_15(m_word2);};
 // old Scroll  void b10_15(i32 n) {SETWBITS10_15(m_word2,n);};
-  RN text(void){return m_RNtext;};
+  RN text(){return m_RNtext;};
   void text(RN text){m_RNtext = text;};
-  bool open(void){return BITS0_0(m_word4)!=0;};
+  bool open(){return BITS0_0(m_word4)!=0;};
   void open(bool o){SETWBITS0_0(m_word4,o?1:0);};
-  void Clear(void);
+  void Clear();
   DB7& operator =(DB7& db7); //Undefined!!!
 };
 
@@ -1219,17 +1219,17 @@ class DB8:public DBCOMMON
 { // potion??
   friend class DATABASES;
   friend void DumpDB8(FILE *f, RN object, i32 /*level*/);
-  void swap(void);
+  void swap();
   i16 word2;// <bits 0-7> Strength of potion
             // <bits 8-14> = potion type
             // bit 15 = ??? (important item??)
 public:
-  ui8 strength(void) {return BITS0_7(word2);};
+  ui8 strength() {return BITS0_7(word2);};
   void strength(i32 s) {SETWBITS0_7(word2,s);};
-  bool important(void) {return (word2&0x8000)!=0;};
-  POTIONTYPE potionType(void) {return (POTIONTYPE)BITS8_14(word2);};
+  bool important() {return (word2&0x8000)!=0;};
+  POTIONTYPE potionType() {return (POTIONTYPE)BITS8_14(word2);};
   void potionType(POTIONTYPE p){SETWBITS8_14(word2,p);};
-  void Clear(void);
+  void Clear();
 };
 
 class DB9:public DBCOMMON // A chest??
@@ -1238,12 +1238,12 @@ class DB9:public DBCOMMON // A chest??
   i16 m_word4;    // <Bits 1-2> + 1 = object index
   ui8 m_uByte6[2];
   friend class DATABASES;
-  void swap(void);
+  void swap();
 public:
-  const RN contents(void) {return m_contents;};
-  RN *pContents(void){return &m_contents;};
+  const RN contents() {return m_contents;};
+  RN *pContents(){return &m_contents;};
   void contents(RN rn) {m_contents = rn;};
-  const i32 word4(void) {return m_word4;};
+  const i32 word4() {return m_word4;};
   const ui32 uByte6(i32 n) {return m_uByte6[n];};
 };
 
@@ -1251,7 +1251,7 @@ class DB10:public DBCOMMON  //corn, shank, necklace, miscellaneous
 {
   friend void DumpDB10(FILE *f, RN object, i32 /*level*/);
   friend class DATABASES;
-  void swap(void);
+  void swap();
 private:
   i16 word2; // For Water.Waterskin
              //     <Bits 0-6> = misc type
@@ -1264,17 +1264,17 @@ private:
              //                    1 = bones associated with a champion's name but otherwise useless
              //                    2 = bones associated with a dead champion.  Put into Vi Alter!
 public:
-  MISCTYPE miscType(void) {return (MISCTYPE)BITS0_6(word2);};
+  MISCTYPE miscType() {return (MISCTYPE)BITS0_6(word2);};
   void miscType(MISCTYPE t) {ASSERT(t<53,"Illegal Misc Type"); SETWBITS0_6(word2, t);};
-  bool important(void) {return BITS7_7(word2) != 0;};
+  bool important() {return BITS7_7(word2) != 0;};
   void important(bool b) {SETWBITS7_7(word2,b?1:0);};
-  bool cursed(void) {return BITS8_8(word2)!=0;};
+  bool cursed() {return BITS8_8(word2)!=0;};
   void cursed(i32 c) {SETWBITS8_8(word2,c);};
-  ui8 value(void) {return BITS14_15(word2);};
+  ui8 value() {return BITS14_15(word2);};
   void value(i32 n) {SETWBITS14_15(word2, n);};
-  int subType(void){return BITS9_13(word2);};
+  int subType(){return BITS9_13(word2);};
   void subType(i32 n){SETWBITS9_13(word2, n);};
-  void Clear(void);
+  void Clear();
 };
 
 class DB11:public DBCOMMON
@@ -1283,7 +1283,7 @@ class DB11:public DBCOMMON
   friend class EXPOOL;
   ui16 size;
   ui32 d[63]; //Total size = 256 bytes
-  void swap(void);
+  void swap();
   void Size(i32 s){size = (ui16)s;};
 };
 
@@ -1303,18 +1303,18 @@ class DB14:public DBCOMMON // Fireball.  Other missiles.  Thrown objects.
   ui8 m_damageRemaining; //5
   ui16 m_timerIndex;     //6
   friend class DATABASES;
-  void swap(void);
+  void swap();
 public:
-  RN  flyingObject(void) {return m_obj2;};
+  RN  flyingObject() {return m_obj2;};
   void flyingObject(RN rn) {m_obj2 = rn;};
-  RN *pFlyingObject(void){return &m_obj2;};
-  ui8 rangeRemaining(void) {return m_rangeRemaining;};
+  RN *pFlyingObject(){return &m_obj2;};
+  ui8 rangeRemaining() {return m_rangeRemaining;};
   void rangeRemaining(i32 e) {m_rangeRemaining=(ui8)e;};
-   ui8 damageRemaining(void) {return m_damageRemaining;};
+   ui8 damageRemaining() {return m_damageRemaining;};
   void damageRemaining(i32 e) {m_damageRemaining=(ui8)e;};
-  ui16 timerIndex(void) {return m_timerIndex;};
+  ui16 timerIndex() {return m_timerIndex;};
   void timerIndex(i32 i) {m_timerIndex = (ui16)i;};
-  void Clear(void);
+  void Clear();
 };
 
 enum CLOUDTYPE
@@ -1333,15 +1333,15 @@ class DB15:public DBCOMMON
              // Bit  7 = ???
              // Bits 8-15 = value.  Like Damage.
   friend class DATABASES;
-  void swap(void);
+  void swap();
 public:           //
-  CLOUDTYPE cloudType(void) {return (CLOUDTYPE)BITS0_6(word2);};
+  CLOUDTYPE cloudType() {return (CLOUDTYPE)BITS0_6(word2);};
   void cloudType(CLOUDTYPE t){SETWBITS0_6(word2,t);};
-  i32 b7(void) {return BITS7_7(word2);};
+  i32 b7() {return BITS7_7(word2);};
   void b7(i32 n){SETWBITS7_7(word2,n);};
-  i32 value(void) {return BITS8_15(word2);};
+  i32 value() {return BITS8_15(word2);};
   void value(i32 n) {SETWBITS8_15(word2,n);};
-  void Clear(void);
+  void Clear();
 };
 
 
@@ -1522,7 +1522,7 @@ struct CURSORFILTER_PACKET
   int                p2;     // = 0
   int                p3;     // = 0
   int                p4;     // = 0
-  CURSORFILTER_PACKET(void);
+  CURSORFILTER_PACKET();
 };
 
 
@@ -1580,20 +1580,20 @@ struct CHARDESC;
 
 class EXPOOL
 {
-  friend i16 ReadDatabases(void);
-  friend RESTARTABLE _DisplayDiskMenu(void);
+  friend i16 ReadDatabases();
+  friend RESTARTABLE _DisplayDiskMenu();
   ui32 *m;
-  void Setup(void);//After loading game.
+  void Setup();//After loading game.
   void enlarge(ui32 size);
 public:
-  EXPOOL(void);
-  ~EXPOOL(void);
-  void Cleanup(void);
+  EXPOOL();
+  ~EXPOOL();
+  void Cleanup();
   void Write(ui32 key, ui32 *record, ui32 size);
   // Read() and Locate() return record size (or -1).
   i32 Read(ui32 key, ui32 *record, ui32 max);
   i32 Locate(ui32 key, ui32 **record);
-  bool IsOpen(void);
+  bool IsOpen();
   //
   // Some functions to get/set/test particular records in expool.
   // I suppose they don't belong here but it works well for me.
@@ -1627,8 +1627,8 @@ class DATABASES
   void swapMISSILE(i32 dbNum);
   void swapCLOUD(i32 dbNum);
 public:
-  DATABASES(void);
-  ~DATABASES(void);
+  DATABASES();
+  ~DATABASES();
   void Allocate(i32 dbNum, i32 numEnt);
   void DeAllocate(i32 dbNum);
   i32 Enlarge(i32 dbNum);//Returns index (or -1 if not possible)
@@ -1686,11 +1686,11 @@ public:
              //    0x0100 Can carry in Pouch.  Can pass thru doors (except keys)
              //    0x0400 Can carry in Chest
 public:
-  OBJ_NAME_INDEX objectType(void) {return (OBJ_NAME_INDEX)objType;};
+  OBJ_NAME_INDEX objectType() {return (OBJ_NAME_INDEX)objType;};
   void objectType(OBJ_NAME_INDEX ot) {objType=(i16)ot;};
-  i32  GraphicClass(void){return graphicClass;};
-  i32  AttackClass(void){return attackClass;};
-  void littleEndian(void)
+  i32  GraphicClass(){return graphicClass;};
+  i32  AttackClass(){return attackClass;};
+  void littleEndian()
   {
     objType = LE16(objType);
     word4 = LE16(word4);
@@ -1705,9 +1705,9 @@ private:
   ui8 m_uByte2;
   ui8 m_uByte3;
 public:
-  ui8 Weight(void) {return m_weight;};
-  ui8 uByte1(void) {return m_uByte1;};
-  ui8 uByte2(void) {return m_uByte2;};
+  ui8 Weight() {return m_weight;};
+  ui8 uByte1() {return m_uByte1;};
+  ui8 uByte2() {return m_uByte2;};
 };
 
 
@@ -1718,7 +1718,7 @@ struct MouseQueueEnt
   ui16 num;
 };
 
-bool mouseQueueIsEmpty(void);
+bool mouseQueueIsEmpty();
 
 class SPELL
 {
@@ -1800,9 +1800,9 @@ class TIMER
 { //  We read them from
   // DUNGEON.DAT when game reloaded.
   friend class GameTimers;
-  friend void swapTimers(void);
+  friend void swapTimers();
 public:
-  TIMER(void) {   m_timerSequence
+  TIMER() {   m_timerSequence
                 = m_timerUByte5 
                 = m_timerUByte6 
                 = m_timerUByte7 
@@ -1820,7 +1820,7 @@ private:
   // 20130115 PRS
   ui32 m_time; // Top 8 bits=partyLevel, bottom 24 bits = time
 public:
-  inline ui32 Time(void){return m_time;};
+  inline ui32 Time(){return m_time;};
   inline void Time(ui32 time){m_time = time;};
 private:
   bool operator < (const TIMER& timer2) const;
@@ -1972,7 +1972,7 @@ private:
     //         word 6 = value to subtract from d.FireShield
     // 79 Result of 1-1-5-2 spell ya-bro-ros (magic footprints)
 public:
-  TIMERTYPE Function(void)const{return (TIMERTYPE)timerFunction;};
+  TIMERTYPE Function()const{return (TIMERTYPE)timerFunction;};
   void Function(TIMERTYPE f)
   {
     ASSERT(f >= TT_EMPTY,"Illegal Timer Type");
@@ -1993,15 +1993,15 @@ private:
   ui8  m_timerUByte8;
   ui8  m_timerUByte9;  //Commonly action (set, clear toggle
 public:
-  inline ui8  timerUByte5(void)const{return m_timerUByte5;};
+  inline ui8  timerUByte5()const{return m_timerUByte5;};
   inline void timerUByte5(ui8 v){m_timerUByte5=v;};
-  inline ui8  timerUByte6(void)const{return m_timerUByte6;};
+  inline ui8  timerUByte6()const{return m_timerUByte6;};
   inline void timerUByte6(ui8 v){m_timerUByte6=v;};
-  inline ui8  timerUByte7(void)const{return m_timerUByte7;};
+  inline ui8  timerUByte7()const{return m_timerUByte7;};
   inline void timerUByte7(ui8 v){m_timerUByte7=v;};
-  inline ui8  timerUByte8(void)const{return m_timerUByte8;};
+  inline ui8  timerUByte8()const{return m_timerUByte8;};
   inline void timerUByte8(ui8 v){m_timerUByte8=v;};
-  inline ui8  timerUByte9(void)const{return m_timerUByte9;};
+  inline ui8  timerUByte9()const{return m_timerUByte9;};
   inline void timerUByte9(ui8 v){m_timerUByte9=v;};
 private:
   ui16 m_timerSequence;  //Sequence when added to queue.
@@ -2010,14 +2010,14 @@ private:
   ui8  m_timerLevel;  // Dungeon level to which the timer refers.
   ui8  unused13[3];  //To make multiple of 32 bits.  Altogether 16 bytes.
 public:
-  inline int  Level(void) {return m_timerLevel;};
+  inline int  Level() {return m_timerLevel;};
   inline void Level(ui8 level){m_timerLevel = level;};
-  i32  TimerSequence(void){return m_timerSequence;};
-  ui8  packedPos(void){return (ui8)((m_timerUByte5 >> 2) & 3);};
+  i32  TimerSequence(){return m_timerSequence;};
+  ui8  packedPos(){return (ui8)((m_timerUByte5 >> 2) & 3);};
   void packedPos(ui32 p){m_timerUByte5=(ui8)((m_timerUByte5&0xf3)|((p&3)<<2));};
-  ui8  packedState(void){return (ui8)(m_timerUByte5 & 3);};
+  ui8  packedState(){return (ui8)(m_timerUByte5 & 3);};
   void packedState(ui32 s){m_timerUByte5=(ui8)((m_timerUByte5&0xfc)|(s&3));};
-  RN& timerObj8(void)
+  RN& timerObj8()
   {
     ASSERT(   (timerFunction==TT_24)
            || (timerFunction==TT_25)
@@ -2027,30 +2027,30 @@ public:
            || (timerFunction==TT_ReactivateGenerator),"Illegal Timer Type");
     return *(RN *)(&m_timerUByte8);
   };
-  void swapTimerWord6(void);
-  void swapTimerObj6(void);
-  void swapTimerWord8(void);
-  void swapTimerObj8(void);
-  void swapTimerSequence(void);
-  RN& timerObj6(void)
+  void swapTimerWord6();
+  void swapTimerObj6();
+  void swapTimerWord8();
+  void swapTimerObj8();
+  void swapTimerSequence();
+  RN& timerObj6()
   {
     ASSERT((timerFunction==TT_Missile0) || (timerFunction==TT_Missile),"Illegal Timer Type");
     return *(RN *)(&m_timerUByte6);
   };
-  RN *pTimerObj6(void){return (RN *)&m_timerUByte6;};
-  i16& timerWord6(void)
+  RN *pTimerObj6(){return (RN *)&m_timerUByte6;};
+  i16& timerWord6()
   {
     return *(i16 *)(&m_timerUByte6);
   };
-  ui16& timerUWord6(void)
+  ui16& timerUWord6()
   {
     return *(ui16 *)(&m_timerUByte6);
   };
-  i16& timerWord8(void)
+  i16& timerWord8()
   {
     return *(i16 *)(&m_timerUByte8);
   };
-  RN *pTimerObj8(void){return (RN *)&m_timerUByte8;};
+  RN *pTimerObj8(){return (RN *)&m_timerUByte8;};
 
 };
 
@@ -2065,27 +2065,27 @@ private:
   ui16  word10;
   ui16  dbSizes[16];
 public:
-  ui8  NumLevel(void) {return BITS8_15(word4);};
-  ui16 Sentinel(void) {return sentinel;};
+  ui8  NumLevel() {return BITS8_15(word4);};
+  ui16 Sentinel() {return sentinel;};
   ui16 DBSize(i32 dbNum) {return dbSizes[dbNum];};
   void DBSize(i32 dbNum, ui16 size) {dbSizes[dbNum] = size;};
-  ui16 LegacyCellFlagArraySize(void) {return word2;};
+  ui16 LegacyCellFlagArraySize() {return word2;};
   void LegacyCellFlagArraySize(ui16 n){word2=n;};
-  ui16 NumWordsInTextArray(void) {return word6;};
+  ui16 NumWordsInTextArray() {return word6;};
   void NumWordsInTextArray(ui16 n) {word6 = n;};
-  ui8  StartingPartyX(void) {return BITS0_4(word8);};
-  ui8  StartingPartyY(void) {return BITS5_9(word8);};
-  ui8  StartingPartyFacing(void) {return BITS10_11(word8);};
-  ui16 ObjectListLength(void) {return word10;};
+  ui8  StartingPartyX() {return BITS0_4(word8);};
+  ui8  StartingPartyY() {return BITS5_9(word8);};
+  ui8  StartingPartyFacing() {return BITS10_11(word8);};
+  ui16 ObjectListLength() {return word10;};
   void ObjectListLength(ui16 v) {word10 = v;};
-  void Swap(void);
+  void Swap();
 };
 
 struct LEVELDESC
 { // Describes a level.  We read them from
   // DUNGEON.DAT
   friend void swapLevelDescriptors(i32);// Needs to swap words
-  friend i16 ReadDatabases(void);
+  friend i16 ReadDatabases();
   ui16 cellOffset;  // littleEndian when read
                     //Offset of first cell in CELLFLAG array
                     //Actually, only the least significant 16 bits.
@@ -2111,23 +2111,23 @@ private:
               // bits 8-11, // First door type on this level
               // bits 12-15 // Second door type on this level
 public:
-  ui8 LastColumn(void) { return BITS6_10(word8);};
-  ui8 LastRow(void) { return BITS11_15(word8);};
-  ui8 Level(void) { return BITS0_5(word8);};
-  ui8 NumWallDecoration(void) {return BITS0_3(word10);};
-  ui8 NumRandomWallDecoration(void) {return BITS4_7(word10);};
-  ui8 NumFloorDecorations(void) {return BITS8_11(word10);};
-  ui8 NumRandomFloorDecorations(void) {return BITS12_15(word10);};
-  ui8 NumDoorDecorations(void) {return BITS0_3(word12);};
-  ui8 numMonsterType(void) {return BITS4_7(word12);};
+  ui8 LastColumn() { return BITS6_10(word8);};
+  ui8 LastRow() { return BITS11_15(word8);};
+  ui8 Level() { return BITS0_5(word8);};
+  ui8 NumWallDecoration() {return BITS0_3(word10);};
+  ui8 NumRandomWallDecoration() {return BITS4_7(word10);};
+  ui8 NumFloorDecorations() {return BITS8_11(word10);};
+  ui8 NumRandomFloorDecorations() {return BITS12_15(word10);};
+  ui8 NumDoorDecorations() {return BITS0_3(word12);};
+  ui8 numMonsterType() {return BITS4_7(word12);};
          //The monster types are listed just after the cellflags.
          //This is also the offset of the wall decoration
          //table in the information following the cellflags.
-  ui8 experienceMultiplier(void) {return BITS12_15(word12);};
-  ui8 backgroundGraphicSet(void) {return BITS0_3(word14);};
-  ui8 wallGraphicSet(void) {return BITS4_7(word14);};
-  ui8 Door1Type(void) {return BITS8_11(word14);};
-  ui8 Door2Type(void) {return BITS12_15(word14);};
+  ui8 experienceMultiplier() {return BITS12_15(word12);};
+  ui8 backgroundGraphicSet() {return BITS0_3(word14);};
+  ui8 wallGraphicSet() {return BITS4_7(word14);};
+  ui8 Door1Type() {return BITS8_11(word14);};
+  ui8 Door2Type() {return BITS12_15(word14);};
 };
 
 struct SOUND
@@ -2173,16 +2173,16 @@ class SINGLE_MONSTER_STATUS
 private:
   ui8 sms;
 public:
-  void Clear(void){sms=0;};
-  bool TestAttacking(void){return (sms&0x80)!=0;};
-  void SetAttacking(void){sms|=0x80;};
-  void SetNotAttacking(void){sms&=0x7f;};
-  bool TestMirror(void){return (sms&0x40)!=0;};
-  void SetMirror(void){sms|=0x40;};
-  void ClearMirror(void){sms&=0xbf;};
-  void ToggleMirror(void){sms^=0x40;};
-  ui8  Nibble0(void){return (ui8)(sms&7);};
-  ui8  Nibble3(void){return (ui8)((sms>>3)&7);};
+  void Clear(){sms=0;};
+  bool TestAttacking(){return (sms&0x80)!=0;};
+  void SetAttacking(){sms|=0x80;};
+  void SetNotAttacking(){sms&=0x7f;};
+  bool TestMirror(){return (sms&0x40)!=0;};
+  void SetMirror(){sms|=0x40;};
+  void ClearMirror(){sms&=0xbf;};
+  void ToggleMirror(){sms^=0x40;};
+  ui8  Nibble0(){return (ui8)(sms&7);};
+  ui8  Nibble3(){return (ui8)((sms>>3)&7);};
   void Nibble0(ui32 v){sms=(ui8)(sms&0xf8|v&7);};
   void Nibble3(ui32 v){sms=(ui8)(sms&0xc7|((v&7)<<3));};
 };
@@ -2222,8 +2222,8 @@ public:
                 //      If Dispell Missile strikes Zytaz and 0x80
                 //         is set then damage occurs
                   
-  inline ui8& positions(void) {return pos_3;};
-  inline ui8& facings(void) {return facing_2;};
+  inline ui8& positions() {return pos_3;};
+  inline ui8& facings() {return facing_2;};
 };
 
 struct MONSTERDESC;
@@ -2235,21 +2235,21 @@ struct MONSTERDESC_WORD4
   friend ALTMONGRAPH *FindAltMonsterGraphic(i32 altNum);
 private:
   ui16 mdw4;
-  ui16 Word(void){return mdw4;};
+  ui16 Word(){return mdw4;};
 public:
-  MONSTERDESC_WORD4(void){mdw4=0;};
-  void Swap(void){mdw4=LE16(mdw4);};
-  ui8  Nibble0(void)  {return (ui8)(mdw4&3);};
-  ui8  Nibble12(void) {return (ui8)((mdw4>>12)&3);};
-  ui8  Nibble14(void) {return (ui8)((mdw4>>14)&3);};
-  bool NonAttackingMirrorOK(void) {return (mdw4&0x0004)!=0;};
-  bool HasSideGraphic(void)       {return (mdw4&0x0008)!=0;};
-  bool HasBackGraphic(void)       {return (mdw4&0x0010)!=0;};
-  bool HasAttackGraphic(void)     {return (mdw4&0x0020)!=0;};
-  bool HasBit7(void)              {return (mdw4&0x0080)!=0;};
-  bool HasBit8(void)              {return (mdw4&0x0100)!=0;};
-  bool AttackingMirrorOK(void)    {return (mdw4&0x0200)!=0;};
-  bool HasBit10(void)             {return (mdw4&0x0400)!=0;};
+  MONSTERDESC_WORD4(){mdw4=0;};
+  void Swap(){mdw4=LE16(mdw4);};
+  ui8  Nibble0()  {return (ui8)(mdw4&3);};
+  ui8  Nibble12() {return (ui8)((mdw4>>12)&3);};
+  ui8  Nibble14() {return (ui8)((mdw4>>14)&3);};
+  bool NonAttackingMirrorOK() {return (mdw4&0x0004)!=0;};
+  bool HasSideGraphic()       {return (mdw4&0x0008)!=0;};
+  bool HasBackGraphic()       {return (mdw4&0x0010)!=0;};
+  bool HasAttackGraphic()     {return (mdw4&0x0020)!=0;};
+  bool HasBit7()              {return (mdw4&0x0080)!=0;};
+  bool HasBit8()              {return (mdw4&0x0100)!=0;};
+  bool AttackingMirrorOK()    {return (mdw4&0x0200)!=0;};
+  bool HasBit10()             {return (mdw4&0x0400)!=0;};
 };
 
 
@@ -2258,7 +2258,7 @@ struct MONSTERDESC
   friend void DumpMonster(FILE *f, i32 i, MONSTERDESC& monster);
   friend void fixItem26(MONSTERDESC *pItem);
   friend ALTMONGRAPH *FindAltMonsterGraphic(i32 altNum);
-  friend void ReadTablesFromGraphicsFile(void);
+  friend void ReadTablesFromGraphicsFile();
   
   ui8 uByte0; // Bits 0-1 tested for == 1
               // This is the index of the entry itself!
@@ -2283,18 +2283,18 @@ private:
               // Bit 12 = can see in dark.
               // Bit 13 = impervious to damage???
 public:
-  bool nonMaterial(void)    const {return (word2&0x40)!=0;};
-  ui8  horizontalSize(void) const {return (ui8)(word2 & 3);};
-  ui8  verticalSize(void)   const {return (ui8)((word2&0x180)>>7);};
-  bool leavesDroppings(void)      {return (word2&0x200)!=0;};
-  bool invincible(void)     const {return (word2&0x2000)!=0;};
-  bool absorbsDaggersEtc(void)    {return (word2&0x400)!=0;};
-  bool levitating(void)     const {return (word2&0x20)!=0;};
-  bool seesInvisible(void)        {return (word2&0x800)!=0;};
-  bool See360(void)               {return (word2&0x4)!=0;};
-  bool word2Bit3(void)            {return (word2&0x8)!=0;};
-  bool word2Bit4(void)            {return (word2&0x10)!=0;};
-  bool canSeeInDark(void)         {return (word2&0x1000)!=0;};
+  bool nonMaterial()    const {return (word2&0x40)!=0;};
+  ui8  horizontalSize() const {return (ui8)(word2 & 3);};
+  ui8  verticalSize()   const {return (ui8)((word2&0x180)>>7);};
+  bool leavesDroppings()      {return (word2&0x200)!=0;};
+  bool invincible()     const {return (word2&0x2000)!=0;};
+  bool absorbsDaggersEtc()    {return (word2&0x400)!=0;};
+  bool levitating()     const {return (word2&0x20)!=0;};
+  bool seesInvisible()        {return (word2&0x800)!=0;};
+  bool See360()               {return (word2&0x4)!=0;};
+  bool word2Bit3()            {return (word2&0x8)!=0;};
+  bool word2Bit4()            {return (word2&0x10)!=0;};
+  bool canSeeInDark()         {return (word2&0x1000)!=0;};
   MONSTERDESC_WORD4 word4;  //littleEndian when read from file
               //  Bits 12-13 = ?
               //  Bits 14-15 = ?
@@ -2346,20 +2346,20 @@ private:
               //bits 8-11 = time increment when attacking
 public:
   ui8 uByte22[4];
-  i16 word0(void)            const {return (i16)((uByte0<<8) | attackSound);};
-  i16 word22(void)           const {return (i16)((uByte22[0]<<8) | uByte22[1]);};
-  ui8 sightDistance(void)    const {return (UI8)(word14 & 15);};
-  ui8 smellingDistance(void) const {return BITS8_11(word14);};
-  ui8 word14_12_15(void)     const {return BITS12_15(word14);};
-  ui8 bravery(void)          const {return BITS4_7(word16);};
-  ui8 word16_8_11(void)      const {return BITS8_11(word16);};
-  ui8 word16_12_15(void)     const {return BITS12_15(word16);};
-  ui8 FireResistance(void)   const {return BITS4_7(word18);};
-  ui8 PoisonResistance(void) const {return BITS8_11(word18);}
-  int AdditionalDelayFromAttackToMove(void) const {return BITS8_11(word20);};;
-  int AdditionalDelayFromMoveToAttack(void) const {return BITS4_7(word20);};;
-  int Word20_0_3(void)                      const {return BITS0_3(word20);};
-  ui8 timePerMove(void)      const {return movementTicks06;};
+  i16 word0()            const {return (i16)((uByte0<<8) | attackSound);};
+  i16 word22()           const {return (i16)((uByte22[0]<<8) | uByte22[1]);};
+  ui8 sightDistance()    const {return (UI8)(word14 & 15);};
+  ui8 smellingDistance() const {return BITS8_11(word14);};
+  ui8 word14_12_15()     const {return BITS12_15(word14);};
+  ui8 bravery()          const {return BITS4_7(word16);};
+  ui8 word16_8_11()      const {return BITS8_11(word16);};
+  ui8 word16_12_15()     const {return BITS12_15(word16);};
+  ui8 FireResistance()   const {return BITS4_7(word18);};
+  ui8 PoisonResistance() const {return BITS8_11(word18);}
+  int AdditionalDelayFromAttackToMove() const {return BITS8_11(word20);};;
+  int AdditionalDelayFromMoveToAttack() const {return BITS4_7(word20);};;
+  int Word20_0_3()                      const {return BITS0_3(word20);};
+  ui8 timePerMove()      const {return movementTicks06;};
 };
 
 struct ITEM100s
@@ -2398,8 +2398,8 @@ struct ITEMQ
   // next list entry when this entry is in the
   // unused list.  The pointers use the same
   // space as word4, prev, next, and graphicNum.
-  //ITEMQ *pgPrev(void){return *(ITEMQ **)(&word4);};
-  //ITEMQ *pgNext(void){return *(ITEMQ **)(&next);};
+  //ITEMQ *pgPrev(){return *(ITEMQ **)(&word4);};
+  //ITEMQ *pgNext(){return *(ITEMQ **)(&next);};
   //void   pgPrev(ITEMQ *pg){(*(ITEMQ **)(&word4))=pg;};
   //void   pgNext(ITEMQ *pg){(*(ITEMQ **)(&next))=pg;};
 };
@@ -2423,13 +2423,13 @@ private:
   ui8 ubCurrent;
   ui8 ubMinimum;
 public:
-  ui8 Minimum(void);
+  ui8 Minimum();
   void Minimum(i32);
   void IncrMinimum(i32 increment); // Minus to decrement
-  ui8 Maximum(void);
+  ui8 Maximum();
   void Maximum(i32);
   void IncrMaximum(i32 increment); // Minus to decrement
-  ui8 Current(void);
+  ui8 Current();
   void Current(i32);
   void IncrCurrent(i32 increment); // Minus to decrement
 };
@@ -2516,24 +2516,24 @@ private:
   i16 m_wMana;       //60;
   i16 m_wMaxMana;    //62;
 public:
-  inline i16 HP(void){return m_wHP;};
+  inline i16 HP(){return m_wHP;};
   void HP(i32 h);
   void IncrHP(i32 i);
-  inline i16 MaxHP(void){return m_wMaxHP;};
+  inline i16 MaxHP(){return m_wMaxHP;};
   void MaxHP(i32 m);
   void IncrMaxHP(i32 i);
-  inline i16 Stamina(void){return m_wStamina;};
+  inline i16 Stamina(){return m_wStamina;};
   void Stamina(i32 s);
-  inline i16 MaxStamina(void){return m_wMaxStamina;};
+  inline i16 MaxStamina(){return m_wMaxStamina;};
   void MaxStamina(i32 m);
   void IncrMaxStamina(i32 i);
-  inline i16 Mana(void) {return m_wMana;};
+  inline i16 Mana() {return m_wMana;};
   void Mana(i32 m);
   void IncrMana(i32 i);
-  inline i16 MaxMana(void) {return m_wMaxMana;};
+  inline i16 MaxMana() {return m_wMaxMana;};
   void MaxMana(i32 m);
   void IncrMaxMana(i32 i);
-  void SaveToWings(void);
+  void SaveToWings();
   bool GetFromWings(ui16 fingerPrint, bool testOnly);
   bool CopyCharacter(ui32 fingerprint);
   CHARDESC *LocateInWings(ui32 fingerprint);
@@ -2580,7 +2580,7 @@ private:
 public:
   inline RN  Possession(int i){return possessions[i];};
   void SetPossession(int i, RN obj, bool processFilter);
-  void InitializePossessions(void);
+  void InitializePossessions();
   ui16 load;//272; In 10ths of KG
   ui16 shieldStrength; //274;
   ui32 talents;        // 276
@@ -2723,17 +2723,17 @@ extern i32 GameMode;
 //void RestoreRegs(ui16 mask);
 
 void logMsg(char *msg);
-void AsciiDump(void);
+void AsciiDump();
 bool verifyRectPos(RectPos *rectpos);
-//void verifyppq(void);
+//void verifyppq();
 
 //void display(CDC *pDC, i8 *STScreen);
-void display(void);
-//void pumper(void); // Pump any queued Windows messages
-void checkVBL(void); //Sort of a pumper replacement.
-void RevealViewport(void); // Debug aid
-void ClearViewport(void); // Debug aid
-//void BuildSmartDiscardTable(void);
+void display();
+//void pumper(); // Pump any queued Windows messages
+void checkVBL(); //Sort of a pumper replacement.
+void RevealViewport(); // Debug aid
+void ClearViewport(); // Debug aid
+//void BuildSmartDiscardTable();
 void SmartDiscard(bool Initialize);
 
 void printAbsLocation(FILE *f, i32 level, i32 x, i32 y);
@@ -2742,8 +2742,8 @@ void printAbsLocation(FILE *f, i32 level, i32 x, i32 y);
 //{
 //
 //};
-void checkMemory(void);
-void Terminate(void);
+void checkMemory();
+void Terminate();
 //void die(i32 errornum, CString msg="");
 void die(i32 errornum, const char * = NULL);
 void NotImplemented(i32 i);
@@ -2764,12 +2764,12 @@ pnt& pntGear(pnt p);
 upnt& upntGear(pnt p);
 void swap4words(i16 *words);
 
-//void checkVBL(void)
-void Invalidate(void);
-void SetSupervisorMode(void);
-void ClearSupervisorMode(void);
-void DisableCursor(void);
-i32  GetAvailMemory(void) ;
+//void checkVBL()
+void Invalidate();
+void SetSupervisorMode();
+void ClearSupervisorMode();
+void DisableCursor();
+i32  GetAvailMemory() ;
 i16 Timer(pnt p, i16 d);
 
 
@@ -2801,14 +2801,14 @@ class FILETABLE
   bool m_enciphered;
   char *m_fileName;
 public:
-  FILETABLE(void);
-  ~FILETABLE(void);
-  FILE *GetFile(void){return m_file;};
-  char *GetFileName(void){return m_fileName;};
+  FILETABLE();
+  ~FILETABLE();
+  FILE *GetFile(){return m_file;};
+  char *GetFileName(){return m_fileName;};
   void SetFile(FILE *f, const char *fileName);
   void Enciphered(bool e){m_enciphered = e;};
-  bool Enciphered(void){return m_enciphered;};
-  void Cleanup(void);
+  bool Enciphered(){return m_enciphered;};
+  void Cleanup();
 };
 
 
@@ -2878,7 +2878,7 @@ struct DSAVARS
 {
   ui8   definedFlags[100];
   ui32  values[100];
-  DSAVARS(void){memset(definedFlags,DVT_Undefined,100);};
+  DSAVARS(){memset(definedFlags,DVT_Undefined,100);};
 };
 
 class MMRECORD
@@ -2892,7 +2892,7 @@ public:
   RN          objMonster;
   DSAVARS     dsaVars;
 
-  MMRECORD(void){flgs[0]=flgs[1]=0;CalledPreMoveFilter=false;};
+  MMRECORD(){flgs[0]=flgs[1]=0;CalledPreMoveFilter=false;};
   void Setflg(MONSTEREVENTS f){flgs[f/32]|=(1<<(f%32));};
   bool Getflg(MONSTEREVENTS f){return (flgs[f/32] & (1<<(f%32)))!=0;};
 };
@@ -3036,8 +3036,8 @@ enum HC
 };
 
 
-//i32  DIRECT_CONIN(void); // Trap 1 #0x07
-//i16  CONSTAT(void);      // Trap 1 #0x0b
+//i32  DIRECT_CONIN(); // Trap 1 #0x07
+//i16  CONSTAT();      // Trap 1 #0x0b
 i16  OPEN(const char *name, const char *flags);
 ui64 MODIFIEDTIME(i32 file); // seconds since the beginning
 void SETENCIPHERED(i16 f, unsigned char *key, i32 keylen);
@@ -3048,43 +3048,43 @@ i32  READ(i32 file, i32 len, ui8 *buf);
 char *GETS(char *buf, i32 max, i16 file);
 i32  WRITE(i16 file, i32 len, ui8 *buf);
 i16  UNLINK(char *name);
-pnt  GETDTA(void);
+pnt  GETDTA();
 void SETDTA(pnt);
 i32  LSEEK(i32 offset, i32 file, i32 origin);
 i32  RENAME(i32 trash, const char *name1, const char *name2);
-void PRINTLINE(const char *message);//(void)
+void PRINTLINE(const char *message);//()
 void setpalette(PALETTE *palette);
-void ForceScreenDraw(void);
-//void VerifyGraphicFreeList(void);
+void ForceScreenDraw();
+//void VerifyGraphicFreeList();
 i32 Smaller(i32, i32);
 i32 Larger(i32, i32);
 i32 TwoBitNibble(i32 packedValue, i32 nibbleNum);
 
 #define StartCSB(n) CALL0(n,StartCSB)
-RESTARTABLE _StartCSB(const CSB_UI_MESSAGE *);//(void)
+RESTARTABLE _StartCSB(const CSB_UI_MESSAGE *);//()
 #define StartChaos(n) CALL0(n,StartChaos)
-RESTARTABLE _StartChaos(const CSB_UI_MESSAGE *);//(void)
+RESTARTABLE _StartChaos(const CSB_UI_MESSAGE *);//()
 #define StartHint(n) CALL0(n,StartHint)
-RESTARTABLE _StartHint(const CSB_UI_MESSAGE *);//(void)
+RESTARTABLE _StartHint(const CSB_UI_MESSAGE *);//()
 #define AskWhatToDo(n) CALL0(n,AskWhatToDo)
-RESTARTABLE _AskWhatToDo(void);//(void)
+RESTARTABLE _AskWhatToDo();//()
 void DispatchCSB(CSB_UI_MESSAGE *);
 void DispatchCSB(CODESTATE);
-//void InitializeDBank(void);
+//void InitializeDBank();
 void jdisint(i16 P1);
 void jenabint(i16 P1);
-void xbtimer(i16 timer, i16 control, i16 data, void (*f)(void));
+void xbtimer(i16 timer, i16 control, i16 data, void (*f)());
 #define wvbl(n) CALL0(n,wvbl)
 RESTARTABLE _wvbl(const CSB_UI_MESSAGE *);
-ui8 *physbase(void);
+ui8 *physbase();
 i16  giaccess(i32 data, i32 Register);
 void playSound(i32 soundNum);
 ui8 *dosound(ui8 *P1); // Start sound stream
 void setscreen(ui8 *logaddr, ui8 *physaddr, i16 res);
 #define MainLoop(n) CALL0(n,MainLoop)
-RESTARTABLE _MainLoop(const CSB_UI_MESSAGE *);//TAG00068e//(void)
+RESTARTABLE _MainLoop(const CSB_UI_MESSAGE *);//TAG00068e//()
 //#define LoadPartyLevel(n,a) CALL1(n,LoadPartyLevel,a)
-void LoadPartyLevel(const i32 P1);//TAG000850(void)
+void LoadPartyLevel(const i32 P1);//TAG000850()
 //   TAG00091c
 void vblFlashButn(i16 x1, i16 x2, i16 y1, i16 y2); // called by VBL handler
 void MemMove(ui8 *src, ui8 *dest, i32 byteCount); //TAG0009dc
@@ -3092,32 +3092,32 @@ void ClearMemory(ui8 *dest, i32 numByte); // TAG000a84
 void fillWithByte(ui8 *addr, i16 num, i8 value, i16 spacing);//TAG000ac0
 void fillMemory(i16 *pwAddr, i32 num, i16 value, i16 spacing); //TAG000af6
 void TAG000bb0(dReg& D0, dReg& D4, dReg& D5); // called by vertical blank handler
-void vblInterrupt(void);  // TAG000c3a
-void TAG000ec6(void);
+void vblInterrupt();  // TAG000c3a
+void TAG000ec6();
 void SystemError(i16 errorNum);//TAG000efc //
 void BLT2Viewport(ui8 *, RectPos *, i16, i16);//TAG000f4a
 void BLT2Screen(ui8 *P1, RectPos *P2, i16 P3, i16 P4);//TAG000f7e
-void SwapGraphic0x231(void);
-void SetButtonPointers(void);
+void SwapGraphic0x231();
+void SetButtonPointers();
 ui32 Signature(char *text);
 void Signature(int fileHandle, ui32 *signature1, ui32 *signature2);
 #define VBLDelay(n,a) CALL1(n,VBLDelay,a);
-RESTARTABLE _VBLDelay(const i32 P1);//TAG000fb2 (void)
+RESTARTABLE _VBLDelay(const i32 P1);//TAG000fb2 ()
 //i16  Abs(i32 x);//TAG00fd2
 //i16  Min (i32 n, i32 m); //TAG000fe2
 //i16  Max(i16, i16);//TAG000ff8
 #define LIMIT(min,x,max)(((x)>(max))?(max):(((x)<(min))?(min):(x)))
 i16  ApplyLimits(i32 min, i32 x, i32 max);//TAG00100e
-i32  STRandom(void); //TAG001030
+i32  STRandom(); //TAG001030
 i32  STRandom(i32);
-ui8  STRandomBool(void);//TAG001050
-ui8  STRandom0_3(void);//TAG001074
+ui8  STRandomBool();//TAG001050
+ui8  STRandom0_3();//TAG001074
 i16  ScaledMultiply(i16 Op1, i16 scale, i16 Op2);//TAG001098
-void TAG0010ae(void);
+void TAG0010ae();
 OBJ_NAME_INDEX GetBasicObjectType(RN);//TAG00114c
 //OBJ_NAME_INDEX GetObjectNameIndex(RN);//TAG001188
 void DrawNameOfHeldObject(RN);//TAG0012a0
-void ClearHeldObjectName(void);//TAG00133e
+void ClearHeldObjectName();//TAG00133e
 void GetIconGraphic(OBJ_NAME_INDEX, ui8 *); //TAG00135c
 void TAG0013e4(OBJ_NAME_INDEX, i32, i32);
 void DrawItem(i32 squareNumber, OBJ_NAME_INDEX objectNameIndex);//TAG00144e
@@ -3142,19 +3142,19 @@ void DrawText(ui8 *dest,
               const char* text,
               i16 length);
 //void SetPrintPosition(i16 column, i16 row);//TAG001836
-//void RemoveTimedOutText(void);// CALL0(n,RemoveTimedOutText)
+//void RemoveTimedOutText();// CALL0(n,RemoveTimedOutText)
 //#define RemoveTimedOutText(n) CALL0(n,RemoveTimedOutText)
-//RESTARTABLE _RemoveTimedOutText(void);
+//RESTARTABLE _RemoveTimedOutText();
 //#define TAG001992(n) CALL0(n,TAG001992)
 //#define CreateNewTextRow(n) CALL0(n,CreateNewTextRow) //TAG001992
-//RESTARTABLE _TAG001992(void);//(void)
-//RESTARTABLE _CreateNewTextRow(void);//(void)//TAG001992
+//RESTARTABLE _TAG001992();//()
+//RESTARTABLE _CreateNewTextRow();//()//TAG001992
 //void Printf(i32 color, pnt text);//TAG0019f8
 //#define PrintLines(n,a,b) CALL2(n,PrintLines,a,b)
-//RESTARTABLE _PrintLines(i32 color, pnt text); //TAG001aa8//(void)
+//RESTARTABLE _PrintLines(i32 color, pnt text); //TAG001aa8//()
 void PrintLines(i32 color, const char *text);//TAG001aa8
 void QuePrintLines(i32 color, const char *text); //TAG001aa8
-void PrintLinefeed(void);//TAG001c02
+void PrintLinefeed();//TAG001c02
 void TextToViewport(i32 x, i32 y, i32 color, const char* text, bool translate);//TAG001c16
 void TextOutToScreen(i32 column,
                      i32 row,
@@ -3162,36 +3162,36 @@ void TextOutToScreen(i32 column,
                      i32,
                      const char* pnt,
                      bool translate=false);//TAG001c42
-void TAG001c6e(void);
+void TAG001c6e();
 //      001ce8 = TRAP 14
 //      001cf8 = TRAP 1
 void StartSound(ui8 *P1, i32 P2, i32 highVolume); // TAG001d16
 i32  SoundFilter(i32 soundNum, i32 highVolume, const LOCATIONREL *soundLocr);
-i32 CheckSoundQueue(void);
+i32 CheckSoundQueue();
 void TAG001e16(i16 P1);
-//void TAG001e50(void); // Timer 0 handler
-//void TAG001ede(void); // Sound timer handler???
-//void TAG0020ca(void);
+//void TAG001e50(); // Timer 0 handler
+//void TAG001ede(); // Sound timer handler???
+//void TAG0020ca();
 void QueueSound(i32 soundNum , 
                 i32 mapX, 
                 i32 mapY, 
                 i32 delay);//TAG00219a
-void KeyclickOff(void); //TAG002164
-void StartQueuedSound(void);//TAG002336;
-void TAG0023b0(void);
+void KeyclickOff(); //TAG002164
+void StartQueuedSound();//TAG002336;
+void TAG0023b0();
 void SetCursorShape(i16);//TAG002456
 void CreateObjectCursor(pnt P1);//TAG002480
-void TAG002572(void);
-void TAG0025a6(i32 P1);//(void)
-void TAG002818(void);
-void RemoveCursor(void); // TAG00289a
-void CreateCursorBitmap(void); //TAG00295e// called by vertical blank handler
-void DrawCursor(void);//TAG002c9a; // called by vertical blank handler
+void TAG002572();
+void TAG0025a6(i32 P1);//()
+void TAG002818();
+void RemoveCursor(); // TAG00289a
+void CreateCursorBitmap(); //TAG00295e// called by vertical blank handler
+void DrawCursor();//TAG002c9a; // called by vertical blank handler
 void MouseInterrupt(aReg A0); //TAG002ef0
 void OnMouseSwitchAction(i32 buttons, i32 x=-1, i32 y=-1);//TAG002f70
 void STHideCursor(HC hc); // TAG002fd2
 void STShowCursor(HC hc); // TAG003026
-void TAG00306c(void);
+void TAG00306c();
 void TAG0030e6(i32 divisor, i32 dividend, i32 *quotient, i32 *remainder);
 //void TAG003158(i32,i32); // i32 (left on stack) = P1*P2 (inline it)
 void MoveWords(aReg& A0, aReg A1, i32 numM1); // 0031c4 // Input = A0, A1, and D0
@@ -3204,11 +3204,11 @@ i16  StrLen(const char *string);//TAG0032ba
 const char *StrChr(const char *, i16);//TAG0032e4 Find character in string
 void ModifyPalettes(i32, i32);//TAG003796
 //#define ReadGraphicsForLevel(n) CALL0(n,ReadGraphicsForLevel)
-void ReadGraphicsForLevel(void);//(void) TAG00390e
+void ReadGraphicsForLevel();//() TAG00390e
 void ReadFloorAndCeilingBitmaps(i16 P1); //TAG00381a
 void ReadWallBitmaps(i16 P1); //TAG00386a
-void MarkViewportUpdated(i16 P1);//TAG0042da (void)
-void FloorAndCeilingOnly(void);//TAG004308
+void MarkViewportUpdated(i16 P1);//TAG0042da ()
+void FloorAndCeilingOnly();//TAG004308
 void MakeMirror(ui8 *src, ui8 *dst, i32 width, i32 height);//TAG00434a
 void BltShapeToViewport(ui8 *P1, RectPos *P2);//TAG00437e
 void BltRectangleToViewport(ui8 *src, RectPos *P2);//TAG0043c4
@@ -3216,7 +3216,7 @@ void BltTempToViewport(RectPos *);//TAG00440a
 void MirrorShapeBltToViewport(ui8 *P1, RectPos *P2);//TAG004450
 void GraphicToViewport(i32 P1, RectPos *rect);//TAG0044b0
 void MirrorGraphicToViewport(i32 graphic, RectPos *rect);//TAG0044fe
-void TAG00456c(void);
+void TAG00456c();
 i16  DrawWallDecoration(i32 graphicOrdinal, 
                         i32 relativePosition,
                         RN text,
@@ -3437,15 +3437,15 @@ void AttachItem16ToMonster(RN P1, i32 mapX, i32 mapY);//TAG00b062
 void DetachItem16(i32 item16Index);// TAG00b152
 //   TAG00b1f0
 RN   CreateMonster(i32, i32, i32 numMonM1, i32, i32, i32, bool, bool);//(RN)
-void CreateAndDropObject(i32, i32, i32, i32, i32);//TAG00b364(void)
-void TAG00b522(RN, i32, i32);//(void)
+void CreateAndDropObject(i32, i32, i32, i32, i32);//TAG00b364()
+void TAG00b522(RN, i32, i32);//()
 void DropMonsterRemains(i32, 
                         i32, 
                         RN, 
                         i16 bodyPartSoundDelay, 
                         i32 monsterAttachedToLevel, 
-                        bool dropResidue);//TAG00b580(void)
-void DeleteMonster(i32, i32, MMRECORD *pmmr);//TAG00b6ac (void)
+                        bool dropResidue);//TAG00b580()
+void DeleteMonster(i32, i32, MMRECORD *pmmr);//TAG00b6ac ()
 //   TAG00b73a
 MONSTER_DAMAGE_RESULT DamageMonster(
                DB4 *, //(i16)
@@ -3459,11 +3459,11 @@ MONSTER_DAMAGE_RESULT DamageMonster(
 // TAG00baec
 MONSTER_DAMAGE_RESULT DamageMonsterGroup(DB4 *, i32, i32, i32, i16, bool, MMRECORD *pmmr); //(i16)
 void KillMonster(RN RNmon, ui32 indexInGroup);
-void StealFromCharacter(DB4 *, i32);//TAG00bc12//(void)
+void StealFromCharacter(DB4 *, i32);//TAG00bc12//()
 i16  DeterminePoisonDamage(MONSTERTYPE mt, i16);
-void TAG00bd40(void);
-void ProcessMonstersOnLevel(void);//TAG00bd70
-void InitializeItem16(void);//TAG00be06
+void TAG00bd40();
+void ProcessMonstersOnLevel();//TAG00bd70
+void InitializeItem16();//TAG00be06
 bool BlockedTypeA(i32 mapX, i32 mapY);//TAG00be5a
 bool StoneOrClosedFalseWall(i32 mapX, i32 mapY);//TAG00bf00
 //   TAG00bf50
@@ -3493,9 +3493,9 @@ void TurnMonsterGroup(ITEM16 *, ////TAG00c86c
 bool MonsterAttacks(RN monster, DB4 *, i32 x, i32 y, i16);//TAG00c8c0//(i16)
 void SetMonsterTimerB(TIMER *, const ui32 alternateTime); // TAG00cb68
 //   TAG00cbc6
-void ProcessTimers29to41(i32 mapX, i32 mapY, TIMERTYPE timeType, i16 P4);//(void)
+void ProcessTimers29to41(i32 mapX, i32 mapY, TIMERTYPE timeType, i16 P4);//()
 //i16  TAG00dcf2(pnt P1);
-void TAG00dd78( void *f(void));
+void TAG00dd78( void *f());
 i16 LaunchMissile(
                RN   object, //TAG00dd90(i16)
                i32  mapX,
@@ -3513,9 +3513,9 @@ void ThrowMissile(i32 missileType,
                   i32 range,
                   i32 damage,
                   i32 deltaRangeDamage);
-void CreateCloud(RN, i16, i32, i32, i32, i32, i16, MMRECORD *pmmrF);//(void)TAG00dea8
+void CreateCloud(RN, i16, i32, i32, i32, i32, i16, MMRECORD *pmmrF);//()TAG00dea8
 void TAG00e156(RN);
-void ProcessObjectFromMissile(RN, RN *dest, i32, i32);//TAG00e17a(void)
+void ProcessObjectFromMissile(RN, RN *dest, i32, i32);//TAG00e17a()
 i16  DetermineMagicDamage(DB14 *rec, RN object);//TAG00e218
 //   TAG00e35a
 i16  ProcessMissileEncounter(
@@ -3528,15 +3528,15 @@ i16  ProcessMissileEncounter(
                              RN missile,
                              MMRECORD *pmmr);
 i16  CheckMonsterVersusMissiles(i32 x, i32 y, ui16, MMRECORD *pmmr);//(i16)TAG00e8ce
-void MissileTimer(TIMER *P1);//TAG00e962(void)
-void ProcessTT_25(TIMER *P1);//TAG00ecca(void)
+void MissileTimer(TIMER *P1);//TAG00e962()
+void ProcessTT_25(TIMER *P1);//TAG00ecca()
 bool IsCellFluxcage(i32 mapX, i32 mapY); //TAG00f058
 RN   IsLordChaosHere(i32 mapX, i32 mapY);//TAG00f0e8
 bool OpenTeleporterPitOrDoor(i32 mapX, i32 mapY); //TAG00f132
 //void FluxCage(i32, i32); //TAG00f182
 RN   CreateFluxcage(i32 x, i32 y);
 #define Fusion(n,a,b) CALL2(n,Fusion,a,b)
-RESTARTABLE _Fusion(const i32 attackX, const i32 attackY);//TAG00f340//(void)
+RESTARTABLE _Fusion(const i32 attackX, const i32 attackY);//TAG00f340//()
 //   TAG00f4c8
 i16  DistanceBetweenPoints(i32 mapX, i32 mapY, i32 partyX, i32 partyY);
 //   TAG00f50a
@@ -3570,22 +3570,22 @@ i16  HitDoor(i32 mapX,   //TAG00fc20
              i32 force,
              bool explosion,
              i32);
-//void InitializeTimers(void);//TAG00fd1c
+//void InitializeTimers();//TAG00fd1c
 //bool TestTimerLess(TIMER *p1, TIMER *p2);//TAG00fd9e
 i16  FindTimerPosition(i32 P1);//TAG00fdce
 //void AdjustTimerPosition(i32 index); //TAG00fdf0(i32);
 //void DeleteTimer(i32);//TAG00ff4c
 //i16  SetTimer(TIMER *P1); // TAG00ffbe
 //void GetNextTimerEntry(TIMER *P1, ui32 *index);//TAG01022c
-//i16  CheckForTimerEvent(void);//TAG010260//returns 0 or 1
-void ProcessTT_1(TIMER *P1);//TAG0102a4(void)
+//i16  CheckForTimerEvent();//TAG010260//returns 0 or 1
+void ProcessTT_1(TIMER *P1);//TAG0102a4()
 void ProcessTT_FALSEWALL(TIMER *P1, ui32 index);//TAG0104bc
 void ProcessTT_BASH_DOOR(TIMER *P1);//TAG010576
 void ProcessTT_DOOR(TIMER *P1);//TAG0105ba
-void ProcessTT_OPENROOM(TIMER *P1, ui32 index);//TAG010642//(void)
+void ProcessTT_OPENROOM(TIMER *P1, ui32 index);//TAG010642//()
 void ProcessTT_ReactivateGenerator(TIMER *P1);//TAG0108a4
-void TriggerMissileLauncher(DB3 *, const TIMER *);//TAG010910(void)
-bool ProcessTT_STONEROOM(TIMER *P1,ui32 index);//TAG010b9a(void)
+void TriggerMissileLauncher(DB3 *, const TIMER *);//TAG010910()
+bool ProcessTT_STONEROOM(TIMER *P1,ui32 index);//TAG010b9a()
 bool ProcessDSATimer5(RN objDSA,
                       const TIMER *pTimer,
                       LOCATIONREL locrSlave);
@@ -3602,22 +3602,22 @@ void ProcessDSAFilter(RN objDSA,
                       LOCATIONREL locrSlave,
                       bool *pFilterActive,
                       DSAVARS *dsaVars);
-void WiggleEverything(i32 mapX, i32 mapY);//TAG010e98(void)
-void ProcessTT_TELEPORTER(TIMER *P1);//TAG0110a6(void)
-void ProcessTimer60and61(TIMER *P1);//TAG011192(void)
-void ProcessTT_PITROOM(TIMER *P1);//TAG01111c//(void)
+void WiggleEverything(i32 mapX, i32 mapY);//TAG010e98()
+void ProcessTT_TELEPORTER(TIMER *P1);//TAG0110a6()
+void ProcessTimer60and61(TIMER *P1);//TAG011192()
+void ProcessTT_PITROOM(TIMER *P1);//TAG01111c//()
 void EnableCharacterAction(i32 chIdx);//TAG011292
 void TAG011366(i16 P1);
-void ProcessTT_ViAltar(TIMER *P1);//TAG0113c4(void)
-void SetWatchdogTimer(void); //TAG0114d0
+void ProcessTT_ViAltar(TIMER *P1);//TAG0113c4()
+void SetWatchdogTimer(); //TAG0114d0
 void ProcessLightLevelTimer(TIMER *P1);
 i16 TAG011594(i16 chIdx,  //(i16)
                CHARDESC *,
                i16 srcPossession,
                i16 dstPossession);
-void TAG0115ee(i32 P1, i32 P2);//(void)
-void MarkAllPortraitsChanged(void);//TAG011664
-bool ProcessTimers(void);//TAG011692 // Parameter seems to be ignored;(void)
+void TAG0115ee(i32 P1, i32 P2);//()
+void MarkAllPortraitsChanged();//TAG011664
+bool ProcessTimers();//TAG011692 // Parameter seems to be ignored;()
 void TAG011718(i16, i16, i32);
 i16  TeleportMonster(const DB1 *,RN object,i16 attachedLevel, bool noItem16);//TAG011a16
 RN   TeleportMissile(const DB14 *pDB14,RN object);//TAG011b8e
@@ -3639,11 +3639,11 @@ void CreateTimer(TIMERTYPE tt,  // timer function
                  i32 b8,    // Byte 8
                  i32 b9,    // Byte 9
                  i32 time); // For currently loaded level
-void SkillIncreaser(i32 skill, i32 adj, i32 singleMember);//TAG012ac0(void)
+void SkillIncreaser(i32 skill, i32 adj, i32 singleMember);//TAG012ac0()
 //TAG012b3c
 void PerformLocalAction(i16 type, i32 mapX, i32 mapY, i32 pos);
-void RotateActuatorList(void);//TAG012b80
-void QueueSwitchAction(DB3 *, i32,i32,i32,i32);//(void)
+void RotateActuatorList();//TAG012b80
+void QueueSwitchAction(DB3 *, i32,i32,i32,i32);//()
 //   TAG012d80
 RN   FindObjectOfTypeAtPosition(i32, i32, ui16 pos, RN);
 bool DoesPartyHave(OBJ_NAME_INDEX);//TAG012de0
@@ -3657,16 +3657,16 @@ void PlaceOrRemoveObjectInRoom(
                        bool place,
                        MMRECORD *pmmr);
 i16  TAG01385a(pnt);
-void TAG0138ec(void);//(void)
+void TAG0138ec();//()
 //i32  DecodeCharacterValue(pnt, i16, bool allowTruncation = false);//TAG0139a2
-void AddCharacter(i16 charID);//TAG0139be(void)
+void AddCharacter(i16 charID);//TAG0139be()
 #define ReIncarnate(n,a) CALL1(n,ReIncarnate,a)
-RESTARTABLE _ReIncarnate(CHARDESC *pChar);//TAG013ea4 (void)
+RESTARTABLE _ReIncarnate(CHARDESC *pChar);//TAG013ea4 ()
 //TAG014368
 #define ResurrectReincarnateCancel(n,a) CALL1(n,ResurrectReincarnateCancel,a) 
-RESTARTABLE _ResurrectReincarnateCancel(const i32);//(void) //TAG014368
-void SetPartyFacing(i32 newDirection);//TAG01470c(void)
-void BringCharacterToLife(ui16 chIdx);//TAG014676//(void)
+RESTARTABLE _ResurrectReincarnateCancel(const i32);//() //TAG014368
+void SetPartyFacing(i32 newDirection);//TAG01470c()
+void BringCharacterToLife(ui16 chIdx);//TAG014676//()
 i32  CharacterAtPosition(i32 pos);//TAG01474e
 i16  GetCharacterToDamage(i32, i32, i32);//TAG01479c
 void DrawLifeBars(i32);//TAG014832
@@ -3675,14 +3675,14 @@ void PrintLifeForce(i32 line, i32 current, i32 max);//TAG014b32
 void PrintLifeForces(CHARDESC *);//TAG014b9e
 void DisplayBackpackItem(i32 chIdx, i32 itemPos);//TAG014bf4
 //   TAG014de0
-void DrawCharacterState(i32 P1); // box at top, direction, //(void)
-void DrawAllCharacterState(void);//TAG015396 (void)
+void DrawCharacterState(i32 P1); // box at top, direction, //()
+void DrawAllCharacterState();//TAG015396 ()
 i16  TAG0153c2(i32 chIdx, i32, i32);
 //   TAG015492
 bool DrawModifiedObjectAtLocation(i32 ScreenLocation, RN object);
-void DrawEightHands(void);//TAG015508//(void)
+void DrawEightHands();//TAG015508//()
 void ObjectToCursor(RN, i16);//TAG0156c4
-RN RemoveObjectFromHand(void);//TAG01576a//(RN)
+RN RemoveObjectFromHand();//TAG01576a//(RN)
 //   TAG0157e8
 void AdjustStatsForItemCarried( CHARDESC *,
                                 i32,
@@ -3690,10 +3690,10 @@ void AdjustStatsForItemCarried( CHARDESC *,
                                 RN);
 RN RemoveCharacterPossession(i32 chIdx, i32 possessionIndex);//TAG015a66(RN)
 //   TAG015c4c
-void AddCharacterPossession(i32 chIdx, RN object, i32 place);//(void)
-void HandleClothingClick(i32 button);//TAG015e0c//(void)
+void AddCharacterPossession(i32 chIdx, RN object, i32 place);//()
+void HandleClothingClick(i32 button);//TAG015e0c//()
 i32  DetermineMastery(i32 chIdx, i32 skill, const char *traceID=NULL);//TAG015f1e
-void AdjustSkills(i32, i32, i32, i32 why);//TAG01605a//(void)
+void AdjustSkills(i32, i32, i32, i32 why);//TAG01605a//()
 i16  TAG016382(RN object);
 i16  StaminaAdjustedAttribute(CHARDESC *, i16);//TAG0163c8
 i16  TAG016426(CHARDESC *pCharacter, i16, i16);
@@ -3704,15 +3704,15 @@ i32  Quickness(CHARDESC *pCharacter, const char *traceID=NULL);//TAG016610
 //   TAG0166b2
 i32  DetermineThrowingDistance(i32 chIdx, i32 hand);
 i16  TAG01680a(i32 chIdx, i32 possessionIndex);
-void WakeUp(void);//TAG0169a8//(void)
+void WakeUp();//TAG0169a8//()
 i16  SearchFootprints(i32 mapX, i32 mapY); //TAG0169ec
 void DeleteFootprintEntry(i16);//TAG016a76
 void AddFootprintEntry(i32, i32, ui16);//TAG016b10
-void DropAllPossessions(i32 chIdx);//TAG016be8//(void)
-void KillCharacter(i32 chIdx);//TAG016c5a (void)
-void DisplayCharacterDamage(void);//TAG016e54(void)
+void DropAllPossessions(i32 chIdx);//TAG016be8//()
+void KillCharacter(i32 chIdx);//TAG016c5a ()
+void DisplayCharacterDamage();//TAG016e54()
 i32  DamageCharacter(i32 chIdx, i32 overdraw, i16, i16);//TAG017068
-void PoisonCharacter(i32 P1, i32 P2);//TAG017274(void)
+void PoisonCharacter(i32 P1, i32 P2);//TAG017274()
 void CurePoison(i32 chIdx);//TAG017344
 i16  DamageAllCharacters(i32,i16,i16);//TAG0173ae
 void AdjustStamina(i32 chIdx, i32 decrement);//TAG01742a
@@ -3730,98 +3730,98 @@ i16 ThrowByCharacter(i32 chIdx, i16, i16 LeftOrRight, int disableTime=-1,
                      i32 range=-1, i32 damage=-1, i32 decayRate=-1,
                      bool record=false, i32 x=0, i32 y=0, i32 f=0);//(i16)
 i16 ThrowObjectInHand(i16 LeftOrRight);//TAG01772e(i16)
-void DisableCharacterAction(i32 chIdx, i32 timeDelay);//TAG017756//(void)
-void TenSecondUpdate(void);//TAG017818
+void DisableCharacterAction(i32 chIdx, i32 timeDelay);//TAG017756//()
+void TenSecondUpdate();//TAG017818
 void DrawSmallIcon(OBJ_NAME_INDEX objNI, i16 x, i16 y);//TAG017c7a
 void ShowChestContents(RN object, DB9 *pDB9, i16);//TAG017ce4
-void RepackChest(void);//TAG017da4
+void RepackChest();//TAG017da4
 void PrintItemDesc(const char* txt, i32 color = COLOR_13);//TAG017e2a
 i32  EncodeDescriptivePhrases(i32, i32, const char *, i32 *, char *, const char*, const char*);//TAG017ece
-void SelectPaletteForLightLevel(void);//TAG017fa8
-void NinetySecondUpdate(void);//TAG018124//(void)
+void SelectPaletteForLightLevel();//TAG017fa8
+void NinetySecondUpdate();//TAG018124//()
 void TAG018238(i16);
 void DisplayScrollText_OneLine(i16, char *);//TAG01826c
 void DisplayScroll(DB7 *pDB7);//TAG0182f0
 void DescribeObject(RN, i16); //TAG0183ea
 void CursorFilter(CURSORFILTER_PACKET *cfp);
-void TAG00187e(void);
+void TAG00187e();
 void DrawHorzBar(i32 x, i32 y, i32 width, i32 color);//TAG018836
 void DrawFoodWaterBar(i16, i16, i16 color);//TAG018878
-void DisplayFoodWater(void);//TAG0188e4
-void TAG0189a8(void);
-void TAG0189d4(void);
+void DisplayFoodWater();//TAG0188e4
+void TAG0189a8();
+void TAG0189d4();
 //   TAG018a58
 void AdjustCurrentAttribute(CHARDESC *, i32 attr, i32 adj);
 #define FeedCharacter(n) CALL0(n,FeedCharacter)
-RESTARTABLE _FeedCharacter(void);//TAG018afc (void)
-void QuitPressingMouth(void);//TAG019018(void);
-void TAG019036(void);
+RESTARTABLE _FeedCharacter();//TAG018afc ()
+void QuitPressingMouth();//TAG019018();
+void TAG019036();
 #define ClickOnEye(n) CALL0(n,ClickOnEye);//TAG0191e8(n) CALL0(n,TAG0191e8)
-RESTARTABLE _ClickOnEye(void);//(void)
-void QuitPressingEye(void);//TAG019264(void);//(void)
+RESTARTABLE _ClickOnEye();//()
+void QuitPressingEye();//TAG019264();//()
 void CharacterPortraitToStatusBox(i32);//TAG0192a4
-void ShowHideInventory(i32 P1);//(void) //TAG0192f4
+void ShowHideInventory(i32 P1);//() //TAG0192f4
 i16  TAG0194c0(pnt P1);
-void DiscardAllInput(void);//TAG01953a(void);
+void DiscardAllInput();//TAG01953a();
   // TAG019570
 i16  SearchButtonList(btn *P1, i32 x, i32 y, i32 buttons); // mouse
 void OnMouseClick(i32 x, i32 y, i32 button);//TAG0195da
-void OnMouseUnClick(void); //When left or right button is released.
-void CauseFakeMouseClick(void);//TAG0196b6
+void OnMouseUnClick(); //When left or right button is released.
+void CauseFakeMouseClick();//TAG0196b6
 void TAG0196da(i32 P1);
 #define FlashButton(n,a,b,c,d) CALL4(n,FlashButton,a,b,c,d)
 RESTARTABLE _FlashButton(const i32 x1,
                          const i32 x2,
                          const i32 y1,
-                         const i32 y2); //TAG01979c(void)
-void WaitForButtonFlash(void);//TAG0197d2 (void)
-void TraverseStairway(i32 UpOrDown,bool setFacing);//TAG0197f6 (void)
+                         const i32 y2); //TAG01979c()
+void WaitForButtonFlash();//TAG0197d2 ()
+void TraverseStairway(i32 UpOrDown,bool setFacing);//TAG0197f6 ()
 #define TurnParty(n,a) CALL1(n,TurnParty,a)
-RESTARTABLE _TurnParty(const i32 direction); //TAG01986c//1=left 2=right (void)
+RESTARTABLE _TurnParty(const i32 direction); //TAG01986c//1=left 2=right ()
 MOVEBUTN *MoveParty(i32 button); // CALL1(n,MoveParty,a)
-void TAG019c34(i32 P1, i32 P2, i32 P3);//(void)
-void SetHandOwner(i32);//TAG019cb2//(void)
+void TAG019c34(i32 P1, i32 P2, i32 P3);//()
+void SetHandOwner(i32);//TAG019cb2//()
 #define MagicSelection(n,a) CALL1(n,MagicSelection,a)
-RESTARTABLE _MagicSelection(const i32 button);//TAG019d90 (void)
+RESTARTABLE _MagicSelection(const i32 button);//TAG019d90 ()
 #define HandleMagicClick(n,a,b) CALL2(n,HandleMagicClick,a,b)
-RESTARTABLE _HandleMagicClick(const i32 clickX, const i32 clickY);//TAG019e4a//(void)
+RESTARTABLE _HandleMagicClick(const i32 clickX, const i32 clickY);//TAG019e4a//()
 #define TAG019fac(n,a,b) CALL2(n,TAG019fac,a,b);
-RESTARTABLE _TAG019fac(const i32 P1, const i32 P2);//(void)
-void  TouchWallF1(void);//TAG01c0c2(void)
-void  TAG01a148(i16);//(void)
-void DropObject(i16 position);//TAG01a228//(void)
+RESTARTABLE _TAG019fac(const i32 P1, const i32 P2);//()
+void  TouchWallF1();//TAG01c0c2()
+void  TAG01a148(i16);//()
+void DropObject(i16 position);//TAG01a228//()
 i32  TestThrow(i16 x, i16 y); //TAG01a34c(i16)
 i16  TestInRectangle(ui8 *rectangle, i32 clickX, i32 clickY);//TAG01a3d6
-void HandleClickInViewport(i32 P1, i32 P2);//TAG01a436(void)
+void HandleClickInViewport(i32 P1, i32 P2);//TAG01a436()
 #define TAG01a6ea(n,a,b) CALL2(n,TAG01a6ea,a,b)
-RESTARTABLE _TAG01a6ea(const i32 P1, const i32 P2);//(void)
-void DisplaySleepScreen(void);//TAG01a77c
+RESTARTABLE _TAG01a6ea(const i32 P1, const i32 P2);//()
+void DisplaySleepScreen();//TAG01a77c
 #define HandleMouseEvents(n,a) CALL1(n,HandleMouseEvents,a)
 RESTARTABLE _HandleMouseEvents(const i32 delta); //TAG01a7b2(bool)
 //   TAG01ab88
 void PrintWithSubstitution(const char *txt, ui32 color, bool translate);
-bool ItemHasChargesLeft(void); //TAG01ac26
+bool ItemHasChargesLeft(); //TAG01ac26
 void GetLegalAttackTypes(ui8 *); //TAG01acb0
 const char*  GetAttackTypeName(i32);//TAG01ad6c
 #define FlashAttackDamage(n,a) CALL1(n,FlashAttackDamage,a)
-RESTARTABLE _FlashAttackDamage(const i32);//TAG01adaa (void)
+RESTARTABLE _FlashAttackDamage(const i32);//TAG01adaa ()
 void DrawAttackButton(i32 chIdx);//TAG01af32
-void DrawLegalAttackTypes(void); //TAG01b098
-void TAG01b1c0(void);//(void)
-void PrepareAttack(i16);//TAG01b1f8 Display weapon options?(void)
+void DrawLegalAttackTypes(); //TAG01b098
+void TAG01b1c0();//()
+void PrepareAttack(i16);//TAG01b1f8 Display weapon options?()
 #define ExecuteAttack(n,a) CALL1(n,ExecuteAttack,a);
 RESTARTABLE _ExecuteAttack(const i32);//TAG01b37c(i16)
 #define TAG01b29a(n) CALL0(n,TAG01b29a)
-RESTARTABLE _TAG01b29a(void);//(void)
+RESTARTABLE _TAG01b29a();//()
 void TAG01b408(i16);
 void DrawSpellControls(i16); //TAG01b50e
 void SelectMagicCaster(i16 chIdx);//TAG01b726
-void DrawMovementButtons(void);//TAG01b880
-void ReadSpellGraphic(void); //TAG01b8ae(void);
+void DrawMovementButtons();//TAG01b880
+void ReadSpellGraphic(); //TAG01b8ae();
 void DrawSpellMenuCharacters(i16 button);//TAG01b8ca
 void DisplayMagicSelection(CHARDESC *chIndx);//TAG01b922
-void TAG01b990(i16);//(void)
-void BackspaceMagicSelection(void);//TAG01ba5a
+void TAG01b990(i16);//()
+void BackspaceMagicSelection();//TAG01ba5a
 i32  WarCryEtc(i32 chIdx,   //TAG01bac2//(i16)
                ATTACKTYPE attackType,
                i32 attackX,
@@ -3838,7 +3838,7 @@ i32  WarCryEtc(i32 chIdx,   //TAG01bac2//(i16)
 i16 MagicShield(CHARDESC *pChar, i32 spellShield, i32 strength, i32 mustHaveMana);
 //   TAG01be38
 void SetBrightnessTimer(i32 deltaBrightness, i32 timeDelay);
-void DecrementChargesRemaining(CHARDESC *);//TAG01be82(void)
+void DecrementChargesRemaining(CHARDESC *);//TAG01be82()
 void SetCharToPartyFacing(CHARDESC *);//TAG01bf70
 #define Attack(n,a,b) CALL2(n,Attack,a,b)
 RESTARTABLE _Attack(const i32 chIdx, const ATTACKTYPE attackType);//TAG01bf9a(i16)
@@ -3870,7 +3870,7 @@ void CenteredText(ui8 *dest, const char *text, i16 x, i16 y);//TAG01d5aa
 i16  SplitLongLine(char *text, char *firstLine, char *secondLine);
 #define DoMenu(n,a,b,c,d,e,f,g,h,i) CALL9(n,DoMenu,a,b,c,d,e,f,g,h,i)
 RESTARTABLE _DoMenu(
-            const char *title1,  //TAG01d678 (void)
+            const char *title1,  //TAG01d678 ()
             const char *title2,
             const char *opt1,
             const char *opt2,
@@ -3884,51 +3884,51 @@ i16  ScrambleAndWrite(i16 *pwbuf);//TAG01dbb2
 i16  Darken(i16 color);//TAG01dc4e
 i16  InsertDisk(const i32 P1, const i32 P2);//(i16)
 #define DisplayDiskMenu(n) CALL0(n,DisplayDiskMenu)
-RESTARTABLE _DisplayDiskMenu(void);//(void)
-i16  ReadDatabases(void);//TAG01e552
+RESTARTABLE _DisplayDiskMenu();//()
+i16  ReadDatabases();//TAG01e552
 #define ReadEntireGame(n) CALL0(n,ReadEntireGame)
-RESTARTABLE  _ReadEntireGame(void); //(i16) //TAG01eb18
+RESTARTABLE  _ReadEntireGame(); //(i16) //TAG01eb18
 //#define InsertDisk(n,a,b) CALL2(n,InsertDisk,a,b) //TAG01daa8
 //RESTARTABLE _InsertDisk(const i32 P1, const i32 P2);//(i16)
 #define FadeToPalette(n,a) CALL1(n,FadeToPalette,a);
-RESTARTABLE _FadeToPalette(const PALETTE *palette); // TAG01f04e (void)
+RESTARTABLE _FadeToPalette(const PALETTE *palette); // TAG01f04e ()
 #define DisplayChaosStrikesBack(n) CALL0(n,DisplayChaosStrikesBack)
-RESTARTABLE _DisplayChaosStrikesBack(void);//TAG01f140 (void)
+RESTARTABLE _DisplayChaosStrikesBack();//TAG01f140 ()
 #define OpenPrisonDoors(n) CALL0(n,OpenPrisonDoors)
-RESTARTABLE _OpenPrisonDoors(void); //TAG01f47a (void)
+RESTARTABLE _OpenPrisonDoors(); //TAG01f47a ()
 #define TAG01f5ea(n) CALL0(n,TAG01f5ea)
-RESTARTABLE _TAG01f5ea(void);//(void)
+RESTARTABLE _TAG01f5ea();//()
 i32  AllocateExpandGraphic(i16 graphicNum, ui8 **address); //TAG01f6fe
 #define TAG01f746(n) CALL0(n,TAG01f746)
-RESTARTABLE _TAG01f746(void); //(void)
+RESTARTABLE _TAG01f746(); //()
 #define TAG01f928(n) CALL0(n,TAG01f928)
-RESTARTABLE _TAG01f928(void); //(void)
+RESTARTABLE _TAG01f928(); //()
 void DisplayHeroName(i16, i16, i16, char *); //TAG01f990
 #define ShowCredits(n,a) CALL1(n,ShowCredits,a)
-RESTARTABLE _ShowCredits(const i32 P1);//(void)
+RESTARTABLE _ShowCredits(const i32 P1);//()
 //      TAG01fed6
 #define ProcessTimersViewportAndSound(n) CALL0(n,ProcessTimersViewportAndSound)
-RESTARTABLE _ProcessTimersViewportAndSound(void);
+RESTARTABLE _ProcessTimersViewportAndSound();
 #define FusionSequence(n) CALL0(n,FusionSequence) //TAG01fefc
-RESTARTABLE _FusionSequence(void); //(void)
+RESTARTABLE _FusionSequence(); //()
 void HangIfZero(i16 P1); // (0x020276)
-void TAG020286(void);
-void CountFloppyDrives(void); //TAG020466
+void TAG020286();
+void CountFloppyDrives(); //TAG020466
 #define SelectSaveGame(n,a,b,c) CALL3(n,SelectSaveGame,a,b,c)
-RESTARTABLE _SelectSaveGame(const i32, const i32 checkExist, const i32 alwaysDate);//TAG0204bc(void)
+RESTARTABLE _SelectSaveGame(const i32, const i32 checkExist, const i32 alwaysDate);//TAG0204bc()
 void ExpandData(pnt src, pnt dst, i32 dstSize); //TAG0206f8
-void TAG02076e(void);//(void)
-void TAG0207cc(void);
+void TAG02076e();//()
+void TAG0207cc();
 void TAG020836(pnt P1);
 i16  TAG020880(i16 P1, i16 P2, i16 P3);
-void ReadTablesFromGraphicsFile(void);//TAG0208b4(void);
-void TAG020fbc(void);
+void ReadTablesFromGraphicsFile();//TAG0208b4();
+void TAG020fbc();
 #define TAG021028(n) CALL0(n,TAG021028)
-RESTARTABLE _TAG021028(void); //(void)
+RESTARTABLE _TAG021028(); //()
 #define ShowPrisonDoor(n) CALL0(n,ShowPrisonDoor)
-RESTARTABLE _GameSetup(i32 showPrisonDoor);//TAG0211a0 (void)
+RESTARTABLE _GameSetup(i32 showPrisonDoor);//TAG0211a0 ()
 #define GameSetup(n,a) CALL1(n,GameSetup,a)
-RESTARTABLE _ShowPrisonDoor(void);//TAG0211a0 (void)
+RESTARTABLE _ShowPrisonDoor();//TAG0211a0 ()
 void TAG02134a(pnt);
 //   TAG0213ec //
 void ExpandGraphic(i8 *src, // 1st 2 words are width and height.
@@ -3946,19 +3946,19 @@ void TAG021960(i16 *P1, i16 P2);
 void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize=999999); // TAG021af2
 //   TAG021c08
 void InitializeCaches(ui8 *P1, i32 P2, ui8 *P3, i32 P4);
-void TAG021cd8(void);
-void openGraphicsFile(void); //TAG021d36
-void OpenCSBgraphicsFile(void);
-void closeGraphicsFile(void); //TAG021d76
-void ReadGraphicsIndex(void); // TAG021d9a
+void TAG021cd8();
+void openGraphicsFile(); //TAG021d36
+void OpenCSBgraphicsFile();
+void closeGraphicsFile(); //TAG021d76
+void ReadGraphicsIndex(); // TAG021d9a
 void DeleteGraphic(i32 graphicNum);//TAG021f5e
-//void CompactMemory(void);//TAG022132
+//void CompactMemory();//TAG022132
 void TAG0220fa(i32 P1);
 ITEMQ *GetExpandedGraphicBuffer(i32 P1); //TAG0221f6
 //#define LoadNeededGraphics(n,a,b) CALL2(n,LoadNeededGraphics,a,b)
-//RESTARTABLE _LoadNeededGraphics(i16 *, const i32);//(void) //TAG0222ea
-void LoadNeededGraphics(i16 *, const i32);//(void) //TAG0222ea
-//void ClearGraphicList2(void);//TAG022720
+//RESTARTABLE _LoadNeededGraphics(i16 *, const i32);//() //TAG0222ea
+void LoadNeededGraphics(i16 *, const i32);//() //TAG0222ea
+//void ClearGraphicList2();//TAG022720
 //void TAG022778(i16 P1);
 //ITEMQ *TAG02289a(i16 P1);
 void TAG022a60(i16, ui8 *);
@@ -3988,9 +3988,9 @@ RESTARTABLE _TAG000588(pnt msg, i32, pnt, struct S12406 *);//(i16)
 #define UtilityDialogBox(n,a,b,c,d) CALL4(n,UtilityDialogBox,a,b,c,d)
 RESTARTABLE _UtilityDialogBox(const char *msg, i32, const char *, struct S12406 *);//(i16)
 #define CheckChampionNames(n) CALL0(n,CheckChampionNames)
-RESTARTABLE _CheckChampionNames(void);//TAG000e64//(i16)
+RESTARTABLE _CheckChampionNames();//TAG000e64//(i16)
 #define TAG000fc4(n,a) CALL1(n,TAG000fc4,a)
-RESTARTABLE _TAG000fc4(i32);//(void)
+RESTARTABLE _TAG000fc4(i32);//()
 #define TAG000ede(n,a,b) CALL2(n,TAG000ede,a,b)
 RESTARTABLE _TAG000ede(i32, char *);//(i16)
 #define TAG00179c(n,a) CALL1(n,TAG00179c,a)
@@ -3998,28 +3998,28 @@ RESTARTABLE _TAG00179c(i32);//(i16)
 #define ReadSavedGame(n,a) CALL1(n,ReadSavedGame,a)
 RESTARTABLE _ReadSavedGame(i32);//TAG001868//(i16)
 #define TAG00260e(n) CALL0(n,TAG00260e)
-RESTARTABLE _TAG00260e(void);//(void)
+RESTARTABLE _TAG00260e();//()
 #define TAG0026c4(n,a) CALL1(n,TAG0026c4,a)
-RESTARTABLE _TAG0026c4(pnt);//(void)
+RESTARTABLE _TAG0026c4(pnt);//()
 #define TAG004518(n) CALL0(n,TAG004518)
-RESTARTABLE _TAG004518(void);//(void)
+RESTARTABLE _TAG004518();//()
 #define InvertButton(n,a) CALL1(n,InvertButton,a)
-RESTARTABLE _InvertButton(const wordRectPos *); //(void)
+RESTARTABLE _InvertButton(const wordRectPos *); //()
 #define DrawCharacterDetails(n,a,b) CALL2(n,DrawCharacterDetails,a,b) //TAG003ab6
-RESTARTABLE  _DrawCharacterDetails(const i32, const i32); //(void)
+RESTARTABLE  _DrawCharacterDetails(const i32, const i32); //()
 #define TAG003ab6(n,a,b) CALL2(n,TAG003ab6,a,b)
-RESTARTABLE  _TAG003ab6(const i32, const i32); //(void)
+RESTARTABLE  _TAG003ab6(const i32, const i32); //()
 #define TAG003f12(n) CALL0(n,TAG003f12)
-RESTARTABLE _TAG003f12(void);//(void)
+RESTARTABLE _TAG003f12();//()
 #define DrawCharacterEditorScreen(n) CALL0(n,DrawCharacterEditorScreen)
-RESTARTABLE _DrawCharacterEditorScreen(void);//(void)
+RESTARTABLE _DrawCharacterEditorScreen();//()
 #define TAG004430(n,a) CALL1(n,TAG004430,a)
-RESTARTABLE _TAG004430(i32);//(void)
+RESTARTABLE _TAG004430(i32);//()
 
 //
 // Entries in Hint.cpp
 #define DisplayText(n,a,b) CALL2(n,DisplayText,a,b)
-RESTARTABLE _DisplayText(const i16, const struct TEXT *);//TAG004a22_6 (void)
+RESTARTABLE _DisplayText(const i16, const struct TEXT *);//TAG004a22_6 ()
 //#define TAG0051c2_xxx(n,a,b) CALL2(n,TAG0051c2_xxx,a,b)
 //RESTARTABLE _TAG0051c2_xxx(const i16 P1, const i16 P2);
 #define TAG005a1e_xxx(n,a,b,c) CALL3(n,TAG005a1e_xxx,a,b,c)
@@ -4033,17 +4033,17 @@ RESTARTABLE _FadePalette(PALETTE *P1,
 //#define TAG005ae8_xxx(n,a,b,c) CALL3(n,TAG005ae8_xxx,a,b,c)
 //RESTARTABLE _TAG005ae8_xxx(i16 P1, i16 P2, pnt P3);
 #define TAG0051c2_1(n,a) CALL1(n,TAG0051c2_1,a)
-RESTARTABLE _TAG0051c2_1(const i16); //(void)
+RESTARTABLE _TAG0051c2_1(const i16); //()
 //#define TAG008c40_xxx(n,a,b,c,d,e) CALL5(n,TAG008c40_xxx,a,b,c,d,e)
 //RESTARTABLE _TAG008c40_xxx(i16 P1, i16 P2, i32 P3, i32 P4, pnt P5);
 //#define TAG008c40_1(n,a) CALL1(n,TAG008c40_1,a)
-//RESTARTABLE _TAG008c40_1(i16);//(void)
+//RESTARTABLE _TAG008c40_1(i16);//()
 //#define TAG008c40_2(n,a) CALL1(n,TAG008c40_2,a)
-//RESTARTABLE _TAG008c40_2(i16);//(void)
+//RESTARTABLE _TAG008c40_2(i16);//()
 #define TAG006c7e_xxx(n,a,b,c,d,e) CALL5(n,TAG006c7e_xxx,a,b,c,d,e)
 RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5);//(i32)
 #define TAG006c7e_2(n,a) CALL1(n,TAG006c7e_2,a)
-RESTARTABLE _TAG006c7e_2(i16);//(void)
+RESTARTABLE _TAG006c7e_2(i16);//()
 #define TAG006c7e_32(n,a,b) CALL2(n,TAG006c7e_32,a,b)
 RESTARTABLE _TAG006c7e_32(i16, pnt);//(i32)
 //#define TAG0076a0_8(n,a,b,c) CALL3(n,TAG0076a0_8,a,b,c)
@@ -4063,67 +4063,67 @@ RESTARTABLE _TAG006c7e_9(i16, i32, i32, struct HCTI *);//(i32)
 //#define TAG00799a_xxx(n,a,b,c,d) CALL4(n,TAG00799a_xxx,a,b,c,d)
 //RESTARTABLE _TAG00799a_xxx(i16 P1, i16 P2, i32 P3, i32 P4);//(i32)
 //#define TAG00799a_1(n,a) CALL1(n,TAG00799a_1,a)
-//RESTARTABLE _TAG00799a_1(i16);//(void)
+//RESTARTABLE _TAG00799a_1(i16);//()
 //#define TAG00799a_2(n,a) CALL1(n,TAG00799a_2,a)
-//RESTARTABLE _TAG00799a_2(i16);//(void)
+//RESTARTABLE _TAG00799a_2(i16);//()
 #define TAG00799a_6(n,a) CALL1(n,TAG00799a_6,a)
-RESTARTABLE _TAG00799a_6(i16);//(void)
+RESTARTABLE _TAG00799a_6(i16);//()
 //#define SetSelectedLine(n,a,b) CALL2(n,SetSelectedLine,a,b)
-//RESTARTABLE _SetSelectedLine(i16, i32);//TAG00799a_7(void)
+//RESTARTABLE _SetSelectedLine(i16, i32);//TAG00799a_7()
 #define TAG00799a_9(n,a) CALL1(n,TAG00799a_9,a)
-RESTARTABLE _TAG00799a_9(i16);//(void)
+RESTARTABLE _TAG00799a_9(i16);//()
 #define TAG00799a_12(n,a,b,c) CALL3(n,TAG00799a_12,a,b,c)
 RESTARTABLE _TAG00799a_12(i16, i32, i32);//(pnt)
 //#define TAG00799a_13(n,a) CALL1(n,TAG00799a_13,a)
 //RESTARTABLE _TAG00799a_13(i16);//(i32)
 //#define TAG007fdc_2(n,a) CALL1(n,TAG007fdc_2,a)
-//RESTARTABLE _TAG007fdc_2(i16);//(void)
+//RESTARTABLE _TAG007fdc_2(i16);//()
 //#define TAG007fdc_xxx(n,a,b,c,d,e) CALL5(n,TAG007fdc_xxx,a,b,c,d,e)
 //RESTARTABLE _TAG007fdc_xxx(i16 P1, i16 P2, i32 P3, i32 P4, i32);//(i32)
 #define TAG007fdc_7(n,a,b,c,d) CALL4(n,TAG007fdc_7,a,b,c,d)
-RESTARTABLE _TAG007fdc_7(i16, i32, i32, i32);//(void)
+RESTARTABLE _TAG007fdc_7(i16, i32, i32, i32);//()
 #define TAG007fdc_36(n,a,b,c) CALL3(n,TAG007fdc_36,a,b,c)
-RESTARTABLE _TAG007fdc_36(i16, i32, i32);//(void)
+RESTARTABLE _TAG007fdc_36(i16, i32, i32);//()
 //#define TAG008c40_3(n,a,b,c) CALL3(n,TAG008c40_3,a,b,c)
-//RESTARTABLE _TAG008c40_3(i16, i32, i32);//(void)
+//RESTARTABLE _TAG008c40_3(i16, i32, i32);//()
 #define TAG008c40_5(n,a,b) CALL2(n,TAG008c40_5,a,b)
 RESTARTABLE _TAG008c40_5(i16, i32);//(i32)
 #define TAG008c40_6(n,a,b) CALL2(n,TAG008c40_6,a,b)
-RESTARTABLE _TAG008c40_6(i16, i32);//(void)
+RESTARTABLE _TAG008c40_6(i16, i32);//()
 #define TAG008c40_8(n,a,b) CALL2(n,TAG008c40_8,a,b)
 RESTARTABLE _TAG008c40_8(i16, i16);//(i32)
 //#define TAG008c40_12(n,a,b,c,d) CALL4(n,TAG008c40_12,a,b,c,d)
 //RESTARTABLE _TAG008c40_12(i16, i32, i32, pnt);//(i32)
 //#define TAG008c40_30(n,a) CALL1(n,TAG008c40_30,a)
-//RESTARTABLE _TAG008c40_30(i16);//(void)
+//RESTARTABLE _TAG008c40_30(i16);//()
 #define TAG0051c2_31(n,a) CALL1(n,TAG0051c2_31,a)
-RESTARTABLE _TAG0051c2_31(i16);//(void)
+RESTARTABLE _TAG0051c2_31(i16);//()
 #define TAG004e4c_xxx(n,a,b,c) CALL3(n,TAG004e4c_xxx,a,b,c)
 RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, i32 P3);
 #define TAG004e4c_6(n,a,b) CALL2(n,TAG004e4c_6,a,b)
-RESTARTABLE _TAG004e4c_6(i16, TEXT *);//(void)
+RESTARTABLE _TAG004e4c_6(i16, TEXT *);//()
 #define TAG004e4c_8(n,a,b) CALL2(n,TAG004e4c_8,a,b)
-RESTARTABLE _TAG004e4c_8(i16, TEXT *);//(void)
+RESTARTABLE _TAG004e4c_8(i16, TEXT *);//()
 //#define TAG005ae8_9(n,a,b) CALL2(n,TAG005ae8_9,a,b)
-//RESTARTABLE _TAG005ae8_9(i16, struct PALETTEPKT *);//(void)
+//RESTARTABLE _TAG005ae8_9(i16, struct PALETTEPKT *);//()
 //#define TAG0051c2_35(n,a) CALL1(n,TAG0051c2_35,a)
-//RESTARTABLE _TAG0051c2_35(i16);//(void)
+//RESTARTABLE _TAG0051c2_35(i16);//()
 #define PaletteFade(n,a,b) CALL2(n,PaletteFade,a,b)
-RESTARTABLE _PaletteFade(i16,struct PALETTEPKT *);//TAG005ae8_34//(void)
+RESTARTABLE _PaletteFade(i16,struct PALETTEPKT *);//TAG005ae8_34//()
 //#define TAG005ae8_1(n,a) CALL1(n,TAG005ae8_1,a)
-//RESTARTABLE _TAG005ae8_1(i16);//(void)
+//RESTARTABLE _TAG005ae8_1(i16);//()
 #define TAG0051c2_2(n,a) CALL1(n,TAG0051c2_2,a)
-RESTARTABLE _TAG0051c2_2(i32);//(void)
+RESTARTABLE _TAG0051c2_2(i32);//()
 #define TAG005d2a(n,a,b) CALL2(n,TAG005d2a,a,b)
-RESTARTABLE _TAG005d2a(i32, i32);//(void)
+RESTARTABLE _TAG005d2a(i32, i32);//()
 //#define TAG0093a0_xxx(n,a,b,c,d) CALL4(n,TAG0093a0_xxx,a,b,c,d)
 //RESTARTABLE _TAG0093a0_xxx(i32 P1, i32 P2, i32 /*P3*/, i32 P4);
 //#define TAG0093a0_17(n,a,b) CALL2(n,TAG0093a0_17,a,b)
-//RESTARTABLE _TAG0093a0_17(i16, i32);//(void)
+//RESTARTABLE _TAG0093a0_17(i16, i32);//()
 //#define MyReadFirstBlock(n,a) CALL1(n,MyReadFirstBlock,a)
-//RESTARTABLE _MyReadFirstBlock(pnt);//TAG006672//(void)
+//RESTARTABLE _MyReadFirstBlock(pnt);//TAG006672//()
 //#define TAG0093a0_18(n,a,b) CALL2(n,TAG0093a0_18,a,b)
-//RESTARTABLE _TAG0093a0_18(i32, i32);//(void)
+//RESTARTABLE _TAG0093a0_18(i32, i32);//()
 //#define LZWRawChar(n,a,b) CALL2(n,LZWRawChar,a,b)
 //RESTARTABLE _LZWRawChar(i16, i32 *);//TAG003022//(i32)
 //#define TAG003210(n,a,b,c,d,e) CALL5(n,TAG003210,a,b,c,d,e)
@@ -4135,15 +4135,15 @@ RESTARTABLE _TAG005d2a(i32, i32);//(void)
 //#define TAG004a22_16(n,a,b) CALL2(n,TAG004a22_16,a,b)
 //RESTARTABLE _TAG004a22_16(i16, i32);//result is guess//(pnt)
 //#define Free_TEXT(n,a,b) CALL2(n,Free_TEXT,a,b)
-//RESTARTABLE _Free_TEXT(i16, TEXT *);//TAG004a22_20//(void)
+//RESTARTABLE _Free_TEXT(i16, TEXT *);//TAG004a22_20//()
 //#define TAG004a22_26(n,a,b,c) CALL3(n,TAG004a22_26,a,b,c)
-//RESTARTABLE _TAG004a22_26(i16, i32, i32 = 0x1baddade);//(void)
+//RESTARTABLE _TAG004a22_26(i16, i32, i32 = 0x1baddade);//()
 //#define TAG004f3a_xxx(n,a,b,c) CALL3(n,TAG004f3a_xxx,,a,b,c)
 //RESTARTABLE _TAG004f3a_xxx(i32 P1, i32 P2, i32 P3);
 //#define TAG004f3a_1(n,a) CALL1(n,TAG004f3a_1,a)
 //RESTARTABLE _TAG004f3a_1(i16);//(pnt)
 //#define TAG004f3a_2(n,a) CALL1(n,TAG004f3a_2,a)
-//RESTARTABLE _TAG004f3a_2(i16);//(void)
+//RESTARTABLE _TAG004f3a_2(i16);//()
 //#define AssignMemory(n,a,b) CALL2(n,AssignMemory,a,b)
 //RESTARTABLE _AssignMemory(i16, i32);//TAG004f3a_14//(pnt)
 //#define TAG002f6c(n,a,b,c,d) CALL4(n,TAG002f6c,a,b,c,d)
@@ -4155,15 +4155,15 @@ RESTARTABLE _TAG005d2a(i32, i32);//(void)
 //#define ReleaseMem(n,a,b) CALL2(n,ReleaseMem,a,b)
 //RESTARTABLE _ReleaseMem(i32, pnt);//TAG004f3a_20//(pnt)
 //#define TAG002e64(n) CALL0(n,TAG002e64)
-//RESTARTABLE _TAG002e64(void);//(void)
+//RESTARTABLE _TAG002e64();//()
 //#define TAG0060c4(n) CALL0(n,TAG0060c4)
-//RESTARTABLE _TAG0060c4(void);//(i32)
+//RESTARTABLE _TAG0060c4();//(i32)
 //#define TAG0062a2(n,a,b) CALL2(n,TAG0062a2,a,b)
-//RESTARTABLE _TAG0062a2(wordRectPos *, pnt); //(void)
+//RESTARTABLE _TAG0062a2(wordRectPos *, pnt); //()
 //#define TAG006bc0(n,a) CALL1(n,TAG006bc0,a)
 //RESTARTABLE _TAG006bc0(i32);//(pnt)
 //#define TAG006bfc(n,a) CALL1(n,TAG006bfc,a)
-//RESTARTABLE _TAG006bfc(pnt);//(void)
+//RESTARTABLE _TAG006bfc(pnt);//()
 //#define TAG006718(n,a) CALL1(n,TAG006718,a)
 //RESTARTABLE _TAG006718(i16 P1);
 //#define TAG00835c_xxx(n,a,b) CALL2(n,TAG00835c_xxx,a,b)
@@ -4171,7 +4171,7 @@ RESTARTABLE _TAG005d2a(i32, i32);//(void)
 //#define TAG00835c_25(n,a) CALL1(n,TAG00835c_25,a)
 //RESTARTABLE _TAG00835c_25(i16);//(i32)
 //#define TAG008a62(n) CALL0(n,TAG008a62)
-//RESTARTABLE _TAG008a62(void);//(i32)
+//RESTARTABLE _TAG008a62();//(i32)
 //#define TAG00948c(n,a) CALL1(n,TAG00948c,a)
 //RESTARTABLE _TAG00948c(i16);//(i32)
 //#define TAG0094de(n,a,b,c) CALL3(n,TAG0094de,a,b,c)
@@ -4185,9 +4185,9 @@ RESTARTABLE _TAG005d2a(i32, i32);//(void)
 //#define TAG00978a_xxx(n,a,b,c,d,e) CALL5(n,TAG00978a_xxx,a,b,c,d,e)
 //RESTARTABLE _TAG00978a_xxx(i16 P1, i16 P2, i32 P3, i32 P4, i32 P5);
 //#define TAG00978a_1(n,a) CALL1(n,TAG00978a_1,a)
-//RESTARTABLE _TAG00978a_1(i16);//(void)
+//RESTARTABLE _TAG00978a_1(i16);//()
 //#define TAG00978a_3(n,a,b) CALL2(n,TAG00978a_3,a,b)
-//RESTARTABLE _TAG00978a_3(i16, struct PAGE *);//(void)
+//RESTARTABLE _TAG00978a_3(i16, struct PAGE *);//()
 //#define TAG00978a_12(n,a,b) CALL2(n,TAG00978a_12,a,b)
 //RESTARTABLE _TAG00978a_12(i16, i32);//(pnt)
 //#define TAG00978a_13(n,a) CALL1(n,TAG00978a_13,a)
@@ -4195,23 +4195,23 @@ RESTARTABLE _TAG005d2a(i32, i32);//(void)
 //#define TAG00978a_21(n,a,b) CALL2(n,TAG00978a_21,a,b)
 //RESTARTABLE _TAG00978a_21(i16, i32);//(pnt)
 //#define TAG00978a_27(n,a,b,c,d) CALL4(n,TAG00978a_27,a,b,c,d)
-//RESTARTABLE _TAG00978a_27(i16, i32, pnt, i32);//(void)
+//RESTARTABLE _TAG00978a_27(i16, i32, pnt, i32);//()
 //#define TAG00978a_28(n,a,b,c) CALL3(n,TAG00978a_28,a,b,c)
 //RESTARTABLE _TAG00978a_28(i16, i16, i16);//(pnt)
 //#define TAG00978a_29(n,a,b) CALL2(n,TAG00978a_29,a,b)
-//RESTARTABLE _TAG00978a_29(i16, i16);//(void)
+//RESTARTABLE _TAG00978a_29(i16, i16);//()
 //#define TAG0051c2_37(n,a) CALL1(n,TAG0051c2_37,a)
-//RESTARTABLE _TAG0051c2_37(i16);//(void)
+//RESTARTABLE _TAG0051c2_37(i16);//()
 //#define TAG0051c2_36(n,a) CALL1(n,TAG0051c2_36,a)
-//RESTARTABLE _TAG0051c2_36(i16);//(void)
+//RESTARTABLE _TAG0051c2_36(i16);//()
 //#define TAG005ae8_38(n,a,b) CALL2(n,TAG005ae8_38,a,b)
-//RESTARTABLE _TAG005ae8_38(i16,PALETTEPKT *);//(void)
+//RESTARTABLE _TAG005ae8_38(i16,PALETTEPKT *);//()
 #define TAG0089b0(n,a,b,c) CALL3(n,TAG0089b0,a,b,c)
-RESTARTABLE _TAG0089b0(i16,struct S20 *,struct T12 *);//(void)
+RESTARTABLE _TAG0089b0(i16,struct S20 *,struct T12 *);//()
 #define TAG005a1e_5(n,a,b) CALL2(n,TAG005a1e_5,a,b)
-RESTARTABLE _TAG005a1e_5(i32, i32);//(void)
+RESTARTABLE _TAG005a1e_5(i32, i32);//()
 #define TAG009410(n,a,b) CALL2(n,TAG009410,a,b)
-RESTARTABLE _TAG009410(pnt, i32);//(void)
+RESTARTABLE _TAG009410(pnt, i32);//()
 #define TAG001dde(n,a) CALL1(n,TAG001dde,a)
 RESTARTABLE _TAG001dde(struct S6 *);//(i32)
 const char *TranslateLanguage(const char *);
@@ -4222,13 +4222,13 @@ class NEWDSAPARAMETERS
   ui32 *saveoldparameters;
   ui32 newparameters[101];
 public:
-  NEWDSAPARAMETERS(void)
+  NEWDSAPARAMETERS()
   {
     saveoldparameters = pDSAparameters;
     pDSAparameters = newparameters;
     pDSAparameters[0] = 0;
   };
-  ~NEWDSAPARAMETERS(void)
+  ~NEWDSAPARAMETERS()
   {
     pDSAparameters = saveoldparameters;
   };

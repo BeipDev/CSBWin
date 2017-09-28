@@ -10,7 +10,7 @@
 #include "Data.h"
 
 
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 bool PlayFile_Play(MouseQueueEnt *MQ);
 void RecordFile_Record(MouseQueueEnt *MQ);
 

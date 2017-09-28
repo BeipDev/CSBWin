@@ -131,7 +131,7 @@ bool IsCellOccupied(i32 x, i32 y)
 //*********************************************************
 //   TAG00f340
 RESTARTABLE _Fusion(const i32 attackX, const i32 attackY)
-{//(void)
+{//()
   static dReg D0, D4, D5, D6, D7;
   static RN  obj_16;
   static i32 i_14[4];
@@ -431,7 +431,7 @@ struct ATTACKPARAMETERS
   i32    userInfo[10];
   i32    dataType; // = ADT_*****
   ATTDEP attdep;
-  //ATTACKPARAMETERS(void){memset(this, 0, sizeof(*this));};
+  //ATTACKPARAMETERS(){memset(this, 0, sizeof(*this));};
 };
 
 
@@ -947,7 +947,7 @@ i32 DeterminePhysicalAttackDamage(
 //*********************************************************
 //   TAG01adaa
 RESTARTABLE _FlashAttackDamage(const i32 value)
-{//(void)
+{//()
   static dReg D0, D5, D6, D7;
   static const char* A2;
   static aReg A3;
@@ -1243,7 +1243,7 @@ i16 MagicShield(CHARDESC *pChar, i32 spellShield, i32 strength, i32 mustHaveMana
 //*********************************************************
 //   TAG01be82
 void DecrementChargesRemaining(CHARDESC *pChar)
-{//(void)
+{//()
   RN   objD7;
   DB5  *DB5A3;
   DB6  *DB6A3;
@@ -2189,8 +2189,8 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
 //
 //*********************************************************
 //           TAG01fed6
-RESTARTABLE _ProcessTimersViewportAndSound(void)
-{//(void)
+RESTARTABLE _ProcessTimersViewportAndSound()
+{//()
   RESTARTMAP
     RESTART(1)
     RESTART(2)
@@ -2217,8 +2217,8 @@ RESTARTABLE _ProcessTimersViewportAndSound(void)
 //
 //*********************************************************
 //           TAG01fefc
-RESTARTABLE _FusionSequence(void)
-{ //(void)    Called by Fusion attack only.
+RESTARTABLE _FusionSequence()
+{ //()    Called by Fusion attack only.
   static dReg D0, D1, D5, D6;
   static i16  D7w;
   static RN    objD4;

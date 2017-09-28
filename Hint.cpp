@@ -564,21 +564,21 @@ extern i16 globalPalette[];
 i16 dumpFile = -1;
 
 void NotImplemented(i32);
-void SetSupervisorMode(void);
-void ClearSupervisorMode(void);
+void SetSupervisorMode();
+void ClearSupervisorMode();
 i32  READ(i32 file, i32 len, ui8 *buf);
 i32  LSEEK(i32 offset, i32 file, i32 origin);
 i16  CLOSE(i32 handle);
 ui8 *MALLOC(i32 size);
 void MFREE(ui8 *);
-pnt  GETDTA(void);
+pnt  GETDTA();
 void SETDTA(pnt);
-i16  drvmap(void); //Bios function TRAP #13
+i16  drvmap(); //Bios function TRAP #13
 void StrCpy(char *dst, const char *src);//TAG003264
 i32  atari_sprintf(char *,const char*, i32, i32=0, i32=0);//TAG0065e0
 void MemoryMove(ui8 *src, ui8 *dst, i16, i16, i32);//like MemMove
-ui8 *physbase(void);
-ui8 *logbase(void);
+ui8 *physbase();
+ui8 *logbase();
 void setscreen(ui8 *logaddr, ui8 *physaddr, i16 res);
 #define wvbl(n) CALL0(n,wvbl)
 void setpalette(PALETTE *palette);
@@ -635,15 +635,15 @@ i32   TAG000606(i16, i16, i16);
 void  TAG000678(pnt, pnt, i32);
 i16   TAG0006bc(pnt, pnt, i16);
 void  TAG0006f8(FILE_DESCRIPTOR *, i16, i16);//TAG0006f8(pnt, i16, i16);
-i16   GetAvailFloppyMap(void);//TAG00073c
+i16   GetAvailFloppyMap();//TAG00073c
 i32   TAG000784(i16, i32 *);
 i32   TAG0008c4(FILE_DESCRIPTOR *pFD);//TAG0008c4(pnt);
 i16   TAG000956(FILE_DESCRIPTOR *);//TAG000956(pnt);
 i32   TAG000b46(i16, FILE_DESCRIPTOR *pFD);//TAG000b46(i16, pnt);
 i32   OpenHelpFile(FILE_DESCRIPTOR *pFD);//TAG000bd2(pnt);
 void  TAG000f50(i16);
-void  TAG001006(void);
-i16   TAG00101c(void);
+void  TAG001006();
+i16   TAG00101c();
 void  TAG001064(i16);
 i32   TAG001096_2(i16);
 i32   ReadFile(i16);//TAG001096_7
@@ -658,33 +658,33 @@ void  TAG0015d6_128(i16, i32);
 void  SetDriveName(i32, i32);//TAG0015d6_256
 i32   TAG00181e(i16);
 i16   TAG001840(i32, pnt, i16);
-void  TAG00187e(void);
-i32   TAG001896(void);
+void  TAG00187e();
+i32   TAG001896();
 i32   TAG00189c(i16, i32, const char*);
 i16   TAG001964(i16, i32, i32, i32 (*)(i32, pnt));
 i16   TAG001a32(pnt, i16, i16);
-void  ClearKeyboard(void);//TAG001a6a
+void  ClearKeyboard();//TAG001a6a
 i16   TAG001a9e(pnt, i16, i16, i16);
 void  TAG001afe(i32, i32, i32);
-void  TAG001bee(void);
+void  TAG001bee();
 void  TAG001c0c(i32);
 i16   EnableButtons(CLICKMAP *);
 void  TAG001ec0(pnt,pnt,wordRectPos *,i16,i16,i16,i16,i16);
 void  ExpandGraphic(i8 *, ui8 *, i16, i16, i32 maxSize);//TAG00227a
 void  TAG0025a0(ui8 *,ui8 *,i16,i16,i16,i16,ui8 *);
 void  TAG002798(ui8 *, wordRectPos *, i16, i16);
-void  TAG0029de(void);
-void  TAG002a2a(void);
+void  TAG0029de();
+void  TAG002a2a();
 void  TAG002a5a(i16);
-void  TAG002ae4(void);
-void  TAG002af4(void);
-void  TAG002b0c(void);
+void  TAG002ae4();
+void  TAG002af4();
+void  TAG002b0c();
 void  TAG002b3c(i16, i16);
 void  TAG002b5c(i16, i16);
-void  TAG002bf4(void);
-void  TAG002c1a(void);
+void  TAG002bf4();
+void  TAG002c1a();
 i32   TAG002c5e(pnt P1,pnt P2,pnt P3);
-void  TAG002e64(void);
+void  TAG002e64();
 i32   ReadDatSeg(pnt, i16);//TAG002eb8
 i32   TAG002f6c(ui8 *P1, i16 P2, i16 P3, i16 P4);
 i32   TAG003006(ui8 *P1, i16 P2);
@@ -715,7 +715,7 @@ S18  *TAG003df0(S12 *);
 pnt   TAG003efc(i32, i16, S18 *);
 void  TAG00404c(pnt, S18 *);
 i16   TAG004078(i16, i16);
-void  TAG00418a(void);
+void  TAG00418a();
 pnt   TAG00419a(i32, i16);
 i32   TAG0041c8(pnt);
 pnt   TAG00421e(pnt);
@@ -743,16 +743,16 @@ void  TAG005ae8_1(i16 P1);
 void  TAG005ae8_2(i16 P1);
 void  TAG005ae8_9(i16 P1, PALETTEPKT *nP2);
 void  TAG005ae8_38(i16 P1, PALETTEPKT *nP2);
-void  TAG005d98(void);
+void  TAG005d98();
 //void  TAG005dcc(wordRectPos *, wordRectPos *, i16, i16);(use expandRectangle)
 void  TAG005f9a_1(wordRectPos *, i16, i16);
 void  TAG0059fe(i32 P1, i32 P2); //Fake function
 static i16 MinA(i16, i16);// TAG0060a4
-i32   TAG0060c4(void);
+i32   TAG0060c4();
 static i16 MinB(i16, i16);// TAG006282
 void  TAG0062a2(wordRectPos *P1, ui8 *P2);
-void  TAG00636a(void);
-void  TAG006388(void);
+void  TAG00636a();
+void  TAG006388();
 void  TAG0063a6(i16);
 i16   TAG0064fc(pnt, pnt);
 pnt   StrCpyTo(pnt,pnt,i16);//TAG006538
@@ -766,32 +766,32 @@ i32   TAG00686a(i16 P1);
 pnt   TAG006bc0(i32 P1);
 i32   TAG006c1c(i16, i32, pnt);
 void  TAG006bfc(pnt P1);
-void  TAG006c5e(void);
-void  TAG007540(void);
+void  TAG006c5e();
+void  TAG007540();
 void  TAG007560(i16);
-void  TAG0075c8(void);
+void  TAG0075c8();
 i32   TAG0076a0_8(i16 P1, pnt nP2, i32 nP3);
 i32   TAG0076a0_13(i16 P1);
 void  TAG0076a0_40(i32 /*P1*/, i32 nP2, const char* nP3, i32 nP4);
 void  TAG0078fa(TEXT *);
 i32   TAG007908(i32, pnt);
 i16   TAG00794e(pnt, pnt);
-void  TAG00797a(void);
+void  TAG00797a();
 void  TAG00799a_1(i16 /*P1*/);
 void  TAG00799a_2(i16 /*P1*/);
 void  SetSelectedLine(i16 /*P1*/, i32 nP2);//TAG00799a_7
 i32   TAG00799a_13(i16 P1);
-void  TAG007fbc(void);
+void  TAG007fbc();
 void  TAG007fdc_2(i16 P1);
 i32   TAG00835c_25(i16 P1);
 void  TAG0083ac(i16, i16, i16, i16, i16);
 i16   TAG0083cc(pnt, pnt); //Adds words between two addresses
 void  TAG008898(i16, i16);
 void  TAG0088b8(wordRectPos *, ui8 *, i16);
-void  TAG008a42(void);
-i32   TAG008a62(void);
+void  TAG008a42();
+i32   TAG008a62();
 void  TAG008b90(i16,S20 *,T12 *);
-void  TAG008c20(void);
+void  TAG008c20();
 void  TAG008c40_1(i16 P1);
 void  TAG008c40_2(i16 /*P1*/);
 void  TAG008c40_3(i16 P1, i32 nP2, i32 nP3);
@@ -799,7 +799,7 @@ i32   TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4);
 void  TAG008c40_30(i16 /*P1*/);
 void  TAG0093a0_17(i16,i32);
 void  TAG0093a0_18(i32 , i32);
-void  Clear_14608(void);//TAG009462
+void  Clear_14608();//TAG009462
 i32   TAG00948c(i16 P1);
 pnt   TAG0094de(i16 P1, PAGE *P2, NODE *P3);
 i32   AddPage(i16 P1, PAGE *P2);//TAG009516
@@ -817,7 +817,7 @@ void  TAG00978a_29(i16 P1, i16 nP2);
 void  TAG009d7e(i16, i16 *, i16 *, i16 *);
 //void  TAG009a02(i32, i32);
 //void  TAG009a1c(i32, i32);
-void  TAG009a40(void);
+void  TAG009a40();
 void  TAG009d36(i16, i16);
 void  TAG009d5e(i16);
 void  TAG009db6(i16, i32, i32 *);
@@ -827,16 +827,16 @@ void  TAG009f1c(i16 *, i16 *, i16 *);
 void  TAG009f80(i16);
 void  TAG00a05c(i16 **);
 i16   TAG00a07a(i16);
-i16   TAG00a238(void);
-i16   TAG00a28c(void);
+i16   TAG00a238();
+i16   TAG00a28c();
 i16   TAG00aa22(i16 *, i16 *, i16 *, i16 *);
 void  TAG00aa58(i16, i32);
 void  TAG00adf4(i32);
 void  TAG00ae38(i32 *);
-void  TAG00ae58(void);
+void  TAG00ae58();
 //pnt   TAG00aeda(i16, i16); TRAP #1
 void  TAG00aef0(i16);
-void  TAG00af06(void);
+void  TAG00af06();
 
 
 void NotImpMsg(i32 addr)
@@ -1032,7 +1032,7 @@ void TAG0006f8(FILE_DESCRIPTOR *P1, i16 P2, i16 P3)
 // Bit 0 = drive A, etc
 // *********************************************************
 //  TAG00073c
-i16 GetAvailFloppyMap(void)
+i16 GetAvailFloppyMap()
 {
   dReg D0, D7;
   SetSupervisorMode();
@@ -1333,7 +1333,7 @@ void TAG000f50(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG001006(void)
+void TAG001006()
 {
   TAG0041c8(f.Pointer15076);
   TAG0041c8(f.Pointer15080);
@@ -1342,7 +1342,7 @@ void TAG001006(void)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG00101c(void)
+i16 TAG00101c()
 {
   dReg D7;
   FILE_DESCRIPTOR *A4;
@@ -1813,7 +1813,7 @@ i16 TAG001840(i32, pnt, i16)
 // *********************************************************
 //
 // *********************************************************
-void TAG00187e(void)
+void TAG00187e()
 {
   f.Pointer14508 = TAG001840;
   f.Long14504 = 0;
@@ -1823,7 +1823,7 @@ void TAG00187e(void)
 // *********************************************************
 //
 // *********************************************************
-i32 TAG001896(void)
+i32 TAG001896()
 {
   return f.Long14504;
 }
@@ -1934,7 +1934,7 @@ i16 TAG001a32(pnt P1, i16 P2, i16 P3)
 //
 // *********************************************************
 //   TAG001a6a
-void ClearKeyboard(void)
+void ClearKeyboard()
 {
   while (UI_CONSTAT())
   {
@@ -2023,7 +2023,7 @@ void TAG001afe(i32 P1, i32 P2, i32 P3)
 // *********************************************************
 //
 // *********************************************************
-void TAG001bee(void)
+void TAG001bee()
 {
   if (f.Word14198 != 0)
   {
@@ -2230,7 +2230,7 @@ void  TAG002798(ui8 *P1,wordRectPos *P2,i16 P3,i16 P4)
 // *********************************************************
 //
 // *********************************************************
-void TAG0029de(void)
+void TAG0029de()
 {
   NotImpMsg(0x29de);
 }
@@ -2238,7 +2238,7 @@ void TAG0029de(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG002a2a(void)
+void TAG002a2a()
 {
   NotImpMsg(0x2a2a);
 }
@@ -2275,7 +2275,7 @@ void TAG002a5a(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG002ae4(void)
+void TAG002ae4()
 {
   TAG009f80(f.Word13878);
   TAG00a28c();
@@ -2284,7 +2284,7 @@ void TAG002ae4(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG002af4(void)
+void TAG002af4()
 {
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;
@@ -2299,7 +2299,7 @@ void TAG002af4(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG002b0c(void)
+void TAG002b0c()
 {
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;
@@ -2346,7 +2346,7 @@ void TAG002b5c(i16 P1, i16 P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG002bf4(void)
+void TAG002bf4()
 {
   /*
 */
@@ -2355,7 +2355,7 @@ void TAG002bf4(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG002c1a(void)
+void TAG002c1a()
 {
   NotImpMsg(0x2c16);
   /*
@@ -2454,8 +2454,8 @@ i32 TAG002c5e(const char* P1,pnt P2,pnt P3)
 // *********************************************************
 //
 // *********************************************************
-void TAG002e64(void)
-{//(void)
+void TAG002e64()
+{//()
   DATINDEX *DatIA4;
   DatIA4 = f.pDatIndex12802;
   TAG001096_10(DatIA4->handle0);
@@ -3328,7 +3328,7 @@ i16 TAG004078(i16 P1,i16 P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG00418a(void)
+void TAG00418a()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   MFREE((ui8 *)f.Pointer136);
@@ -3495,7 +3495,7 @@ i32 TAG0049fe(TEXT *, i32 P2, i32 P3)
 // *********************************************************
 //   TAG004a22_6
 RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
-{//(void)
+{//()
   static dReg D0;
   static aReg A0, A1;
   static TEXT *pTextP3;
@@ -3664,7 +3664,7 @@ pnt TAG004a22_16(i16 P1, i32 nP2)
 // *********************************************************
 //   TAG004a22_20
 void Free_TEXT(i16 P1, TEXT *nP2)
-{//(void)
+{//()
   TEXT *pTextP3;
   union 
         {
@@ -3692,7 +3692,7 @@ void Free_TEXT(i16 P1, TEXT *nP2)
 //
 // *********************************************************
 void TAG004a22_26(i16 /*P1*/, i32 nP2, i32 nP3)
-{//(void)
+{//()
   dReg D0;
   ui8 *A0;
   TEXT *pTextP3;
@@ -3737,7 +3737,7 @@ void TAG004a22_26(i16 /*P1*/, i32 nP2, i32 nP3)
 //
 // *********************************************************
 RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, i32 P3)
-{//(void)
+{//()
   static TEXT *pTextP3;
   RESTARTMAP
     RESTART(1)
@@ -3774,7 +3774,7 @@ RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, i32 P3)
 //
 // *********************************************************
 RESTARTABLE _TAG004e4c_6(i16 P1,TEXT *P2)
-{//(void)
+{//()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -3786,7 +3786,7 @@ RESTARTABLE _TAG004e4c_6(i16 P1,TEXT *P2)
 //
 // *********************************************************
 RESTARTABLE _TAG004e4c_8(i16 P1,TEXT *P2)
-{//(void)
+{//()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -3821,7 +3821,7 @@ pnt TAG004f3a_1(i16 /*P1*/)
 //
 // *********************************************************
 void TAG004f3a_2(i16 /*P1*/)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(15, P2);
   TAG00418a();
@@ -3987,7 +3987,7 @@ i16 TAG0051a2(i16 P1, i16 P2)
 //
 // *********************************************************
 RESTARTABLE _TAG0051c2_1(const i16 P1)
-{//(void)
+{//()
   static dReg D0, D1;
   static pnt *pntA0;
   static i32   i_52;
@@ -4101,7 +4101,7 @@ RESTARTABLE _TAG0051c2_1(const i16 P1)
 //
 // *********************************************************
 RESTARTABLE _TAG0051c2_2(i32 P1)
-{//(void)
+{//()
   static dReg D0;
   static pnt *pntA0, *pntA1;
   RESTARTMAP
@@ -4169,7 +4169,7 @@ RESTARTABLE _TAG0051c2_2(i32 P1)
 //
 // *********************************************************
 RESTARTABLE _TAG0051c2_31(i16 P1)
-{//(void)
+{//()
   static dReg D0;
   static i16 *wA0;
   static i16   w_48;
@@ -4254,7 +4254,7 @@ RESTARTABLE _TAG0051c2_31(i16 P1)
 //
 // *********************************************************
 void TAG0051c2_35(i16 /*P1*/)
-{//(void)
+{//()
   dReg D0;
   ui8 **pntA0, **pntA1;
   i16   w_48;
@@ -4336,7 +4336,7 @@ void TAG0051c2_36(i16 /*P1*/)
 //
 // *********************************************************
 void TAG0051c2_37(i16 /*P1*/)
-{//(void)
+{//()
   pnt *pntA0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(14, P2);
@@ -4399,7 +4399,7 @@ RESTARTABLE _TAG005a1e_xxx(const i16, const i16 P2, const i32 P3)
 //
 // *********************************************************
 RESTARTABLE _TAG005a1e_5(i32 P1, i32 P2)
-{ //(void)
+{ //()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -4413,7 +4413,7 @@ RESTARTABLE _TAG005a1e_5(i32 P1, i32 P2)
 //
 // *********************************************************
 void TAG005ae8_1(i16 P1)
-{//(void)
+{//()
   i32 i;
   i32  i_28;
   PALETTEPKT  pkt_24;
@@ -4438,7 +4438,7 @@ void TAG005ae8_1(i16 P1)
 //
 // *********************************************************
 void TAG005ae8_2(i16 /*P1*/)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(22, P2);
   //TAG009a1c(22, P2);
@@ -4449,7 +4449,7 @@ void TAG005ae8_2(i16 /*P1*/)
 //
 // *********************************************************
 void TAG005ae8_9(i16 P1, PALETTEPKT *nP2)
-{//(void)
+{//()
   i16  *wA1;
   PALETTEPKT *pktA0;
   i16 *pw_6;
@@ -4491,7 +4491,7 @@ void TAG005ae8_9(i16 P1, PALETTEPKT *nP2)
 // *********************************************************
 //   TAG005ae8_34
 RESTARTABLE _PaletteFade(i16 P1, PALETTEPKT *nP2)
-{//(void)
+{//()
   static PALETTEPKT *pktA0;
   RESTARTMAP
     RESTART(1)
@@ -4517,7 +4517,7 @@ RESTARTABLE _PaletteFade(i16 P1, PALETTEPKT *nP2)
 //
 // *********************************************************
 void TAG005ae8_38(i16 P1, PALETTEPKT *nP2)
-{//(void)
+{//()
   PALETTEPKT *pktA0;
 //;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(22, P2);
@@ -4535,7 +4535,7 @@ void TAG005ae8_38(i16 P1, PALETTEPKT *nP2)
 //
 // *********************************************************
 RESTARTABLE _TAG005d2a(i32 P1, i32 P2)
-{//(void)
+{//()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -4560,7 +4560,7 @@ RESTARTABLE _TAG005d2a(i32 P1, i32 P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG005d98(void)
+void TAG005d98()
 { //Set critical error handler to set D0 to -1.
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   SetSupervisorMode();
@@ -4578,7 +4578,7 @@ RESTARTABLE _FadePalette(PALETTE *P1,
                         const i16 P3,
                         const i16 P4,
                         const i16 p5)
-{//(void)
+{//()
   static dReg D0, D4, D5, D6, D7;
   static i16  *wA0, *wA1;
   static i16 w_34[16];
@@ -4750,7 +4750,7 @@ i16 MinA(i16 P1, i16 P2)
 // *********************************************************
 //
 // *********************************************************
-i32 TAG0060c4(void)
+i32 TAG0060c4()
 {//(i32)
   dReg D7;
   ui32 *pi_12;
@@ -4783,7 +4783,7 @@ i16 MinB(i16 P1, i16 P2)
 //
 // *********************************************************
 void TAG0062a2(wordRectPos *P1, ui8 *P2)
-{//(void)
+{//()
   dReg D0, D6, D7;
   wordRectPos *rpA0;
   ui8 *pnt_4;
@@ -4804,7 +4804,7 @@ void TAG0062a2(wordRectPos *P1, ui8 *P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG00636a(void)
+void TAG00636a()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   TAG001964(1, 0x01060001, 0x010600ff, TAG007908);
@@ -4813,7 +4813,7 @@ void TAG00636a(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG006388(void)
+void TAG006388()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;
   TAG001964(1, 0x01060001, 0x010600ff, TAG007908);
@@ -5013,7 +5013,7 @@ i32 MyReadFirstBlock(pnt P1)
 //
 // *********************************************************
 void TAG006718(i16 P1)
-{//(void)
+{//()
   i32 i;
   S4076 *p;
   p = &f.s4076_8816[P1];
@@ -5171,7 +5171,7 @@ pnt TAG006bc0(i32 P1)
 //
 // *********************************************************
 void TAG006bfc(pnt P1)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (P1 == NULL) return;
   ReleaseMem(17, (ui8 *)P1);
@@ -5194,7 +5194,7 @@ i32 TAG006c1c(i16 FDnum, i32 P2, pnt P3)
 // *********************************************************
 //
 // *********************************************************
-void TAG006c5e(void)
+void TAG006c5e()
 {
   NotImpMsg(0x6c5e);
 }
@@ -5679,7 +5679,7 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
 //
 // *********************************************************
 RESTARTABLE _TAG006c7e_2(i16 P1)
-{//(void)
+{//()
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -5714,7 +5714,7 @@ RESTARTABLE _TAG006c7e_32(i16 P1, pnt P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG007540(void)
+void TAG007540()
 {
   NotImpMsg(0x7540);
 }
@@ -5722,14 +5722,14 @@ void TAG007540(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG0075c8(void)
+void TAG0075c8()
 { //  set hard-disk handling vectors?????
 }
 
 // *********************************************************
 //
 // *********************************************************
-void TAG00760a(void)
+void TAG00760a()
 {
 }
 
@@ -5862,7 +5862,7 @@ i32 TAG0076a0_13(i16 P1)
 //
 // *********************************************************
 void TAG0076a0_40(i32 /*P1*/, i32 nP2, const char* nP3, i32 nP4)
-{//(void)
+{//()
   i32 i_18;
   i32 i_4;
   //case 0x28:
@@ -5928,7 +5928,7 @@ i16 TAG00794e(pnt P1, pnt P2)
 // *********************************************************
 //
 // *********************************************************
-void TAG00797a(void)
+void TAG00797a()
 {
   NotImpMsg(0x797a);
 }
@@ -5937,7 +5937,7 @@ void TAG00797a(void)
 //
 // *********************************************************
 void TAG00799a_1(i16 /*P1*/)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(3, P2);
   f.Seg1Addr10550 = NULL;
@@ -5952,7 +5952,7 @@ void TAG00799a_1(i16 /*P1*/)
 //
 // *********************************************************
 void TAG00799a_2(i16 /*P1*/)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(3, P2);
   if (f.Word10486 == 0) return;
@@ -5977,7 +5977,7 @@ void TAG00799a_2(i16 /*P1*/)
 //
 // *********************************************************
 RESTARTABLE _TAG00799a_6(i16 P1)
-{//(void)
+{//()
   static dReg D0;
   static wordRectPos *pRectPos_42;
   static PALETTEPKT pkt_38;
@@ -6057,7 +6057,7 @@ RESTARTABLE _TAG00799a_6(i16 P1)
 // *********************************************************
 //   TAG00799a_7
 void SetSelectedLine(i16 /*P1*/, i32 nP2)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(3, P2);
   f.Word10516 = sw(nP2);
@@ -6069,7 +6069,7 @@ void SetSelectedLine(i16 /*P1*/, i32 nP2)
 //
 // *********************************************************
 RESTARTABLE _TAG00799a_9(i16 P1)
-{//(void)
+{//()
   static dReg D5, D6, D7;
   static aReg A4;
   static i16 w_14;
@@ -6236,7 +6236,7 @@ i32 TAG00799a_13(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG007fbc(void)
+void TAG007fbc()
 {
   NotImpMsg(0x7fbc);
 }
@@ -6246,7 +6246,7 @@ void TAG007fbc(void)
 //
 // *********************************************************
 void TAG007fdc_2(i16 P1)
-{//(void)
+{//()
   i16  w_10;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(19, P2);
@@ -6274,7 +6274,7 @@ void TAG007fdc_2(i16 P1)
 //
 // *********************************************************
 RESTARTABLE _TAG007fdc_7(i16 P1,i32 nP2,i32 nP3,i32 /*nP4*/)
-{//(void)
+{//()
   static dReg D0;
   static i16  w_10;
   static pnt  pnt_8;
@@ -6353,7 +6353,7 @@ RESTARTABLE _TAG007fdc_7(i16 P1,i32 nP2,i32 nP3,i32 /*nP4*/)
 //
 // *********************************************************
 RESTARTABLE _TAG007fdc_36(i16 P1, i32 nP2, i32 nP3)
-{//(void)
+{//()
   static dReg D0;
   static i16  w_10;
   RESTARTMAP
@@ -6452,7 +6452,7 @@ i16 TAG0083cc(pnt P1, pnt P2)
 //
 // *********************************************************
 RESTARTABLE _StartHint(const CSB_UI_MESSAGE *)
-{//(void)
+{//()
   static dReg D0;
   static TEXT  *pText_10;
   static i16 w_4;
@@ -6691,7 +6691,7 @@ void TAG0088b8(wordRectPos *P1, ui8 *P2, i16 P3)
 //
 // *********************************************************
 RESTARTABLE _TAG0089b0(i16, S20 *P2, T12 *)
-{//(void)
+{//()
   static TEXT *pText_4;
   static S20 *s20A3;
   RESTARTMAP
@@ -6715,7 +6715,7 @@ RESTARTABLE _TAG0089b0(i16, S20 *P2, T12 *)
 // *********************************************************
 //
 // *********************************************************
-void TAG008a42(void)
+void TAG008a42()
 {
   NotImpMsg(0x8a42);
 }
@@ -6723,7 +6723,7 @@ void TAG008a42(void)
 // *********************************************************
 //
 // *********************************************************
-i32 TAG008a62(void)
+i32 TAG008a62()
 {//(i32)
   dReg D7;
   ui32  *pi_12;
@@ -6744,7 +6744,7 @@ i32 TAG008a62(void)
 // *********************************************************
 //
 // *********************************************************
-void TAG008c20(void)
+void TAG008c20()
 {
   NotImpMsg(0x8c20);
 }
@@ -6754,7 +6754,7 @@ void TAG008c20(void)
 //
 // *********************************************************
 void TAG008c40_1(i16 P1)
-{//(void)
+{//()
   i32 i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(5, P2);
@@ -6774,7 +6774,7 @@ void TAG008c40_1(i16 P1)
 //
 // *********************************************************
 void TAG008c40_2(i16 /*P1*/)
-{//(void)
+{//()
   i32 i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(5, P2);
@@ -6791,7 +6791,7 @@ void TAG008c40_2(i16 /*P1*/)
 //
 // *********************************************************
 void TAG008c40_3(i16 P1, i32 nP2, i32 nP3)
-{//(void)
+{//()
   dReg D7;
   aReg A0;
   T12 *t12A3;
@@ -6909,7 +6909,7 @@ RESTARTABLE _TAG008c40_5(i16 P1, i32 nP2)
 //
 // *********************************************************
 RESTARTABLE _TAG008c40_6(i16 P1, i32 nP2)
-{ //(void)
+{ //()
   //text to buttons??
   static dReg D0, D7;
   static T12 *t12A3;
@@ -7094,7 +7094,7 @@ i32 TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4)
 //
 // *********************************************************
 void TAG008c40_30(i16 /*P1*/)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(5, P2);
   //TAG009a1c(5, P2);
@@ -7106,7 +7106,7 @@ void TAG008c40_30(i16 /*P1*/)
 //
 // *********************************************************
 void TAG0093a0_17(i16,i32)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(7, P2);
   return;
@@ -7116,7 +7116,7 @@ void TAG0093a0_17(i16,i32)
 //
 // *********************************************************
 void TAG0093a0_18(i32 , i32)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(7, P2);
   if (f.Word16508 == 1)
@@ -7138,7 +7138,7 @@ void TAG0093a0_18(i32 , i32)
 //
 // *********************************************************
 RESTARTABLE _TAG009410(pnt,i32 P2)
-{//(void)
+{//()
   static i8 b_50[50];
   RESTARTMAP
     RESTART(2)
@@ -7157,7 +7157,7 @@ RESTARTABLE _TAG009410(pnt,i32 P2)
 //
 // *********************************************************
 //   TAG009462
-void Clear_14608(void)
+void Clear_14608()
 {
   for (i32 i=0; i<23; i++)
   {
@@ -7338,7 +7338,7 @@ pnt TAG00964e(i32 P1, i32 P2)
 //
 // *********************************************************
 void TAG00978a_1(i16 /*P1*/)
-{//(void)
+{//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(13, P2);
   Clear_14608();
@@ -7350,7 +7350,7 @@ void TAG00978a_1(i16 /*P1*/)
 //
 // *********************************************************
 void TAG00978a_3(i16 P1, PAGE *nP2)
-{//(void)
+{//()
   dReg D0;
   i32 i_4;
   PAGE *pPageP3;
@@ -7434,7 +7434,7 @@ pnt TAG00978a_21(i16 P1, i32 nP2)
 //
 // *********************************************************
 void TAG00978a_27(i16 P1, i32 nP2, pnt nP3, i32 nP4)
-{//(void)
+{//()
   i32 i_4;
   PAGE *pPageP3;
   TEXT *pTextP4;
@@ -7504,7 +7504,7 @@ pnt TAG00978a_28(i16 P1,i16 nP2,i16 nP3)
 //
 // *********************************************************
 void TAG00978a_29(i16 P1, i16 nP2)
-{//(void)
+{//()
   PAGE *pPage_8;
   i32 i_4;
   PAGE *pPageP3;
@@ -7544,7 +7544,7 @@ void TAG009a1c(i32,i32)
 // *********************************************************
 //
 // *********************************************************
-void TAG009a40(void)
+void TAG009a40()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   f.Word10462 = 1;
@@ -7821,7 +7821,7 @@ i16 TAG00a07a(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG00a238(void)
+i16 TAG00a238()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   f.Pointer268 = f.Word380;
@@ -7840,7 +7840,7 @@ i16 TAG00a238(void)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG00a28c(void)
+i16 TAG00a28c()
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;
   TAG00a07a(19);
@@ -7893,7 +7893,7 @@ void TAG00ae38(i32 *P1)
 // *********************************************************
 //
 // *********************************************************
-void TAG00ae58(void)
+void TAG00ae58()
 {
   //if (testfornotimplemented) NotImpMsg(0xae58);
 //;;;;;;;;;;;;;;;;;;;;;;;
@@ -7920,7 +7920,7 @@ void TAG00aef0(i16)
 // *********************************************************
 //
 // *********************************************************
-void TAG00af06(void) //(i16 P1,i16 P2)
+void TAG00af06() //(i16 P1,i16 P2)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   f.Pointer184 = MinA;  

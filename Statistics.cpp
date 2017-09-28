@@ -91,7 +91,7 @@ void GetMonsterName(int monsterType, int graphic, char *name)
 };
 
 
-void Statistics(void)
+void Statistics()
 {
   int i, j, why, total, len, maxLen;
   unsigned int *pRecord;

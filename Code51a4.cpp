@@ -980,9 +980,9 @@ struct ALTMONGRAPH
 
 struct ALTMONCACHE // 108 entries. One for each of 27 monstertypes and 4 alternate graphics
 {
-  ALTMONCACHE(void);
-  ~ALTMONCACHE(void){Clear();};
-  void Clear(void);
+  ALTMONCACHE();
+  ~ALTMONCACHE(){Clear();};
+  void Clear();
   ALTMONGRAPH *pGraphic;
   i32  size;      // size initially set to -1;
                   // if (pGraphic == NULL and size == 0) then the entry does not exist.
@@ -992,7 +992,7 @@ struct ALTMONCACHE // 108 entries. One for each of 27 monstertypes and 4 alterna
 };
 
 
-ALTMONCACHE::ALTMONCACHE(void)
+ALTMONCACHE::ALTMONCACHE()
 {
   ui32 i;
   pGraphic = NULL;
@@ -1005,7 +1005,7 @@ ALTMONCACHE::ALTMONCACHE(void)
   graphicID = -1;
 }
 
-void ALTMONCACHE::Clear(void)
+void ALTMONCACHE::Clear()
 {
   ui32 i;
   if (pGraphic != NULL)
@@ -1029,7 +1029,7 @@ void ALTMONCACHE::Clear(void)
 // A cache of Derived graphics for Alternate Monster Graphics
 ALTMONCACHE altMonCache[27][4]; //27 monster types - 4 alternate graphics.
 
-void CleanupAltMonCache(void)
+void CleanupAltMonCache()
 {
   i32 i, j;
   for (i=0; i<27; i++)

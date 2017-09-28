@@ -787,7 +787,7 @@ i32 MoveObject (i32 srcType, i32 srcObjMsk, i32 srcPosMsk, i32 srcLoc, i32 srcDe
 }
 
 
-CURSORFILTER_PACKET::CURSORFILTER_PACKET(void)
+CURSORFILTER_PACKET::CURSORFILTER_PACKET()
 {
   type = CURSORFILTER_Unknown;
   object = RN(RNnul).ConvertToInteger();

@@ -276,8 +276,8 @@ class RN // Record Name
   friend class DB14;
   //friend void DumpDB3(FILE *, RN, i32, i32, i32, CELLFLAG);
 //  friend i16 TAG0093d4(RN);
-  void swap(void) {indirectIndex=LE16(indirectIndex);};
-  bool checkIndirectIndex(void) const;
+  void swap() {indirectIndex=LE16(indirectIndex);};
+  bool checkIndirectIndex() const;
 private:
   //union {
   //  ui16 ui;
@@ -297,7 +297,7 @@ private:
     return indirectIndex<i;
   };
 public:
-  RN(void) {indirectIndex = 0xffff;};
+  RN() {indirectIndex = 0xffff;};
   //{
   //  ASSERT((pos<4) && (db<16) && (idx<1024));
   //  d.bf.m_pos=pos;
@@ -316,19 +316,19 @@ public:
   {
     indirectIndex = (UI16)(i);
   };
-  OBJ_NAME_INDEX NameIndex(void) const;
-  OBJ_DESC_INDEX DescIndex(void) const;
+  OBJ_NAME_INDEX NameIndex() const;
+  OBJ_DESC_INDEX DescIndex() const;
   void CreateSpell(i32 n);  //result is RNFireball + n
-  ui8  GetSpellType(void);
-  void LittleEndian(void) {indirectIndex = LE16(indirectIndex);};
-  DBTYPE dbType(void) const
+  ui8  GetSpellType();
+  void LittleEndian() {indirectIndex = LE16(indirectIndex);};
+  DBTYPE dbType() const
   {
     if (!checkIndirectIndex()) return dbUNKNOWN;
     if (dataIndexMap[indirectIndex] == 0xffff) return dbUNKNOWN;
     return DBTYPE(dataTypeMap[indirectIndex]&0xf);
   };
-  ui8 dbNum(void) const {return (ui8)dbType();};
-  ui8 pos(void) const
+  ui8 dbNum() const {return (ui8)dbType();};
+  ui8 pos() const
   {
     checkIndirectIndex();
     return (UI8)((dataTypeMap[indirectIndex]>>4) & 3);
@@ -340,12 +340,12 @@ public:
       ((dataTypeMap[indirectIndex]&0xcf)|((p&3)<<4));
     return *this;
   };
-  ui16 idx(void) const
+  ui16 idx() const
   {
     checkIndirectIndex();
     return dataIndexMap[indirectIndex];
   };
-  //ui32 rid(void) const {return d.rp.m_rid;};
+  //ui32 rid() const {return d.rp.m_rid;};
   bool operator == (RN rn) const
   {
     return indirectIndex == rn.indirectIndex;
@@ -368,13 +368,13 @@ public:
     ASSERT((i >= 0xff00)||(i==0), "Illegal RN");
     return indirectIndex!=i;
   };
-  ui16 ConvertToInteger(void) const {return indirectIndex;}; //USE SPARINGLY!
-  bool IsMagicSpell(void){return indirectIndex>=RNFireball;};
-  bool IsNonPhysicalSpell(void){return indirectIndex>=RNDispellMissile;};
-  bool IsAKey(void) const;
-  bool NonMaterial(void);  //Must be a monster!
-  bool Levitating(void);   //Must be a monster!
-  ui8  VerticalSize(void); //Must be a monster!
+  ui16 ConvertToInteger() const {return indirectIndex;}; //USE SPARINGLY!
+  bool IsMagicSpell(){return indirectIndex>=RNFireball;};
+  bool IsNonPhysicalSpell(){return indirectIndex>=RNDispellMissile;};
+  bool IsAKey() const;
+  bool NonMaterial();  //Must be a monster!
+  bool Levitating();   //Must be a monster!
+  ui8  VerticalSize(); //Must be a monster!
 };
 
 enum PLACE
@@ -408,21 +408,21 @@ void DebugLoad(void *, i32, i32, RN);
 class TEMPORARY_CHAR
 {
 public:
-  TEMPORARY_CHAR(void);
-  ~TEMPORARY_CHAR(void);
+  TEMPORARY_CHAR();
+  ~TEMPORARY_CHAR();
   char *text;
   void operator =(unsigned short *wtext);
-  char *Text(void);
+  char *Text();
 };
 
 class TEMPORARY_WIDE
 {
 public:
-  TEMPORARY_WIDE(void);
-  ~TEMPORARY_WIDE(void);
+  TEMPORARY_WIDE();
+  ~TEMPORARY_WIDE();
   unsigned short *text;
   void operator =(const char *atext);
-  unsigned short *Text(void);
+  unsigned short *Text();
 };
 #endif
 

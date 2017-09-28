@@ -53,14 +53,14 @@ struct ITEM20
 };
 
 
-void  SetSupervisorMode(void);
-void  ClearSupervisorMode(void);
+void  SetSupervisorMode();
+void  ClearSupervisorMode();
 void  CONOUT(i32) {NotImplemented(0xffff71);};
 ui8  *MALLOC(i32 size);
 
 void  MFREE(ui8 *address);
-//i32   DIRECT_CONIN(void){NotImplemented(0xffff79); return 0;}; // Trap 1 #0x07
-//i16   CONSTAT(void);     // Trap 1 #0x0b
+//i32   DIRECT_CONIN(){NotImplemented(0xffff79); return 0;}; // Trap 1 #0x07
+//i16   CONSTAT();     // Trap 1 #0x0b
 i32   LSEEK(i32 offset, i32 file, i32 origin);
 //i16   OPEN(char *name, i32 ref);
 i32   READ(i32 file, i32 len, ui8 *buf);
@@ -71,8 +71,8 @@ void  FileSeek(i32 handle, i32 offset);//TAG00010e
 void  ReadFile(i32 handle, i32 size, ui8 *buf);//  TAG000144
 void  TAG00053a(i16, i32);
 void  TAG0007a8(i32);
-i32   TAG0007aa(void); // TRAP #1 save registers
-void  SetCriticalErrorHandler(void);//TAG0007ce
+i32   TAG0007aa(); // TRAP #1 save registers
+void  SetCriticalErrorHandler();//TAG0007ce
 i16   TAG0009ee(i32);
 void  TAG000a60(i32);
 i16   LoadProgram(STRUCT148 *s148);//TAG000ad2
@@ -88,7 +88,7 @@ i32   TAG001a56(i16, i32, i16);
 void  TAG001b6c(i32);
 void  TAG001b82(i16 handle);
 i16   TAG001cd4(i16, i32, i16);
-void  TAG001e5e(void);
+void  TAG001e5e();
 
 
 #define UTILFILL(a,b) i8 fill##a[a-b];
@@ -291,7 +291,7 @@ void TAG0007a8(i32)
 //
 // *********************************************************
 //   TAG0007ce
-void SetCriticalErrorHandler(void)
+void SetCriticalErrorHandler()
 {
   SetSupervisorMode();
 // Set critical error handler to:
@@ -853,7 +853,7 @@ i16 TAG001cd4(i16,i32,i16)
 // *********************************************************
 //
 // *********************************************************
-void TAG001e5e(void)
+void TAG001e5e()
 {
   strcpy((char *)b.Byte274, "A:\\F");
   memcpy(b.Byte290, "0123456789ABCDEF", 16);

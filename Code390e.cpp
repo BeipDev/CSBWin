@@ -13,8 +13,8 @@
 //
 //*********************************************************
 //          _TAG00390e
-void ReadGraphicsForLevel(void)
-{//(void)
+void ReadGraphicsForLevel()
+{//()
   static dReg D0, D1, D3, D5, D6, D7;
   static aReg A0, A3;
   static i16 LOCAL_22;

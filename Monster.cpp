@@ -13,7 +13,7 @@ extern ui8         monsterMoveInhibit[4];
 extern bool neophyteSkills;
 
 const char *MonsterName(MONSTERTYPE mt);
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 
 const char *TimerName(TIMERTYPE tt)
 {
@@ -80,7 +80,7 @@ void settrace(i32 n)
 #define TIMERTRACE(n)
 #endif
 
-void EnsureItem16Available(void)
+void EnsureItem16Available()
 {
   if (   (d.ITEM16QueLen >= d.MaxITEM16-5)
       && (d.LoadedLevel == d.partyLevel)  )
@@ -237,7 +237,7 @@ RN CreateMonster(i32  value,   //8
 //*********************************************************
 //   TAG00bc12
 void StealFromCharacter(DB4 *pDB4, i32 chIdx)
-{//(void)
+{//()
   dReg D0, D1, D5, D6, D7;
   RN objD4;
   CHARDESC *pcA2;
@@ -788,7 +788,7 @@ i16 FindPossibleMove(const MONSTERDESC *pmtDesc,i32 x,i32 y,i16 P4)
   return 0;
 }
 
-void CallMonsterMovedFilter(void)
+void CallMonsterMovedFilter()
 {
 }
 
@@ -902,7 +902,7 @@ void TurnMonsterGroup(ITEM16 *pI16,
 }
 
 
-i32 RanLiveChar(void)
+i32 RanLiveChar()
 { //Return charIndex of a random live character.
   i32 ch[4];  // A list of live characters
   i32 i, n;
@@ -3058,7 +3058,7 @@ bool InitialChecks(                                                 //IC
 
 MONSTERMOVEFILTERCACHE monsterMoveFilterCache;
 
-MONSTERMOVEFILTERCACHE::MONSTERMOVEFILTERCACHE(void)
+MONSTERMOVEFILTERCACHE::MONSTERMOVEFILTERCACHE()
 {
   ui32 i;
   global.partyLevelOnly = 0xfffe;
@@ -3070,7 +3070,7 @@ MONSTERMOVEFILTERCACHE::MONSTERMOVEFILTERCACHE(void)
   };
 }
 
-MONSTERMOVEFILTERCACHE::~MONSTERMOVEFILTERCACHE(void)
+MONSTERMOVEFILTERCACHE::~MONSTERMOVEFILTERCACHE()
 {
 }
 
@@ -3241,7 +3241,7 @@ void ProcessTimers29to41(
                const i32 mapY,
                TIMERTYPE timeFunc,
                i16 timeUntilAlternateUpdate) //From timer.uByte8
-{//(void)
+{//()
   ITEM16      staticItem16;
   dReg        D0, D1, D3, D4, D5;
   MONSTERTYPE mtD0;

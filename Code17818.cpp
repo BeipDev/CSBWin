@@ -157,7 +157,7 @@ i32 DetermineMastery(i32 chIdx,i32 skill,const char *traceID)
 }
 
 //   TAG017818 //2.5 seconds while sleeping
-void TenSecondUpdate(void)
+void TenSecondUpdate()
 {
   dReg D0, D1, D3, D4, D5, D6;
   OBJ_NAME_INDEX objNID0;

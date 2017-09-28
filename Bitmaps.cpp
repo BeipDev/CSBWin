@@ -10,8 +10,8 @@
 #include "Data.h"
 
 void info(char *, unsigned int);
-void ClearOverlayPalette(void);
-bool IsPlayFileOpen(void);
+void ClearOverlayPalette();
+bool IsPlayFileOpen();
 
 extern bool overlayActive;
 extern ui8 overlayPaletteRed[512];
@@ -24,8 +24,8 @@ public:
   pnt bitmap;
   i32 width;
   i32 height;
-  BITMAPENTRY(void){bitmap = NULL;};
-  ~BITMAPENTRY(void){if(bitmap!=NULL)UI_free(bitmap);bitmap=NULL;};
+  BITMAPENTRY(){bitmap = NULL;};
+  ~BITMAPENTRY(){if(bitmap!=NULL)UI_free(bitmap);bitmap=NULL;};
 };
 
 #if defined _bigEndian
@@ -76,8 +76,8 @@ class SAFEFILE
 public:
   i16 f;
   pnt buf;
-  SAFEFILE(void){f=-1; buf=NULL;};
-  ~SAFEFILE(void)
+  SAFEFILE(){f=-1; buf=NULL;};
+  ~SAFEFILE()
   {
     if(f>=0)CLOSE(f);f=-1;
     if (buf != NULL) UI_free(buf); buf = NULL;
@@ -446,11 +446,11 @@ class PORTRAITS
 {
 public:
   PORTRAIT *first;
-  PORTRAITS(void){first=NULL;};
-  ~PORTRAITS(void);
+  PORTRAITS(){first=NULL;};
+  ~PORTRAITS();
 };
 
-PORTRAITS::~PORTRAITS(void)
+PORTRAITS::~PORTRAITS()
 {
   PORTRAIT *temp;
   while (first != NULL)
@@ -629,7 +629,7 @@ bool OVERLAYDATA::ReadOverlay(i32 onum)
   return true;
 }
 
-void OVERLAYDATA::Mirror(void)
+void OVERLAYDATA::Mirror()
 {
   ui8 *f, *l;
   i32 line;

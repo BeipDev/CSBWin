@@ -10,13 +10,13 @@
 #include "CSB.h"
 #include "Data.h"
 
-bool IsPlayFileOpen(void);
+bool IsPlayFileOpen();
 void WarnIllegalTimer(i32 srcX, i32 srcY, i32 dstX, i32 dstY);
 void SelectOverlay(i32, i32, i32, i32, i32);
 void SetOverlayPalette(i32 onum, i32 p1, i32 p2, i32 density);
 void PlayCustomSound(i32 soundNum, i32 volume, i32 flags);
 void info(char *, unsigned int);
-void EnsureItem16Available(void);
+void EnsureItem16Available();
 void ModifyDescription(i32 locrInt, i32 index, i32 color);
 i32 MoveObject (i32 srcType, i32 srcObjMsk, i32 srcPosMsk, i32 srcLoc, i32 srcDepth,
                 i32 dstType, i32 dstObjMsk, i32 dstPosMsk, i32 dstLoc, i32 dstDepth);
@@ -50,7 +50,7 @@ class INSTRUMENTATION
   i32 m_DSACounts[256];
   i32 m_DSAOperations[256];
 public:
-  INSTRUMENTATION(void)
+  INSTRUMENTATION()
   {
     memset(m_DSACounts,0,256*4);
     memset(m_DSAOperations,0,256*4);
@@ -85,7 +85,7 @@ void INSTRUMENTATION::Dump(FILE *f)
 INSTRUMENTATION instrumentation;
 #endif
 
-void DSAInstrumentation_Dump(void)
+void DSAInstrumentation_Dump()
 {
 #ifdef _DEBUG
   if (DSAIndex.AnyTraceActive())
@@ -107,18 +107,18 @@ class STACK
   i32 stack[100];
   ui32 stacklen;
 public:
-  STACK(void);
-  ~STACK(void);
-  void Clear(void){stacklen=0;};
+  STACK();
+  ~STACK();
+  void Clear(){stacklen=0;};
   void push(LOCATIONREL locr);
   void push(i32 i);
-  i32 pop(void);
+  i32 pop();
   void pick(ui32 i);
   void poke(ui32 i);
   void roll(ui32 i);
   void minusRoll(ui32 i);
-  char *underflowMsg(void);
-  void dump(void);
+  char *underflowMsg();
+  void dump();
 };
 
 struct DSADBANK
@@ -145,8 +145,8 @@ struct DSADBANK
   bool ConsumateDeletes(RN RNslave);
   void DeleteObject(RN obj);
   DSAVAR_TYPE GetVarState(i32 i){return (DSAVAR_TYPE)pDsaVars->definedFlags[i];};
-  DSADBANK(void){numText = 0;mostRecentInterestingObjectID=-1;m_objectDeleteList=RNeof;};
-  ~DSADBANK(void);
+  DSADBANK(){numText = 0;mostRecentInterestingObjectID=-1;m_objectDeleteList=RNeof;};
+  ~DSADBANK();
 };
 
 enum ExecutionResultFlags
@@ -163,7 +163,7 @@ void DSADBANK::DeleteObject(RN obj)
 };
 
 
-DSADBANK::~DSADBANK(void)
+DSADBANK::~DSADBANK()
 {
   i32 i;
   if (numText != 0)
@@ -289,7 +289,7 @@ static char *constructDebugMessage(const char *msg)
 
 // **********  RUNTIME DEBUGGING HELP **********
 
-ui32 LOCATIONREL::Integer(void) const
+ui32 LOCATIONREL::Integer() const
 {
   ASSERT(x < 32,"locr");
   ASSERT(y < 32,"locr");
@@ -307,7 +307,7 @@ LOCATIONREL *LOCATIONREL::Integer(i32 t)
   return this;
 }
 
-bool LOCATIONREL::IsValid(void) const
+bool LOCATIONREL::IsValid() const
 {
   if (l >= d.dungeonDatIndex->NumLevel()) return false;
   if (x > d.pLevelDescriptors[l].LastColumn()) return false;
@@ -328,21 +328,21 @@ LOCATIONABS& LOCATIONABS::operator =(LOCATIONREL& locr)
 
 
 
-STACK::STACK(void)
+STACK::STACK()
 {
   stacklen = 0;
 }
 
-STACK::~STACK(void)
+STACK::~STACK()
 {
 }
 
-char *STACK::underflowMsg(void)
+char *STACK::underflowMsg()
 {
   return constructDebugMessage("DSA stack underflow");
 }
 
-void STACK::dump(void)
+void STACK::dump()
 {
   i32 i, n;
   if (pdsaDbank->tracing)
@@ -375,7 +375,7 @@ void STACK::push(i32 i)
   stack[stacklen++] = i;
 }
 
-i32 STACK::pop(void)
+i32 STACK::pop()
 {
   if (stacklen < 1)
   {
@@ -454,7 +454,7 @@ static void message(const char *msg, bool always=false)
 }
 
 
-void NoFilter(void)
+void NoFilter()
 {
   message("Filter Modifying Dungeon");
 }
@@ -970,7 +970,7 @@ struct ui16_16
   //A 32-bit unsigned integer constructed from two 16-bit numbers.
   ui16 low;
   i16  high;
-  ui32  val(void){return (high<<16) | low;};
+  ui32  val(){return (high<<16) | low;};
   bool operator ==(ui32 v){return val()==v;};
   bool operator >(ui32 v){return val()>v;};
   i32  operator >>(ui32 n){return val() >> n;};
@@ -1385,7 +1385,7 @@ static void EX_STORE(EXECUTIONPACKET& exPkt)
   return;
 }  
   
-static void EX_TYPE(void)
+static void EX_TYPE()
 {
   i32 id, objID;
   RN thisObj, contents;
@@ -1610,7 +1610,7 @@ bool ForEach(int thisObj, int srcObj, bool callback(RN thisObj, int srcObj))
   return false;
 };
 
-static void EX_IsCarried(void)
+static void EX_IsCarried()
 {
   int chidx;
   int objid, charnum;
@@ -1641,7 +1641,7 @@ static void EX_IsCarried(void)
   };
 }
 
-static void EX_DEL(void)
+static void EX_DEL()
 {
   LOCATIONREL locr;
   i32 iLocation;
@@ -1738,7 +1738,7 @@ static void EX_DEL(void)
 }
 
 
-static void EX_DELMON(void)
+static void EX_DELMON()
 {
   LOCATIONREL locr;
   i32 indx;
@@ -1747,7 +1747,7 @@ static void EX_DELMON(void)
   DeleteMonsterInGroup(locr, indx);
 }
 
-static void EX_INSMON(void)
+static void EX_INSMON()
 {
   LOCATIONREL locr;
   i32 posMask;
@@ -1963,7 +1963,7 @@ static RN CopyItemList (RN origRN)
 
 
 
-static void EX_ADD(void)
+static void EX_ADD()
 {
   LOCATIONREL locr;
   RN object, newObj, RNmon;
@@ -5047,7 +5047,7 @@ class SAVEPEXPKT
   EXECUTIONPACKET *save;
 public:
   SAVEPEXPKT(EXECUTIONPACKET *p){save=pExPkt;pExPkt=p;};
-  ~SAVEPEXPKT(void){pExPkt=save;};
+  ~SAVEPEXPKT(){pExPkt=save;};
 };
 
 static i32 Execute(RN  RNmaster,
@@ -5487,7 +5487,7 @@ bool ProcessDSATimer6(RN objSlave,
 }
 
 
-DSAINDEX::DSAINDEX(void)
+DSAINDEX::DSAINDEX()
 {
   i32 i;
   for (i=0; i<256; i++)
@@ -5496,12 +5496,12 @@ DSAINDEX::DSAINDEX(void)
   };
 }
 
-DSAINDEX::~DSAINDEX(void)
+DSAINDEX::~DSAINDEX()
 {
   Cleanup();
 }
 
-void DSAINDEX::Cleanup(void)
+void DSAINDEX::Cleanup()
 {
   i32 i;
   for (i=0; i<256; i++)
@@ -5534,12 +5534,12 @@ DSA *DSAINDEX::GetDSA(i32 index)
   return m_pDSA[index];
 }
 
-bool DSAINDEX::AnyTraceActive(void)
+bool DSAINDEX::AnyTraceActive()
 {
   return (m_tracing[0]|m_tracing[1]|m_tracing[2]|m_tracing[3]|m_tracing[4]) != 0;
 }
 
-void DSAINDEX::SaveTracing(void)
+void DSAINDEX::SaveTracing()
 {
   memcpy(m_savedTracing, m_tracing, sizeof(m_tracing));
 }
@@ -5550,7 +5550,7 @@ void DSAINDEX::RestoreTracing(ui32 *pArray)
   memcpy(m_tracing, pArray, sizeof(m_tracing));
 }
 
-void DSAINDEX::ReadTracing(void)
+void DSAINDEX::ReadTracing()
 {
   i32 size;
   ui32 *pRecord;
@@ -5577,7 +5577,7 @@ void DSAINDEX::ReadTracing(void)
 }
 
 
-void DSAINDEX::WriteTracing(void)
+void DSAINDEX::WriteTracing()
 {
   expool.Write((EDT_Database<<24) | (EDBT_DSAtraces<<16), m_tracing, sizeof(m_tracing)/4);
 }
@@ -5594,17 +5594,17 @@ void DSAINDEX::SetTracing(i32 dsaIndex)
 }
 
 
-void DSAINDEX::AllTracing(void)
+void DSAINDEX::AllTracing()
 {
   memset(m_tracing, 0xff, sizeof(m_tracing));
 }
 
-void DSAINDEX::NoTracing(void)
+void DSAINDEX::NoTracing()
 {
   memset(m_tracing, 0x00, sizeof(m_tracing));
 }
 
-DSA::DSA(void)
+DSA::DSA()
 {
   strcpy(m_description,"New DSA");
   m_localState = true;
@@ -5615,7 +5615,7 @@ DSA::DSA(void)
   m_state = 0;
 }
 
-DSA::~DSA(void)
+DSA::~DSA()
 {
   i32 i;
   for (i=0; i<m_numState; i++)
@@ -5634,7 +5634,7 @@ DSAState *DSA::StatePointer(i32 stateNum)
   return m_pStates[stateNum];
 }
 
-void DSA::Read(void)
+void DSA::Read()
 {
   ui32 i;
   ui32 numNonEmptyStates;
@@ -5669,7 +5669,7 @@ void DSA::Read(void)
   };
 };
 
-void DSA::Write(void)
+void DSA::Write()
 {
   ui32 i;
   ui32 numNonEmptyStates = 0;
@@ -5694,13 +5694,13 @@ void DSA::Write(void)
 
 
 
-DSAState::DSAState(void)
+DSAState::DSAState()
 {
   m_numAction = 0;
   m_pActions = NULL;
 }
 
-DSAState::~DSAState(void)
+DSAState::~DSAState()
 {
   i32 i;
   for (i=0; i<m_numAction; i++)
@@ -5739,7 +5739,7 @@ i32 DSAState::ProgramSize(i32 column)
   return 0;
 }
 
-void DSAState::Read(void)
+void DSAState::Read()
 {
   i32 i;
   RCS(&m_numAction);
@@ -5761,7 +5761,7 @@ void DSAState::Read(void)
   };
 }
 
-void DSAState::Write(void)
+void DSAState::Write()
 {
   i32 i;
   WCS(&m_numAction);
@@ -5773,21 +5773,21 @@ void DSAState::Write(void)
 
 
 
-DSAAction::DSAAction(void)
+DSAAction::DSAAction()
 {
   m_column      = -1;
   m_numPgmWords = 0;
   m_program     = NULL;
 }
 
-DSAAction::~DSAAction(void)
+DSAAction::~DSAAction()
 {
   if (m_program != NULL) UI_free (m_program);
   m_program = NULL;
   m_numPgmWords = 0;
 }
 
-void DSAAction::Read(void)
+void DSAAction::Read()
 {
   RCS(&m_column);
   RCS(&m_numPgmWords);
@@ -5797,7 +5797,7 @@ void DSAAction::Read(void)
   RCS(m_program, m_numPgmWords);
 }
 
-void DSAAction::Write(void)
+void DSAAction::Write()
 {
   WCS(&m_column);
   WCS(&m_numPgmWords);

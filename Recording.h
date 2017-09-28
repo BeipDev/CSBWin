@@ -19,10 +19,10 @@ class LINE_QUEUE
 {
   LQENTRY *m_pFirst;
 public:
-  LINE_QUEUE(void){m_pFirst = NULL;};
-  LQENTRY *GetHeadPosition(void){return m_pFirst;};
+  LINE_QUEUE(){m_pFirst = NULL;};
+  LQENTRY *GetHeadPosition(){return m_pFirst;};
   char *GetNext(LQENTRY* &pos){LQENTRY* curr=pos; pos=curr->m_pNext; return curr->m_line;};
-  void clear(void)
+  void clear()
   {
     while (m_pFirst != NULL)
     {
@@ -72,19 +72,19 @@ private:
   bool m_dungeonSignature;
   bool m_versionSignature;
 public:
-  RECORDFILE(void) {m_fileNum = -1;m_isQueueingLines = false; m_lineQueue.clear();
+  RECORDFILE() {m_fileNum = -1;m_isQueueingLines = false; m_lineQueue.clear();
                     m_graphicSignature=false;
                     m_dungeonSignature=false;
                     m_versionSignature=false;};
-  ~RECORDFILE(void) {if (m_fileNum >= 0) CLOSE(m_fileNum);};
-  bool IsOpen(void) {return m_fileNum >= 0;};
-  bool IsRecording(void)
+  ~RECORDFILE() {if (m_fileNum >= 0) CLOSE(m_fileNum);};
+  bool IsOpen() {return m_fileNum >= 0;};
+  bool IsRecording()
   {
     return (m_fileNum >= 0) || m_isQueueingLines;
   };
-  void Open(void);
-  void PreOpen(void);
-  void Close(void);
+  void Open();
+  void PreOpen();
+  void Close();
   void Record(MouseQueueEnt *happening);
   void Record(i32 x, i32 y, i32 func);
   void Record(const char* line);
@@ -103,16 +103,16 @@ private:
   bool m_eofEncountered, m_forceClose;
   i16 m_file;
 public:
-  PLAYFILE(void) {m_file=-1; m_time=-1;m_eofEncountered=false;m_forceClose=false;};
-  ~PLAYFILE(void) {if (m_file >= 0) CLOSE(m_file);};
-  bool IsOpen(void);
-  void Open(void);
-  void Close(void);
+  PLAYFILE() {m_file=-1; m_time=-1;m_eofEncountered=false;m_forceClose=false;};
+  ~PLAYFILE() {if (m_file >= 0) CLOSE(m_file);};
+  bool IsOpen();
+  void Open();
+  void Close();
   bool Play(MouseQueueEnt *);
   void Backspace(MouseQueueEnt *);
-  void ReadEOF(void); //Force file close at EOF without
+  void ReadEOF(); //Force file close at EOF without
                       //advancing d.Time.
-  bool IsEOF(void) {return m_eofEncountered;};
+  bool IsEOF() {return m_eofEncountered;};
 };
 
 //extern PLAYFILE PlayFile;
