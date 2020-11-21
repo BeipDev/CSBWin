@@ -2842,8 +2842,8 @@ void GameTimers::ConvertToSequencedTimers()
   ui8 *pNewTimer;
   for (i=m_maxTimers-1; i>=0; i--)
   {
-    pOldTimer =   (ui8 *)&m_timers[i*oldSize];
-    pNewTimer =   (ui8 *)&m_timers[i*newSize];
+    pOldTimer =   (ui8 *)&m_timers[0]+i*oldSize;
+    pNewTimer =   (ui8 *)&m_timers[0]+i*newSize;
     memmove(pNewTimer, pOldTimer, oldSize);
     ((TIMER *)pNewTimer)->m_timerSequence = 0;
   };
