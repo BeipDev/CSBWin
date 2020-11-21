@@ -16,9 +16,9 @@ private:
 std::string FILENAME::createName(const char *folder, const char *file)
 {
   if(!file)
-    return nullptr;
+    return {};
   if(strlen(file) == 0)
-    return nullptr;
+    return {};
 
   std::string result;
   if(!folder)

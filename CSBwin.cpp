@@ -235,7 +235,10 @@ void ProcessCommandLine()
     if (*pCol == term) break;
     pCol++;
   };
-  g_root = parentFolder(command, pCol);
+
+  char cPath[MAX_PATH];
+  DWORD length=::GetModuleFileName(nullptr , cPath, sizeof(cPath));
+  g_root = parentFolder(cPath, cPath+length);
   pCol = lpCmdLine;
   if (pCol[0] == '"')
   {

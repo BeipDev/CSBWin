@@ -28,6 +28,7 @@
 #include <memory>
 #include <array>
 #include <unordered_map>
+#include <algorithm>
 #endif
 
 // C RunTime Header Files
