@@ -152,6 +152,7 @@
     <None Include="cursor3.cur">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include=".clang-format" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="confdefs.h">
