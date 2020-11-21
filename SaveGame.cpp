@@ -1056,7 +1056,7 @@ RESTARTABLE _DisplayDiskMenu()
       ASSERT(RememberToPutObjectInHand == -1, "objInHand");
       gb2.ObjectInHand = d.objectInHand.ConvertToInteger();
       gb2.MaxITEM16 = d.MaxITEM16;
-      ClearMemory((ui8 *)gb2.FILL180, 80);
+      ClearMemory((ui8 *)gb2.FILL180, 78);
       //ClearMemory((pnt)&memBlocks, 96);
       //    A0 = LOCAL_234;
       //    pntGear(LOCAL_330) = A0;
