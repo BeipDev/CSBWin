@@ -1,17 +1,20 @@
 REM Make a staging folder called ZipTemp that holds the install files & directory structure
 mkdir ZipTemp
+mkdir ZipTemp\DM
+copy DM ZipTemp\DM
+mkdir ZipTemp\CSB
+copy CSB ZipTemp\CSB
+
 copy config.txt ZipTemp
 copy CSBWin.exe ZipTemp
-copy dungeon.dat ZipTemp
-copy dungeon-csb.dat ZipTemp
-copy graphics.dat ZipTemp
 copy hcsb.* ZipTemp
 copy mini.dat ZipTemp
-copy PlayFile-DM.log ZipTemp
 copy readme.txt ZipTemp
-copy "Start new CSB Game.bat" ZipTemp
+copy "Play DM.bat" ZipTemp
+copy "Play CSB.bat" ZipTemp
 copy "Start new Kid Dungeon Game.bat" ZipTemp
 copy "Watch DM Replay.bat" ZipTemp
+copy "Watch CSB Replay.bat" ZipTemp
 
 del CSBWin_x86.zip
 

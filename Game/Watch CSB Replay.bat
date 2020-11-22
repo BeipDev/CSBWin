@@ -1,0 +1,1 @@
+start csbwin.exe directory="CSB" play=Playfile.replay

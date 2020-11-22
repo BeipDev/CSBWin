@@ -1,1 +1,1 @@
-start csbwin.exe play=Playfile-DM.replay
+start csbwin.exe directory="DM" play=Playfile.replay

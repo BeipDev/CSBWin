@@ -1,1 +1,1 @@
-start csbwin.exe dungeon=dungeon-kid.dat
+start csbwin.exe directory="DM" dungeon=dungeon-kid.dat
