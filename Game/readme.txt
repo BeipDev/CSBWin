@@ -17,5 +17,10 @@ How to start a new Chaos Strikes Back (CSB) game:
   Choose Dungeon
   Restore the newly created save game
 
+To transfer DM chars into CSB
 
+  Run "Play DM.bat"
+  Choose Utility
+  (do the 'Make New Adventure' the same as CSB above)
+  After saving, the save game will be in the DM folder. You'll have to move it to the CSB folder to play it
 
