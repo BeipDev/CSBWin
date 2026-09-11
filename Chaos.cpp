@@ -711,7 +711,7 @@ pnt    FormatInteger(pnt, ui32, i16);//TAG0064b4
 //void   TAG006520(pnt,pnt);StrCpy
 //i16    TAG00654e(pnt, pnt);strcmp
 //i16    TAG0065bc(pnt);//StrLen
-i32    atari_sprintf(char *,const char*, i32, i32, i32=0); //TAG0065e0
+i32    atari_sprintf(char *,const char*, intptr_t, intptr_t, intptr_t=0); //TAG0065e0
 i32    GetPixel(pnt, i16, i16, i16);//TAG006700
 //void   TAG006892(...) //Use TAG0088b2 from Graphics.cpp
 //void   TAG00716a(pnt, RectPos *, i16 color, i16 dstwidth); (FillRectangle)
@@ -3671,7 +3671,7 @@ void PrintAttributeValue(const char* P1, i32 P2, i32 P3)
 {
   char b_20[20];
 //;;;;;;;;;;;;;;;;;;;;;;
-  atari_sprintf(b_20, "%s %d", (i32)P1, P2);
+  atari_sprintf(b_20, "%s %d", (intptr_t)P1, P2);
   TextToScreen(17, P3, 13, 0, b_20);
 }
 
@@ -3727,7 +3727,7 @@ RESTARTABLE _DrawCharacterDetails(const i32 P1, const i32 P2)
     if (D4W >= 15) D4W = 14;
     A0 = (aReg)pnt4772[D4W];
     A1 = (aReg)pnt4788[D6W];
-    atari_sprintf(b_28, "%s %s", (i32)A0, (i32)A1);
+    atari_sprintf(b_28, "%s %s", (intptr_t)A0, (intptr_t)A1);
     TextToScreen(17, D5W, 13, 0, (char *)b_28);
     D5W += 7;
 //
@@ -4472,15 +4472,14 @@ pnt FormatInteger(pnt rslt, ui32 num, i16 hex)
 //
 // *********************************************************
 //  TAG0065e0
-i32 atari_sprintf(char *dst, const char* fmt, i32 V1, i32 V2, i32 V3)
+i32 atari_sprintf(char *dst, const char* fmt, intptr_t V1, intptr_t V2, intptr_t V3)
 { // returns length of result
   dReg D5;
   aReg A2, A3, A4;
   bool fmtSpec, lSpec, uSpec, hex;
   pnt pnt_8;
-  pnt pnt_4;
-  i32 stack[]={V1,V2,V3};
-  pnt_4=(pnt)stack;
+  intptr_t stack[] = {V1, V2, V3};
+  intptr_t *pStack = stack;
 //;;;;;;;;;;;;;;;;;;
   A4 = (aReg)dst;
   pnt_8 = A4;
@@ -4513,8 +4512,7 @@ i32 atari_sprintf(char *dst, const char* fmt, i32 V1, i32 V2, i32 V3)
         hex = (*A3 == 'x');
         if (lSpec)
         {
-          D5L = LoadLong(pnt_4);//next value
-          pnt_4 += 4;
+          D5L = (i32)(*pStack++);//next value
           if ((!uSpec) && (!hex))
           {
             if (D5L & 0x80000000)
@@ -4526,8 +4524,7 @@ i32 atari_sprintf(char *dst, const char* fmt, i32 V1, i32 V2, i32 V3)
         }
         else
         {
-          D5L = LoadLong(pnt_4) & 0xffff;
-          pnt_4+=4;
+          D5L = (i32)((*pStack++) & 0xffff);
           if ((!uSpec) && (!hex))
           {
             if (D5W & 0x8000)
@@ -4541,8 +4538,7 @@ i32 atari_sprintf(char *dst, const char* fmt, i32 V1, i32 V2, i32 V3)
         fmtSpec = false;
         break;
       case 's':
-        A2 = (aReg)LoadPnt(pnt_4);
-        pnt_4 += 4;
+        A2 = (aReg)(*pStack++);
         while (*A2 != 0)
         {
           *(A4++) = *(A2++);

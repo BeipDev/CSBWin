@@ -1284,12 +1284,13 @@ RESTARTABLE _DisplayDiskMenu()
       if(D0W == 0)
          goto tag01e4f0;
       // ******
-
-      i32 sizeOfCompressedText = BE32(d.compressedText.size());
-      D0W = WriteAndChecksum(
-          (ui8 *)&sizeOfCompressedText,
-          pwA3,
-          4);
+      {
+         i32 sizeOfCompressedText = BE32(d.compressedText.size());
+         D0W = WriteAndChecksum(
+             (ui8 *)&sizeOfCompressedText,
+             pwA3,
+             4);
+      }
       if(D0W == 0)
          goto tag01e4f0;
       // ******

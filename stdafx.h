@@ -29,6 +29,7 @@
 #include <array>
 #include <unordered_map>
 #include <algorithm>
+#include <string>
 #endif
 
 // C RunTime Header Files

@@ -11,7 +11,7 @@
 
 
 #if (defined _MSVC_INTEL) || (defined _MSVC_CE2002ARM)
-#define LOW_I16(X) ((i16)((i32)X))
+#define LOW_I16(X) ((i16)((intptr_t)(X)))
 #else
 
 

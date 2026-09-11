@@ -18,7 +18,7 @@ void CleanupAltMonCache();
 void CleanupWallDecorations();
 //void CleanupFloorDecorations();
 extern FILETABLE fileTable[maxFilesOpen];
-extern char *helpMessage;
+extern const char *helpMessage;
 extern bool overlayActive;
 extern TEMPORARY_FILE CSBgraphicsFile;
 extern ui8 overlayPaletteRed[512];
@@ -407,7 +407,7 @@ void ShrinkBLT(ui8 *src,
   D1L <<= D2B;
   D1L = (D1UL/D3UW) & 0xffff;
   D1L <<= 6;
-  A2 = (pnt)D1L;
+  A2 = (pnt)(intptr_t)D1L;
   D1UL >>= 1;//ULed
   D1L += 0x7fff;
   LOCAL_8 = D1L;
@@ -419,7 +419,7 @@ void ShrinkBLT(ui8 *src,
   LOCAL_4 = D1L;
   D1UL >>= 1;//ULed
   D1L += 0x7fff;
-  A4 = (pnt)D1L;
+  A4 = (pnt)(intptr_t)D1L;
   D1UL >>= 16;//ULed
   D0L = D1UW*D0UW;
   src += D0W;
@@ -438,7 +438,7 @@ tag00851c:
 
   if ((ui16)D6W != LOW_I16(A3))
   {
-    A3 = (pnt)((int)D6W);
+    A3 = (pnt)(intptr_t)D6W;
     D6UW >>= 1;//UWed
     D0L = LE32(longGear(src+D6W));
     D1L = LE32(longGear(src+D6W+4));
@@ -484,7 +484,7 @@ tag00851c:
   if (pushedD3 != 0)
   {
     SWAP(D4);
-    D4L += (i32)A2;
+    D4L += (i32)(intptr_t)A2;
     D7L = ((D7L>>1)&0x7fffffff)|((D7L&1)<<31);
     if(D7L >= 0) goto tag00851c;
     longGear(dst) = LE32(D2L); dst+=4;
@@ -496,10 +496,10 @@ tag00851c:
   dstHeight--;
   if (dstHeight != 0)
   {
-    D2L = (i32)A4;
+    D2L = (i32)(intptr_t)A4;
     D3L = D2L;
     D3L += LOCAL_4;
-    A4 = (pnt)D3L;
+    A4 = (pnt)(intptr_t)D3L;
     SWAP(D2);// = ((D2>>16)&0xffff)|((D2&0xffff)<<16);
     SWAP(D3);// = ((D3>>16)&0xffff)|((D3&0xffff)<<16);
     D3W = (i16)(D3W-D2W);
@@ -673,13 +673,13 @@ void TAG0088b2(ui8 *src,
   D3L = (15 + D7UW + D5UW) & 0xfff0; // src x of first full word beyond image
   D3UW >>= 1;//UWed // # bytes in src line containing information
   D4W = (i16)(D2W - D3W); // #source bytes to skip at end of line
-  A3 = (pnt)D4L; // # bytes to skip at end of source line
+  A3 = (pnt)(intptr_t)D4L; // # bytes to skip at end of source line
   D7W = (i16)(D7W+D6W); // #bits in dest words including leading empty bits
   LOCAL_2 = D7W; // # bits in dest incl leading empty bits
   D3L = (15 + D7UW) & 0xfff0;
   D3UW >>= 1;//UWed // #bytes in dest containing some part of image
   D1W = (i16)(D1W-D3W); // #bytes in dest not containing any image
-  A4 = (pnt)D1L; // #bytes in dest not conataining any imaage
+  A4 = (pnt)(intptr_t)D1L; // #bytes in dest not conataining any imaage
   D1W = D5W; // source start bit offset
   D5W = (i16)(D6W - D5W); // D5 = right shift count src->dest
   if (D5W <0)   D5W += 16; // if source is left of dest in current word
@@ -715,7 +715,7 @@ void TAG0088b2(ui8 *src,
   // *****4411c6
 
   D3W = (i16)(D5W + D5W);
-  A5 = (pnt)((int)wordGear(A5 + D3W));
+  A5 = (pnt)(intptr_t)(ui16)wordGear(A5 + D3W);
   SWAP(D5);// = ((D5&0xffff)<<16) | ((D5>>16)&0xffff);
   if (transparentColor < 0)
   {

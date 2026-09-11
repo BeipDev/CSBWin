@@ -575,7 +575,7 @@ pnt  GETDTA();
 void SETDTA(pnt);
 i16  drvmap(); //Bios function TRAP #13
 void StrCpy(char *dst, const char *src);//TAG003264
-i32  atari_sprintf(char *,const char*, i32, i32=0, i32=0);//TAG0065e0
+i32  atari_sprintf(char *,const char*, intptr_t, intptr_t=0, intptr_t=0);//TAG0065e0
 void MemoryMove(ui8 *src, ui8 *dst, i16, i16, i32);//like MemMove
 ui8 *physbase();
 ui8 *logbase();
@@ -794,11 +794,11 @@ void  TAG008b90(i16,S20 *,T12 *);
 void  TAG008c20();
 void  TAG008c40_1(i16 P1);
 void  TAG008c40_2(i16 /*P1*/);
-void  TAG008c40_3(i16 P1, i32 nP2, i32 nP3);
-i32   TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4);
+void  TAG008c40_3(i16 P1, i32 nP2, intptr_t nP3);
+intptr_t TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4);
 void  TAG008c40_30(i16 /*P1*/);
 void  TAG0093a0_17(i16,i32);
-void  TAG0093a0_18(i32 , i32);
+void  TAG0093a0_18(i32, intptr_t);
 void  Clear_14608();//TAG009462
 i32   TAG00948c(i16 P1);
 pnt   TAG0094de(i16 P1, PAGE *P2, NODE *P3);
@@ -820,8 +820,8 @@ void  TAG009d7e(i16, i16 *, i16 *, i16 *);
 void  TAG009a40();
 void  TAG009d36(i16, i16);
 void  TAG009d5e(i16);
-void  TAG009db6(i16, i32, i32 *);
-void  TAG009dea(i16, i32, i32 *);
+void  TAG009db6(i16, intptr_t, i32 *);
+void  TAG009dea(i16, intptr_t, i32 *);
 void  TAG009ea0(i16 *, i16 *, i16 *);
 void  TAG009f1c(i16 *, i16 *, i16 *);
 void  TAG009f80(i16);
@@ -831,7 +831,7 @@ i16   TAG00a238();
 i16   TAG00a28c();
 i16   TAG00aa22(i16 *, i16 *, i16 *, i16 *);
 void  TAG00aa58(i16, i32);
-void  TAG00adf4(i32);
+void  TAG00adf4(intptr_t);
 void  TAG00ae38(i32 *);
 void  TAG00ae58();
 //pnt   TAG00aeda(i16, i16); TRAP #1
@@ -870,7 +870,7 @@ FILE_DESCRIPTOR *FindFileDescriptor(i32 FDnum)
 //
   if ( (FDnum < 0) || (FDnum >= f.Word15070) )
   {
-    TAG00189c(1, 0x0106000e, (char *)FDnum);
+    TAG00189c(1, 0x0106000e, (char *)((intptr_t)FDnum));
   };
   A4 = (FILE_DESCRIPTOR *)LoadPnt(f.Pointer15080);
   //A4 += 124 * FDnum;
@@ -879,7 +879,7 @@ FILE_DESCRIPTOR *FindFileDescriptor(i32 FDnum)
   //if (wordGear(A4+4) == 0)
   if (A4->word4 == 0)
   {
-    TAG00189c(1, 0x0106000e, (char *)FDnum);
+    TAG00189c(1, 0x0106000e, (char *)((intptr_t)FDnum));
   };
   return A4;
 }
@@ -922,7 +922,7 @@ i32 TAG0004b6(i32 P1, FILE_DESCRIPTOR *P2)
       {
         atari_sprintf((char *)A4->byte22, 
                       "A read error occurred on file %s in %%s",
-                      (i32)LoadPnt((ui8 *)&A4->pointer82));
+                      (intptr_t)LoadPnt((ui8 *)&A4->pointer82));
       };
       break;
   case 0x01060008:
@@ -949,12 +949,12 @@ i32 TAG0004b6(i32 P1, FILE_DESCRIPTOR *P2)
       atari_sprintf(
               (char *)A4->byte22, 
               "IO Error occured on %%s in %s", 
-              (i32)A4->byte10,
+              (intptr_t)A4->byte10,
               0);
       break;
   }; //switch
   //TAG00189c(0, D7L, (pnt)(UI16)(wordGear(A4)));
-  TAG00189c(0, D7L, (char *)((int)(A4->word0)));
+  TAG00189c(0, D7L, (char *)((intptr_t)(A4->word0)));
   return D7L;
 }
 
@@ -1629,7 +1629,7 @@ i32 TAG001096_22(i16 P1)
 // *********************************************************
 //
 // *********************************************************
-i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
+i32 TAG0015d6_xxx(i32 P1, i32 P2, intptr_t P3, i32)
 {
   dReg D0, D7;
   FILE_DESCRIPTOR *A4;
@@ -1642,13 +1642,13 @@ i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
       StoreLong(&A4->long18, P3);
       break;
   case 2:
-      StoreLong((i32 *)(&A4->pointer82), P3);
+      StorePnt((pnt)&A4->pointer82, (pnt)P3);
       break;
   case 4:
       StoreLong(&A4->long86, P3);
       break;
   case 8:
-      StoreLong((i32 *)(&A4->pointer90), P3);
+      StorePnt((pnt)&A4->pointer90, (pnt)P3);
       break;
   case 16:
       StoreLong(&A4->long94, P3);     
@@ -1757,7 +1757,7 @@ i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
 // *********************************************************
 void SetFileName(i32 P1, pnt P2)
 {
-  TAG0015d6_xxx(P1, 2, (i32)P2, 0x1baddade);
+  TAG0015d6_xxx(P1, 2, (intptr_t)P2, 0x1baddade);
 }
 
 // *********************************************************
@@ -1765,7 +1765,7 @@ void SetFileName(i32 P1, pnt P2)
 // *********************************************************
 void SetBufferAddress(i16 P1, pnt P2)
 {
-  TAG0015d6_xxx(P1, 8, (i32)P2, 0x1baddade);
+  TAG0015d6_xxx(P1, 8, (intptr_t)P2, 0x1baddade);
 }
 
 // *********************************************************
@@ -2333,8 +2333,8 @@ void TAG002b5c(i16 P1, i16 P2)
   case 1:
       f.Word12804 = P2;
       TAG009d7e(f.Word12804, &w_6, &f.Word12820, &f.Word12818);
-      TAG009dea(f.Word12804, (i32)TAG002bf4, &f.Long12814);
-      TAG009db6(f.Word12804, (i32)TAG002c1a, &f.Long12810);
+      TAG009dea(f.Word12804, (intptr_t)TAG002bf4, &f.Long12814);
+      TAG009db6(f.Word12804, (intptr_t)TAG002c1a, &f.Long12810);
       break;
   case 2:
       TAG009dea(f.Word12804, f.Long12814, &i_10);
@@ -3144,7 +3144,7 @@ tag003e26:
   };
   if (D4W == 0)
   {
-    TAG00189c(1, 0x010d0005, (char *)((int)(UI16)(s12A4->w4)));
+    TAG00189c(1, 0x010d0005, (char *)((intptr_t)(UI16)(s12A4->w4)));
   };
   if (D3W == 0)
   {
@@ -3161,7 +3161,7 @@ tag003e26:
     };
     if (D6W == f.Word126)
     {
-      D0L = TAG00189c(0, 0x010d0001, (char *)((int)(UI16)(s12A4->w4)));
+      D0L = TAG00189c(0, 0x010d0001, (char *)((intptr_t)(UI16)(s12A4->w4)));
       if (D0L == 0x0102fffe)
       {
         s18A3 = s18A2;
@@ -3290,7 +3290,7 @@ i16 TAG004078(i16 P1,i16 P2)
     TAG00189c(1, 0x010d000b, "ERR No system memory");
   };
   f.Pointer136 = A4;
-  if ((i32)A4 & 1) {A4++; D7L--;};
+  if (((uintptr_t)A4) & 1) {A4++; D7L--;};
   D7L &= -2;
   f.Word126 = 1;
   f.s18_124[0].pnt0 = A4;
@@ -3612,19 +3612,13 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
 // *********************************************************
 pnt TAG004a22_14(i16 P1)
 {//(pnt)
-  union 
-        {
-          i32 i;
-          TEXT *pText;
-          pnt p;
-        } r_4;
-  r_4.i = 0x1baddade;
+  pnt p_4;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(9, P2);
-  r_4.p = AssignMemory(P1, 22);
-  wordGear(r_4.p) = 3;
+  p_4 = AssignMemory(P1, 22);
+  wordGear(p_4) = 3;
   //TAG009a1c(9, P2);
-  return ((pnt)r_4.i);
+  return p_4;
 }
 
 // *********************************************************
@@ -3632,31 +3626,23 @@ pnt TAG004a22_14(i16 P1)
 // *********************************************************
 pnt TAG004a22_16(i16 P1, i32 nP2)
 {//(pnt)
-  TEXT *pTextP3;
-  union 
-        {
-          i32 i;
-          TEXT *pText;
-          pnt p;
-        } r_4;
-  r_4.i = 0x1baddade;
-  pTextP3 = (TEXT *)nP2;
+  TEXT *pText;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(9, P2);
-  r_4.pText = (TEXT *)TAG004a22_14(P1);
+  pText = (TEXT *)TAG004a22_14(P1);
   if (nP2 != 0)
   {
-    r_4.pText->pnt2 = (char *)AssignMemory(P1, nP2);
+    pText->pnt2 = (char *)AssignMemory(P1, nP2);
   };
-  r_4.pText->rectPos6.x1 = rectPos14516.x1;
-  r_4.pText->rectPos6.x2 = rectPos14516.x2;
-  r_4.pText->rectPos6.y1 = rectPos14516.y1;
-  r_4.pText->rectPos6.y2 = rectPos14516.y2;
-  r_4.pText->w18 = 0;
-  r_4.pText->w20 = 0;
-  r_4.pText->w14 = 1;
+  pText->rectPos6.x1 = rectPos14516.x1;
+  pText->rectPos6.x2 = rectPos14516.x2;
+  pText->rectPos6.y1 = rectPos14516.y1;
+  pText->rectPos6.y2 = rectPos14516.y2;
+  pText->w18 = 0;
+  pText->w20 = 0;
+  pText->w14 = 1;
   //TAG009a1c(9, P2);
-  return ((pnt)r_4.i);
+  return (pnt)pText;
 }
 
 // *********************************************************
@@ -3695,15 +3681,6 @@ void TAG004a22_26(i16 /*P1*/, i32 nP2, i32 nP3)
 {//()
   dReg D0;
   ui8 *A0;
-  TEXT *pTextP3;
-  union 
-        {
-          i32 i;
-          TEXT *pText;
-          pnt p;
-        } r_4;
-  r_4.i = 0x1baddade;
-  pTextP3 = (TEXT *)nP2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(9, P2);
   if (word15708 == -1)
@@ -3736,7 +3713,7 @@ void TAG004a22_26(i16 /*P1*/, i32 nP2, i32 nP3)
 // *********************************************************
 //
 // *********************************************************
-RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, i32 P3)
+RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, intptr_t P3)
 {//()
   static TEXT *pTextP3;
   RESTARTMAP
@@ -3778,7 +3755,7 @@ RESTARTABLE _TAG004e4c_6(i16 P1,TEXT *P2)
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
-  TAG004e4c_xxx(_1_, P1, 6, (i32)P2);
+  TAG004e4c_xxx(_1_, P1, 6, (intptr_t)P2);
   RETURN;
 }
 
@@ -3790,7 +3767,7 @@ RESTARTABLE _TAG004e4c_8(i16 P1,TEXT *P2)
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
-  TAG004e4c_xxx(_1_, P1, 8, (i32)P2);
+  TAG004e4c_xxx(_1_, P1, 8, (intptr_t)P2);
   RETURN;
 }
 
@@ -4075,11 +4052,10 @@ RESTARTABLE _TAG0051c2_1(const i16 P1)
     pntA0 = &f.Pointer16506[f.Word16498];
     //pA1 = &f.Pointer16506[f.Word16498];
     //pA2 = &f.Pointer16506[f.Word16498];
-    D0L = 256;
-    D0L -= (i32)(*pntA0);
-    D0L &= 255;
-    D0L += (i32)(*pntA0);
-    *pntA0 = (pnt)D0L;//round up to multiple of 256.
+    uintptr_t alignedAddress;
+    alignedAddress = (uintptr_t)(*pntA0);
+    alignedAddress = (alignedAddress + 255) & ~(uintptr_t)255;
+    *pntA0 = (pnt)alignedAddress;//round up to multiple of 256.
   };
   pntA0 = &f.Pointer16506[f.Word16498];
   f.Pointer12798 = *pntA0;
@@ -5161,7 +5137,7 @@ pnt TAG006bc0(i32 P1)
   pnt_4 = AssignMemory(17, P1);
   if (pnt_4 == NULL)
   {
-    TAG0093a0_18(17, (i32)"get mem");
+    TAG0093a0_18(17, (intptr_t)"get mem");
     for (;;) {};
   };
   return (pnt_4);
@@ -5237,7 +5213,7 @@ void PrintHint(FILE *file, char *src, i32 numHint)
 //*********************************************************
 //
 //*********************************************************
-RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
+RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, intptr_t P3, i32, pnt P5)//(i32)
 { //(i32)                   @8    @10     @12      @16    @20
   static dReg D0;
   static HCTI *pHCTiP5;
@@ -5331,13 +5307,12 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
             w_16 = (i16)TAG0076a0_13(20);
             if (w_16 > 1)
             {
-              D0L = (i32)pText16272[3];
+              pnt_8 = (pnt)pText16272[3];
             }
             else
             {
-              D0L = (i32)pText16272[2];
+              pnt_8 = (pnt)pText16272[2];
             };
-            pnt_8 = (pnt)D0L;
             TAG004e4c_6(_6_,17,pnt_8);
           }
           else
@@ -5707,7 +5682,7 @@ RESTARTABLE _TAG006c7e_32(i16 P1, pnt P2)
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
-  TAG006c7e_xxx(_1_, P1, 32, (i32)P2, 0x1baddade, (pnt)0x1baddade);
+  TAG006c7e_xxx(_1_, P1, 32, (intptr_t)P2, 0x1baddade, (pnt)0x1baddade);
   RETURN_int(intResult);
 }
 
@@ -6133,7 +6108,7 @@ RESTARTABLE _TAG00799a_12(i16 P1, i32 selectedLine, i32 pageNum)
   static pnt pseg2_20;
   static i16 w_14;
   static pnt   pnt_8;
-  static i32 i_4 = 0x1baddade;
+  static intptr_t i_4 = 0x1baddade;
   RESTARTMAP
     RESTART(2)
     RESTART(10)
@@ -6157,13 +6132,13 @@ RESTARTABLE _TAG00799a_12(i16 P1, i32 selectedLine, i32 pageNum)
   };
   if (pageNum != 0)
   {
-    i_4 = (i32)&f.Byte12792;
+    i_4 = (intptr_t)&f.Byte12792;
     for (w_14 = 1; w_14 < pageNum; w_14++)
     {
       for (pnt_46 = (pnt)i_4; *(pnt_46++) != 0;)
       {
       };
-      i_4 = (i32)pnt_46;
+      i_4 = (intptr_t)pnt_46;
 //
 //
     };
@@ -6196,7 +6171,7 @@ RESTARTABLE _TAG00799a_12(i16 P1, i32 selectedLine, i32 pageNum)
     TAG004e4c_8(_10_, 3, pText16272[9]);
   } ;
   ReleaseMem(P1, (ui8 *)pnt_8);
-  i_4 = (i32)pseg2_20;
+  i_4 = (intptr_t)pseg2_20;
   //TAG009a1c(3,P2);
   RETURN_pnt((pnt)i_4);
 }
@@ -6790,7 +6765,7 @@ void TAG008c40_2(i16 /*P1*/)
 // *********************************************************
 //
 // *********************************************************
-void TAG008c40_3(i16 P1, i32 nP2, i32 nP3)
+void TAG008c40_3(i16 P1, i32 nP2, intptr_t nP3)
 {//()
   dReg D7;
   aReg A0;
@@ -7005,11 +6980,11 @@ RESTARTABLE _TAG008c40_8(i16 P1, i16 nP2)
 // *********************************************************
 //
 // *********************************************************
-i32 TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4)
+intptr_t TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4)
 {//(i32)
   dReg D0, D7;
   S20 *s20A0;
-  i32 i_4 = 0x1baddade;
+  intptr_t i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(5, P2);
   i_4 = -1;
@@ -7042,7 +7017,7 @@ i32 TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4)
         D0B = s20_16208[D7W].b2;
         if (D0B == nP2)
         {
-          i_4 = (i32)&s20_16208[D7W].rectPos4;
+          i_4 = (intptr_t)&s20_16208[D7W].rectPos4;
           break;
         };
 //
@@ -7055,7 +7030,7 @@ i32 TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4)
         D0B = s20_16208[D7L].b2;
         if (D0B == nP2)
         {
-          i_4 = (i32)s20_16208[D7L].pnt14;
+          i_4 = (intptr_t)s20_16208[D7L].pnt14;
           break;
         };
 //
@@ -7115,7 +7090,7 @@ void TAG0093a0_17(i16,i32)
 // *********************************************************
 //
 // *********************************************************
-void TAG0093a0_18(i32 , i32)
+void TAG0093a0_18(i32, intptr_t)
 {//()
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(7, P2);
@@ -7382,20 +7357,14 @@ void TAG00978a_3(i16 P1, PAGE *nP2)
 // *********************************************************
 pnt TAG00978a_12(i16 P1, i32 nP2)
 {//(pnt)
-  i32 i_4;
-  PAGE *pPageP3;
-  pPageP3 = (PAGE *)nP2;
-  i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(13, P2);
   {
     NODE *pNode_8;
     pNode_8 = (NODE *)TAG0095b0(P1, nP2);//Find node of P3th page.
     pntResult;
-    i_4 = (i32)pNode_8->pPage0;
+    return (pnt)pNode_8->pPage0;
   };
-  //TAG009a1c(13, P2);
-  return ((pnt)i_4);
 }
 
 // *********************************************************
@@ -7419,15 +7388,9 @@ i32 TAG00978a_13(i16 P1)
 // *********************************************************
 pnt TAG00978a_21(i16 P1, i32 nP2)
 {//(pnt)
-  i32 i_4;
-  PAGE *pPageP3;
-  pPageP3 = (PAGE *)nP2;
-  i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(13, P2);
-  i_4 = (i32)TAG00964e(P1, nP2);
-  //TAG009a1c(13, P2);
-  return ((pnt)i_4);
+  return TAG00964e(P1, nP2);
 }
 
 // *********************************************************
@@ -7435,12 +7398,8 @@ pnt TAG00978a_21(i16 P1, i32 nP2)
 // *********************************************************
 void TAG00978a_27(i16 P1, i32 nP2, pnt nP3, i32 nP4)
 {//()
-  i32 i_4;
-  PAGE *pPageP3;
   TEXT *pTextP4;
   pTextP4 = (TEXT *)nP3;
-  pPageP3 = (PAGE *)nP2;
-  i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(13, P2);
   {
@@ -7465,15 +7424,10 @@ pnt TAG00978a_28(i16 P1,i16 nP2,i16 nP3)
   i16  w_16;
   i16  w_14;
   PAGE *pPage_8;
-  i32 i_4;
-  PAGE *pPageP3;
-  TEXT *pTextP4;
-  pTextP4 = (TEXT *)((int)nP3);
-  pPageP3 = (PAGE *)((int)nP2);
-  i_4 = 0x1baddade;
+  PAGE *pResult;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(13, P2);
-  i_4 = 0;
+  pResult = NULL;
   w_16 = sw(TAG00978a_13(P1));
   w_18 = sw(nP3);
   for (w_14 = w_16; w_14>0; w_14--)
@@ -7488,7 +7442,7 @@ pnt TAG00978a_28(i16 P1,i16 nP2,i16 nP3)
         if ((w_18--) <= 0)
         {
           pPage_8->w2 = w_14;
-          i_4 = (i32)pPage_8;
+          pResult = pPage_8;
           break;
         };
       };
@@ -7497,7 +7451,7 @@ pnt TAG00978a_28(i16 P1,i16 nP2,i16 nP3)
 //
   };
   //TAG009a1c(13, P2);
-  return ((pnt)i_4);
+  return (pnt)pResult;
 }
 
 // *********************************************************
@@ -7506,10 +7460,6 @@ pnt TAG00978a_28(i16 P1,i16 nP2,i16 nP3)
 void TAG00978a_29(i16 P1, i16 nP2)
 {//()
   PAGE *pPage_8;
-  i32 i_4;
-  PAGE *pPageP3;
-  pPageP3 = (PAGE *)((int)nP2);
-  i_4 = 0x1baddade;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //TAG009a02(13, P2);
   pPage_8 = (PAGE *)TAG00978a_21(P1, nP2);
@@ -7596,7 +7546,7 @@ void TAG009d7e(i16 P1, i16 *P2, i16 *P3, i16 *P4)
 // *********************************************************
 //
 // *********************************************************
-void TAG009db6(i16 P1, i32 P2, i32 *P3)
+void TAG009db6(i16 P1, intptr_t P2, i32 *P3)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   TAG00adf4(P2);
@@ -7611,7 +7561,7 @@ void TAG009db6(i16 P1, i32 P2, i32 *P3)
 // *********************************************************
 //
 // *********************************************************
-void TAG009dea(i16 P1, i32 P2, i32 *P3)
+void TAG009dea(i16 P1, intptr_t P2, i32 *P3)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   TAG00adf4(P2); //Saves pointer at Word13862 and Word13860
@@ -7875,10 +7825,11 @@ void TAG00aa58(i16 P1,i32 P2)
 // *********************************************************
 // Parameter points into code!
 // *********************************************************
-void TAG00adf4(i32 P1)
+void TAG00adf4(intptr_t P1)
 {
-  f.Word13862 = sw(P1 >> 16);
-  f.Word13860 = (UI16)(P1 & 0xffff);
+  ASSERT(((uintptr_t)P1 >> 32) == 0, "callback pointer overflow");
+  f.Word13862 = sw((i32)P1 >> 16);
+  f.Word13860 = (UI16)((i32)P1 & 0xffff);
 }
 
 // *********************************************************

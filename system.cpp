@@ -668,15 +668,15 @@ void RevealViewport()
 struct STATEENTRY
 {
   CODESTATE state;
-  i32 p1;
-  i32 p2;
-  i32 p3;
-  i32 p4;
-  i32 p5;
-  i32 p6;
-  i32 p7;
-  i32 p8;
-  i32 p9;
+  intptr_t p1;
+  intptr_t p2;
+  intptr_t p3;
+  intptr_t p4;
+  intptr_t p5;
+  intptr_t p6;
+  intptr_t p7;
+  intptr_t p8;
+  intptr_t p9;
 };
 
 #define MaxState 20
@@ -727,7 +727,7 @@ void _CALL0(CODESTATE newState)
 }
 
 void _CALL1(CODESTATE newState,
-            i32 p1)
+            intptr_t p1)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -739,8 +739,8 @@ void _CALL1(CODESTATE newState,
 }
 
 void _CALL2(CODESTATE newState,
-            i32 p1,
-            i32 p2)
+            intptr_t p1,
+            intptr_t p2)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -753,9 +753,9 @@ void _CALL2(CODESTATE newState,
 }
 
 void _CALL3(CODESTATE newState,
-            i32 p1,
-            i32 p2,
-            i32 p3)
+            intptr_t p1,
+            intptr_t p2,
+            intptr_t p3)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -769,10 +769,10 @@ void _CALL3(CODESTATE newState,
 }
 
 void _CALL4(CODESTATE newState,
-            i32 p1,
-            i32 p2,
-            i32 p3,
-            i32 p4)
+            intptr_t p1,
+            intptr_t p2,
+            intptr_t p3,
+            intptr_t p4)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -787,11 +787,11 @@ void _CALL4(CODESTATE newState,
 }
 
 void _CALL5(CODESTATE newState,
-            i32 p1,
-            i32 p2,
-            i32 p3,
-            i32 p4,
-            i32 p5)
+            intptr_t p1,
+            intptr_t p2,
+            intptr_t p3,
+            intptr_t p4,
+            intptr_t p5)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -807,12 +807,12 @@ void _CALL5(CODESTATE newState,
 }
 
 void _CALL6(CODESTATE newState,
-            i32 p1,
-            i32 p2,
-            i32 p3,
-            i32 p4,
-            i32 p5,
-            i32 p6)
+            intptr_t p1,
+            intptr_t p2,
+            intptr_t p3,
+            intptr_t p4,
+            intptr_t p5,
+            intptr_t p6)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -829,14 +829,14 @@ void _CALL6(CODESTATE newState,
 }
 
 void _CALL8(CODESTATE newState,
-            i32 p1,
-            i32 p2,
-            i32 p3,
-            i32 p4,
-            i32 p5,
-            i32 p6,
-            i32 p7,
-            i32 p8)
+            intptr_t p1,
+            intptr_t p2,
+            intptr_t p3,
+            intptr_t p4,
+            intptr_t p5,
+            intptr_t p6,
+            intptr_t p7,
+            intptr_t p8)
 
 {
   ASSERT(numState < MaxState,"maxState");
@@ -855,15 +855,15 @@ void _CALL8(CODESTATE newState,
 }
 
 void _CALL9(CODESTATE newState,
-            i32 p1,
-            i32 p2,
-            i32 p3,
-            i32 p4,
-            i32 p5,
-            i32 p6,
-            i32 p7,
-            i32 p8,
-            i32 p9)
+            intptr_t p1,
+            intptr_t p2,
+            intptr_t p3,
+            intptr_t p4,
+            intptr_t p5,
+            intptr_t p6,
+            intptr_t p7,
+            intptr_t p8,
+            intptr_t p9)
 
 {
   ASSERT(numState < MaxState,"maxState");

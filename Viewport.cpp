@@ -18,7 +18,7 @@ void info(char *msg, ui32 n);
 
 
 #ifdef _DEBUG
-void GTrace_s(char *s)
+void GTrace_s(const char *s)
 {
   if (GraphicTraceActive)
   {
@@ -26,7 +26,7 @@ void GTrace_s(char *s)
   };
 }
 
-void GTrace_1(char *s, i32 a)
+void GTrace_1(const char *s, i32 a)
 {
   if (GraphicTraceActive)
   {
@@ -34,7 +34,7 @@ void GTrace_1(char *s, i32 a)
   };
 }
 
-void GTrace_2(char *s, i32 a, i32 b)
+void GTrace_2(const char *s, i32 a, i32 b)
 {
   if (GraphicTraceActive)
   {
@@ -42,7 +42,7 @@ void GTrace_2(char *s, i32 a, i32 b)
   };
 }
 
-void GTrace_3(char *s, i32 a, i32 b, i32 c)
+void GTrace_3(const char *s, i32 a, i32 b, i32 c)
 {
   if (GraphicTraceActive)
   {
@@ -50,7 +50,7 @@ void GTrace_3(char *s, i32 a, i32 b, i32 c)
   };
 }
 
-void GTrace_4(char *s, i32 a, i32 b, i32 c, i32 dd)
+void GTrace_4(const char *s, i32 a, i32 b, i32 c, i32 dd)
 {
   if (GraphicTraceActive)
   {
@@ -58,7 +58,7 @@ void GTrace_4(char *s, i32 a, i32 b, i32 c, i32 dd)
   };
 }
 
-void GTrace_6(char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f)
+void GTrace_6(const char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f)
 {
   if (GraphicTraceActive)
   {
@@ -66,7 +66,7 @@ void GTrace_6(char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f)
   };
 }
 
-void GTrace_8(char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f, i32 g, i32 h)
+void GTrace_8(const char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f, i32 g, i32 h)
 {
   if (GraphicTraceActive)
   {
@@ -74,7 +74,7 @@ void GTrace_8(char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f, i32 g, i32 h)
   };
 }
 
-void GTrace_12(char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f, i32 g, i32 h, i32 i, i32 j, i32 k, i32 l)
+void GTrace_12(const char *s, i32 a, i32 b, i32 c, i32 dd, i32 e, i32 f, i32 g, i32 h, i32 i, i32 j, i32 k, i32 l)
 {
   if (GraphicTraceActive)
   {
@@ -280,7 +280,7 @@ void CUSTOMBITMAP::InitializeMask(BACKGROUND_MASK *pMask)
 
 
 #ifdef _DEBUG
-void cgeDebug(char *s, i32 i)
+void cgeDebug(const char *s, i32 i)
 {
   if (GraphicTraceActive)
   {
@@ -288,7 +288,7 @@ void cgeDebug(char *s, i32 i)
     fflush(GETFILE(TraceFile));
   };
 }
-void cgeDebug(char *s, i32 i, i32 j, i32 k)
+void cgeDebug(const char *s, i32 i, i32 j, i32 k)
 {
   if (GraphicTraceActive)
   {
@@ -5413,7 +5413,7 @@ ui32 *BACKGROUND_LIB::GetBitmap(ui32 graphicID, ui32 minimumSize, ui32 *bitmapSi
 }
 
 #ifdef _DEBUG
-void BACKGROUND_LIB::DumpGraphic(i32 graphicID, i32 maskID, char *extension)
+void BACKGROUND_LIB::DumpGraphic(i32 graphicID, i32 maskID, const char *extension)
 {
   i32 idx;
   ui32 actualSize;

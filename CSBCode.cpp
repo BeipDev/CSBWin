@@ -57,7 +57,7 @@ extern bool fullscreenRequested;
 extern bool virtualFullscreen;
 extern bool overlappingText;
 extern i32 VBLMultiplier;
-extern char *helpMessage;
+extern const char *helpMessage;
 extern unsigned char *encipheredDataFile;
 extern bool simpleEncipher;
 extern i32 trace;
@@ -112,7 +112,7 @@ void die(i32 errorNum, const char *msg) // TAG000efc
   UI_Die(errorNum);
 }
 
-void _Assert(bool value, char *program, i32 line, const char *text)
+void _Assert(bool value, const char *program, i32 line, const char *text)
 {
   i32 n;
   if (value==0)
@@ -255,14 +255,14 @@ RN& RNGear(pnt p)
 #ifdef _DEBUG
 i32& longGear(ui8 *p)
 {
-  ASSERT(((int)p & 3) == 0,"p");
+  ASSERT((((uintptr_t)p) & 3) == 0,"p");
   return *((i32 *)(p));
 }
 #endif
 
 pnt& pntGear(pnt p)
 {
-  ASSERT(((int)p & 3) == 0,"p");
+  ASSERT((((uintptr_t)p) & 3) == 0,"p");
   return *((pnt *)(p));
 }
 
@@ -9217,7 +9217,7 @@ RESTARTABLE _DisplayChaosStrikesBack()
   d.UseByteCoordinates=0;
   if (d.iAvailableMemory < 138060) RETURN;
   pGraphic = (ui8 *)allocateMemory(133056,0); // Temporary allocation
-  pGraphic = (ui8 *)((ui32)(pGraphic + 256) & 0xffffff00); // Round to 256-byte boundary
+  pGraphic = (ui8 *)((UINT_PTR)(pGraphic + 256) & ~0xFF); // Round to 256-byte boundary
   // We have 132800 bytes remaining after rounding.
   A3 = (aReg)pGraphic;
 #ifdef GraphicsDebug
@@ -9371,6 +9371,7 @@ RESTARTABLE _OpenPrisonDoors() //TAG01f47a
 {//()
   static dReg D7;
   static aReg A0, A1, A3;
+  static pnt *pDoorPtrBase;
   static ui8 *LOCAL_4, *LOCAL_8;
   static i32 i;
   RESTARTMAP
@@ -9379,8 +9380,9 @@ RESTARTABLE _OpenPrisonDoors() //TAG01f47a
     RESTART(3);
   END_RESTARTMAP
   A3 = (pnt)&d.Pointer22952; // Prison door left
+  pDoorPtrBase = (pnt *)&d.Pointer22952;
   LOCAL_4 = d.LogicalScreenBase + 4800;
-  LOCAL_8 = (ui8 *)pntGear((pnt)A3 + 36);
+  LOCAL_8 = (ui8 *)pDoorPtrBase[9];
   for (D7W = 1; D7W != 32; D7W++)
   {
     //UI_Sleep(60);
@@ -9389,10 +9391,10 @@ RESTARTABLE _OpenPrisonDoors() //TAG01f47a
       while (CheckSoundQueue()) wvbl(_2_);
       StartSound(d.Pointer22964, 145, 1); //Graphic #535 // Start sound
     };
-    MemMove((ui8 *)pntGear((pnt)A3+32), (ui8 *)pntGear((pnt)A3+36), 20608); // Dungeon interior.
+    MemMove((ui8 *)pDoorPtrBase[8], (ui8 *)pDoorPtrBase[9], 20608); // Dungeon interior.
 // I commented this out.. I could see no change.
     TAG0088b2((ui8 *)d.pViewportBMP,  // left part of interior.
-              upntGear((pnt)A3+36),
+              (ui8 *)pDoorPtrBase[9],
               (RectPos *)d.Word60,
               0,
               0,
@@ -9401,8 +9403,8 @@ RESTARTABLE _OpenPrisonDoors() //TAG01f47a
               -1);
     if (((RectPos *)d.Word68)->w.x2 >= 0)
     {
-      TAG0088b2(upntGear(A3+(D7W&3)*4), // Left Door
-                upntGear(A3+36),
+      TAG0088b2((ui8 *)pDoorPtrBase[D7W&3], // Left Door
+                (ui8 *)pDoorPtrBase[9],
                 (RectPos *)d.Word68,
                 (D7W&0xfc)*4,
                 0,
@@ -9411,8 +9413,8 @@ RESTARTABLE _OpenPrisonDoors() //TAG01f47a
                 -1);
       ((RectPos *)d.Word68)->w.x2 -= 4;
     };
-    TAG0088b2(upntGear(((D7W&3)+4)*4+A3), // Right side door
-              upntGear(A3+36),
+    TAG0088b2((ui8 *)pDoorPtrBase[(D7W&3)+4], // Right side door
+              (ui8 *)pDoorPtrBase[9],
               (RectPos *)d.Word76,
               (D7W&3)*4,
               0,
@@ -10828,10 +10830,16 @@ void ExpandGraphic(i8 *src,ui8 *dest,i16 P3,i16 P4,i32 maxSize)
   i32 retindex=10;
   i32 C;
   BSRRETURNS retstack[10];
+  pnt endDest;
+  uintptr_t savedA2;
+  bool hasSavedA2;
   D1L = 0;
   D7L = 0;
-  ASSERT(((int)src & 3) ==0,"src");
-  ASSERT(((int)dest & 3) ==0,"dst");
+  endDest = NULL;
+  savedA2 = 0;
+  hasSavedA2 = false;
+  ASSERT((((uintptr_t)src) & 3) ==0,"src");
+  ASSERT((((uintptr_t)dest) & 3) ==0,"dst");
   A0 = (aReg)src;
   A1 = (aReg)dest;
   D5W = P3;
@@ -10849,7 +10857,7 @@ void ExpandGraphic(i8 *src,ui8 *dest,i16 P3,i16 P4,i32 maxSize)
     D6W--;
     D6L = D6UW * 160; //(ui16)D0W; // Total number bytes
     if (D6L > maxSize) D6L = maxSize;
-    D6L += (i32)A3;
+    endDest = A3 + D6L;
     D4W = sw(160 - D7W);
 //    D7W = D4W;
     D7W = 160;
@@ -10859,7 +10867,7 @@ void ExpandGraphic(i8 *src,ui8 *dest,i16 P3,i16 P4,i32 maxSize)
     D6L = D6UW * (ui16)D7W; // Total number bytes
     if (D6L > maxSize) D6L = maxSize;
     A3 = A1 + D6L;//Destination LWA+1
-    D6L = (i32)A3;//Destination LWA+1
+    endDest = A3;
   };
   longGear((ui8 *)A1)   = 0;
   longGear((ui8 *)A1+4) = 0;
@@ -10915,8 +10923,8 @@ tag0214d0:
   A2 = A1-D7W;
 tag0214e4:
   BSR(0214fa,0214e6);
-  if (D5L == 0) goto tag0214ec;
-  A2 = (pnt)D5L;
+  if (!hasSavedA2) goto tag0214ec;
+  A2 = (pnt)savedA2;
 tag0214ec:
   A2 += 8;
   if (D1W != 0) goto tag0214e4;
@@ -10950,7 +10958,7 @@ tag02151e:
   D5L &= D3L;
   longGear((ui8 *)A1) |= LE32(D5L);
   A1 += 4;
-  D5L = 0;
+  hasSavedA2 = false;
   if (D0W < 0) goto tag021538;
   A1 -= 8;
   RTS;
@@ -10959,12 +10967,12 @@ tag021536:
 tag021538:
   if (A1 != A3) goto tag02154e;
 tag02153c:
-  if (A1 == (pnt)D6L) goto tag02170a;
+  if (A1 == endDest) goto tag02170a;
   A3 += D7W;
   SWAP(D7);//D7 = ((D7<<16)&0xffff0000) | ((D7>>16)&0xffff);
   A1 += D7W;
-  D5L = (i32)A2;
-  D5W = sw(D5W + D7W);
+  savedA2 = (((uintptr_t)A2) & ~((uintptr_t)0xffff)) | (ui16)((ui16)(uintptr_t)A2 + (ui16)D7W);
+  hasSavedA2 = true;
   SWAP(D7);// = ((D7<<16)&0xffff0000) | ((D7>>16)&0xffff);
 tag02154e:
   D0L = 15;
@@ -11033,6 +11041,7 @@ tagReturn:
   switch (retstack[retindex++])
   {
   case Tag02148a: goto tag02148a;
+  case Tag0214aa: goto tag0214aa;
   case Tag0214e6: goto tag0214e6;
   case Tag0214f6: goto tag0214f6;
   case Tag02155e: goto tag02155e;
@@ -11047,12 +11056,13 @@ tagReturn:
 
 void checkMemory()
 {
+  const i32 kMemoryHeaderDebugOffset = (i32)sizeof(pnt) + 4;
   pnt prevblk=NULL;
   pnt blk = firstMemoryBlock;
   //return;
   while (blk != NULL)
   {
-    ASSERT(longGear((ui8 *)blk+8) == memDebugFlag,"blk+8");
+    ASSERT(longGear((ui8 *)blk+kMemoryHeaderDebugOffset) == memDebugFlag,"blk+debug");
     prevblk=blk;
     blk = pntGear(blk);
   };
@@ -11066,6 +11076,9 @@ ui8 *allocateMemory(i32 sizeNeeded,i16 type) //TAG02175c
   // Type =0 --> temporary allocation
   // Type =2 --> temporary allocation of as much as possible
   //dReg D7;
+  const i32 kMemoryHeaderSize = (i32)sizeof(pnt) + 8;
+  const i32 kMemoryHeaderSizeOffset = (i32)sizeof(pnt);
+  const i32 kMemoryHeaderDebugOffset = (i32)sizeof(pnt) + 4;
   aReg A0, A3;
   ASSERT(sizeNeeded != 0,"sizeNeeded");
   //D7L = sizeNeeded;
@@ -11083,7 +11096,8 @@ ui8 *allocateMemory(i32 sizeNeeded,i16 type) //TAG02175c
 //  }
 //  else
 //  { // Not enough space or temporary allocation
-    if (sizeNeeded+12 > d.iAvailableMemory)
+    i32 overhead = (type==1) ? kMemoryHeaderSize : 0;
+    if (sizeNeeded + overhead > d.iAvailableMemory)
     { // die, I think.
       die(40);
     };
@@ -11095,16 +11109,16 @@ ui8 *allocateMemory(i32 sizeNeeded,i16 type) //TAG02175c
     }
     else if (type==1)
     {
-      A3 = (pnt)d.pEndOfAvailMemory-sizeNeeded-12;
-      ASSERT(((int)d.pEndOfAvailMemory & 3) == 0,"endOfMemory");
-      ASSERT(((int)A3 & 3) == 0,"A3");
+      A3 = (pnt)d.pEndOfAvailMemory-sizeNeeded-kMemoryHeaderSize;
+      ASSERT((((uintptr_t)d.pEndOfAvailMemory) & 3) == 0,"endOfMemory");
+      ASSERT((((uintptr_t)A3) & 3) == 0,"A3");
       d.pEndOfAvailMemory = (ui8 *)A3;
       pntGear(A3) = firstMemoryBlock;
       firstMemoryBlock = A3;
-      longGear((ui8 *)A3+4) = sizeNeeded;
-      longGear((ui8 *)A3+8) = memDebugFlag;
-      A3 += 12;
-      d.iAvailableMemory -= sizeNeeded+12;
+      longGear((ui8 *)A3+kMemoryHeaderSizeOffset) = sizeNeeded;
+      longGear((ui8 *)A3+kMemoryHeaderDebugOffset) = memDebugFlag;
+      A3 += kMemoryHeaderSize;
+      d.iAvailableMemory -= sizeNeeded+kMemoryHeaderSize;
     }
     else
     { // Temporary allocation

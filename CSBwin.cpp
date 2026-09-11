@@ -55,23 +55,24 @@ POINT g_aspectRatio{320, 240};
 
 std::string parentFolder(char *folderName, char *endName);
 
-char *helpMessage = "CSBWin looks in three places for files:\n"
-                    " 1) The default directory\n"
-                    " 2) The parent of the default directory\n"
-                    " 3) The directory of CSBWin.exe\n"
-                    "      Searched in order 1, 2, 3\n\n."
-                    "The default directory can be spcified in two ways:\n"
-                    " 1) The command line   directory=\"c:\\My Games\\DM\\\"\n"
-                    " 2) The config.txt file   directory \"c:\\My Games\\DM\\\"\n\n"
-                    "      The quotes are necessary if the name contains spaces.\n"
-                    "      The config.txt file overrides the command line\n"
-                    "      except (of course) when searching for config.txt\n\n"
-                    "If no default directory is specified then the only\n"
-                    "directory searched will be the directory containing CSBWin.exe.\n\n"
-                    "Whenever a file is created it will be created in the first of\n"
-                    "the three directories that is specified.  So new files will go\n"
-                    "into the default directory unless none is specified, in which\n"
-                    "case they will go into the CSBWin.exe directory";
+const char *helpMessage = 
+   "CSBWin looks in three places for files:\n"
+   " 1) The default directory\n"
+   " 2) The parent of the default directory\n"
+   " 3) The directory of CSBWin.exe\n"
+   "      Searched in order 1, 2, 3\n\n."
+   "The default directory can be spcified in two ways:\n"
+   " 1) The command line   directory=\"c:\\My Games\\DM\\\"\n"
+   " 2) The config.txt file   directory \"c:\\My Games\\DM\\\"\n\n"
+   "      The quotes are necessary if the name contains spaces.\n"
+   "      The config.txt file overrides the command line\n"
+   "      except (of course) when searching for config.txt\n\n"
+   "If no default directory is specified then the only\n"
+   "directory searched will be the directory containing CSBWin.exe.\n\n"
+   "Whenever a file is created it will be created in the first of\n"
+   "the three directories that is specified.  So new files will go\n"
+   "into the default directory unless none is specified, in which\n"
+   "case they will go into the CSBWin.exe directory";
 
 i32 WindowWidth = 960;
 i32 WindowHeight = 0;
@@ -96,7 +97,7 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 
-void MTRACE(char *msg)
+void MTRACE(const char *msg)
 {
   if (trace < 0) return;
   FILE *f = GETFILE(trace);

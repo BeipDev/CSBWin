@@ -581,11 +581,14 @@ i16 LoadProgram(STRUCT148 *s148)
     };
     while (i_10 > 0)
     {
+      uintptr_t relocated;
       D3W = littleEndian(wordGear(p_42));
       D3L = D3W;
       A0 = p_34 + D3L;
       D0L = LE32(longGear(A0));
-      longGear(A0) = LE32((i32)p_34 + D0L);
+      relocated = (uintptr_t)p_34 + (uintptr_t)(ui32)D0L;
+      ASSERT((relocated >> 32) == 0, "LoadProgram relocation overflow");
+      longGear(A0) = LE32((i32)relocated);
       p_42 += 2;
       i_10 -= 2;
 //

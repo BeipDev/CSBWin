@@ -93,7 +93,7 @@ typedef unsigned _int16 HTIMER;  // A handle to a timer entry;
 # endif
 #endif
 
-void _Assert(bool, char *, i32, const char * = NULL);
+void _Assert(bool, const char *, i32, const char * = NULL);
 
 #undef ASSERT
 #ifdef _DEBUG

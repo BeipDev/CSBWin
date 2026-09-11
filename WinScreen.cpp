@@ -885,7 +885,8 @@ void display (){
       }
 
       g_pID2DRenderTarget->BeginDraw();
-      g_pID2DBitmap->CopyFromMemory(&D2D1_RECT_U{0, 0, uint32_t(g_rcAtari.right), uint32_t(g_rcAtari.bottom)}, pixels, sizeof(DWORD)*g_rcAtari.right);
+      auto rect=D2D1_RECT_U{0, 0, uint32_t(g_rcAtari.right), uint32_t(g_rcAtari.bottom)};
+      g_pID2DBitmap->CopyFromMemory(&rect, pixels, sizeof(DWORD)*g_rcAtari.right);
 
       g_pID2DRenderTarget->DrawBitmap(g_pID2DBitmap, D2D1_RECT_F{float(g_rcClient.left), float(g_rcClient.top), float(g_rcClient.right), float(g_rcClient.bottom)}, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
       g_pID2DRenderTarget->EndDraw();

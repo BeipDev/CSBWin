@@ -390,7 +390,7 @@ public:
   BACKGROUND_MASK  *GetMask(ui32 graphicID, ui32 maskNumber, ui32 minimumSize);
   BACKGROUND_MASK  *MaskExists(ui32 graphicID, ui32 maskNumber);
   ui32 *GetBitmap(ui32 graphicID, ui32 minimumSize, ui32 *bitmapSize);
-  void DumpGraphic(i32 graphicID, i32 maskNum, char *extension);
+  void DumpGraphic(i32 graphicID, i32 maskNum, const char *extension);
   void InsertBitmap(ui32 ID, ui32 size, ui32 *address);
   BACKGROUND_MASK *CreateNewMask(ui32 ID, ui32 num, BACKGROUND_MASK *pMask);
   AFFINEMASK *CreateNewAffineMask(ui32 ID, ui32 num, AFFINEMASK *paffine);
@@ -4045,7 +4045,7 @@ RESTARTABLE _TAG0051c2_1(const i16); //()
 //#define TAG008c40_2(n,a) CALL1(n,TAG008c40_2,a)
 //RESTARTABLE _TAG008c40_2(i16);//()
 #define TAG006c7e_xxx(n,a,b,c,d,e) CALL5(n,TAG006c7e_xxx,a,b,c,d,e)
-RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5);//(i32)
+RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, intptr_t P3, i32, pnt P5);//(i32)
 #define TAG006c7e_2(n,a) CALL1(n,TAG006c7e_2,a)
 RESTARTABLE _TAG006c7e_2(i16);//()
 #define TAG006c7e_32(n,a,b) CALL2(n,TAG006c7e_32,a,b)
@@ -4103,7 +4103,7 @@ RESTARTABLE _TAG008c40_8(i16, i16);//(i32)
 #define TAG0051c2_31(n,a) CALL1(n,TAG0051c2_31,a)
 RESTARTABLE _TAG0051c2_31(i16);//()
 #define TAG004e4c_xxx(n,a,b,c) CALL3(n,TAG004e4c_xxx,a,b,c)
-RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, i32 P3);
+RESTARTABLE _TAG004e4c_xxx(i16 /*P1*/, i16 P2, intptr_t P3);
 #define TAG004e4c_6(n,a,b) CALL2(n,TAG004e4c_6,a,b)
 RESTARTABLE _TAG004e4c_6(i16, TEXT *);//()
 #define TAG004e4c_8(n,a,b) CALL2(n,TAG004e4c_8,a,b)

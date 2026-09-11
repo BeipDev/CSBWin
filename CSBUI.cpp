@@ -382,7 +382,7 @@ EditDialog::~EditDialog()
 }
 
 
-static char *initialEditText;
+static const char *initialEditText;
 char *finalEditText= NULL;
 // Mesage handler for EditDialog
 
@@ -2188,23 +2188,27 @@ void *UI_malloc(i32 size, ui32 /*id*/)
 {
   void *result;
 #ifdef _DEBUG //037
+  const size_t kDebugAllocHeaderUnaligned = 2*sizeof(void*) + sizeof(i32);
+  const size_t kDebugAllocHeaderSize = (kDebugAllocHeaderUnaligned + sizeof(void*) - 1) & ~(sizeof(void*) - 1);
+  const size_t kDebugAllocBackLinkOffset = sizeof(void*);
+  const size_t kDebugAllocIdOffset = 2*sizeof(void*);
   CheckAllAllocated();
-  result = malloc(size+12);
+  result = malloc(size + kDebugAllocHeaderSize);
 #else
   result = malloc(size);
 #endif //037
   if (result == NULL) AllocationError();
 #ifdef _DEBUG //038
   *(ui8 **)((ui8 *)result+0) = allocatedMemoryList;
-  *(ui8 **)((ui8 *)result+4) = NULL;
-  *(i32 *)((ui8 *)result+8) = id;
+  *(ui8 **)((ui8 *)result+kDebugAllocBackLinkOffset) = NULL;
+  *(i32 *)((ui8 *)result+kDebugAllocIdOffset) = id;
   if (allocatedMemoryList != NULL)
   {
-    *(void **)(allocatedMemoryList+4) = result;
+    *(void **)(allocatedMemoryList+kDebugAllocBackLinkOffset) = result;
   };
   allocatedMemoryList = (ui8 *)result;
   if (id != 0xffff) listLength++;
-  return (void *)((ui8 *)result+12);
+  return (void *)((ui8 *)result + kDebugAllocHeaderSize);
 #else
   return result;
 #endif //038
@@ -2218,6 +2222,8 @@ void *UI_realloc(void *buf, i32 size, ui32 /*id*/)
 {
   void *result;
 #ifdef _DEBUG //040
+  const size_t kDebugAllocHeaderUnaligned = 2*sizeof(void*) + sizeof(i32);
+  const size_t kDebugAllocHeaderSize = (kDebugAllocHeaderUnaligned + sizeof(void*) - 1) & ~(sizeof(void*) - 1);
   void **next, **prev;
   if (buf == NULL)
   {
@@ -2225,8 +2231,8 @@ void *UI_realloc(void *buf, i32 size, ui32 /*id*/)
   }
   else
   {
-    buf = (void *)((ui8 *)buf - 12);
-    size += 12;
+    buf = (void *)((ui8 *)buf - kDebugAllocHeaderSize);
+    size += (i32)kDebugAllocHeaderSize;
     result = realloc(buf, size);
     if (result == NULL) AllocationError();
     prev = ((void ***)result)[1];
@@ -2243,8 +2249,9 @@ void *UI_realloc(void *buf, i32 size, ui32 /*id*/)
     {
       next[1] = result;//Fix back link of next.
     };
+    *(i32 *)((ui8 *)result + 2*sizeof(void*)) = id;
   };
-  return (void *)((char *)result + 12);
+  return (void *)((char *)result + kDebugAllocHeaderSize);
 #else
   if (buf == NULL)
   {
@@ -2262,9 +2269,11 @@ void *UI_realloc(void *buf, i32 size, ui32 /*id*/)
 void UI_free(void *buf)
 {
 #ifdef _DEBUG //041
+  const size_t kDebugAllocHeaderUnaligned = 2*sizeof(void*) + sizeof(i32);
+  const size_t kDebugAllocHeaderSize = (kDebugAllocHeaderUnaligned + sizeof(void*) - 1) & ~(sizeof(void*) - 1);
   void **next, **prev;
   CheckAllAllocated();
-  buf = (void *)((pnt)buf-12);
+  buf = (void *)((ui8 *)buf - kDebugAllocHeaderSize);
   prev = ((void ***)buf)[1];
   next = ((void ***)buf)[0];
   if (prev == NULL)
@@ -2279,7 +2288,7 @@ void UI_free(void *buf)
   {
     next[1] = prev;
   };
-  if ( ((ui32 *)buf)[2] != 0xffff) listLength--;
+  if ( *(i32 *)((ui8 *)buf + 2*sizeof(void*)) != 0xffff) listLength--;
   free(buf);
 #else
   free(buf);
