@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 /*
 
 ===========================================================
@@ -22,17 +21,17 @@ Had to do with mummy absorbing the dagger.
 
 When standing in a stairwell, go backward rapidly so that
 you go up and down the stairs.  Repeat many times and
-you leave the stairwell.  
+you leave the stairwell.
 
 I can reporduce this.
-15 April 2001 PRS  
+15 April 2001 PRS
 
 Fixed.  Kinda.  This was caused by the main loop
 processing more than one mouse event per clock tick.
 That in turn was done for the Record/Playback feature.
 So I put things back as the Atari had it.  I will have
 to fix the Record/Playback in some other way.  I cannot
-even remember what is was that went wrong!  
+even remember what is was that went wrong!
 
 
 

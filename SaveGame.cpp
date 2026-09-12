@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-//#include "Objects.h"
+// #include "Objects.h"
 #include "Dispatch.h"
 #include "CSB.h"
 #include "Data.h"
@@ -61,74 +61,74 @@ struct GAMEBLOCK1
    // Data below this line is 512 bytes long.  This
    // block is the first read from the game save file.
    // IN original code...starts at -740(A6)
-   i8 Byte740[300];       //000
-   i8 Byte22598;          //300
-   ui8 Byte22596;         //301
-   i8 FILL438[4];         //302
-   i16 SaveOption;        //306
-   i32 RandomGameID;      //308;// reversed//
-   i16 Block2Hash;        //312 swapped
-   i16 ITEM16Hash;        //314 swapped
-   i16 CharacterHash;     //316 swapped
-   i16 TimersHash;        //318 swapped
-   i16 TimerQueHash;      //320 swapped
-   i32 totalMoveCount;    //322
-   i16 Hash326;           //326
-   i16 Hash328;           //328
-   i16 Hash330;           //330
-   i16 Hash332;           //332
-   i16 Hash334;           //334
-   i16 Hash336;           //336
-   i16 Hash338;           //338
-   i16 Hash340;           //340
-   i16 Hash342;           //342
-   i16 Block2Checksum;    //344swapped
-   i16 ITEM16Checksum;    //346 swapped
-   i16 CharacterChecksum; //348 swapped
-   i16 TimersChecksum;    //350 swapped
-   i16 TimerQueChecksum;  //352 swapped
-   i16 Checksum354;       //354
-   i16 Checksum356;       //356
-   i16 Checksum358;       //358
-   i16 Checksum360;       //360
-   i16 Checksum362;       //362
-   i16 Checksum364;       //364
-   i16 Checksum366;       //366
-   i16 Checksum368;       //368
-   i16 Checksum370;       //370
-   i16 Checksum372;       //372
-   i16 Checksum374;       //374
-   i16 Word22594;         //376 swapped
-   i16 Word22592;         //378 swapped
-   i8 Byte22808[132];     //380 moved as a unit
+   i8 Byte740[300];       // 000
+   i8 Byte22598;          // 300
+   ui8 Byte22596;         // 301
+   i8 FILL438[4];         // 302
+   i16 SaveOption;        // 306
+   i32 RandomGameID;      // 308;// reversed//
+   i16 Block2Hash;        // 312 swapped
+   i16 ITEM16Hash;        // 314 swapped
+   i16 CharacterHash;     // 316 swapped
+   i16 TimersHash;        // 318 swapped
+   i16 TimerQueHash;      // 320 swapped
+   i32 totalMoveCount;    // 322
+   i16 Hash326;           // 326
+   i16 Hash328;           // 328
+   i16 Hash330;           // 330
+   i16 Hash332;           // 332
+   i16 Hash334;           // 334
+   i16 Hash336;           // 336
+   i16 Hash338;           // 338
+   i16 Hash340;           // 340
+   i16 Hash342;           // 342
+   i16 Block2Checksum;    // 344swapped
+   i16 ITEM16Checksum;    // 346 swapped
+   i16 CharacterChecksum; // 348 swapped
+   i16 TimersChecksum;    // 350 swapped
+   i16 TimerQueChecksum;  // 352 swapped
+   i16 Checksum354;       // 354
+   i16 Checksum356;       // 356
+   i16 Checksum358;       // 358
+   i16 Checksum360;       // 360
+   i16 Checksum362;       // 362
+   i16 Checksum364;       // 364
+   i16 Checksum366;       // 366
+   i16 Checksum368;       // 368
+   i16 Checksum370;       // 370
+   i16 Checksum372;       // 372
+   i16 Checksum374;       // 374
+   i16 Word22594;         // 376 swapped
+   i16 Word22592;         // 378 swapped
+   i8 Byte22808[132];     // 380 moved as a unit
 };
 
 struct GAMEBLOCK2
 {
    // The following 128 bytes are the second thing
    // read from the game file.
-   i32 Time;                  //000;  reversed
-   i32 ranseed;               //004; reversed
-   ui16 ObjectInHand;         //008; swapped
-   i16 numcharacter;          //010; swapped
-   i16 partyx;                //012; swapped
-   i16 partyy;                //014; swapped
-   i16 partyfacing;           //016; swapped
-   i16 partyLevel;            //018; swapped
-   i16 handChar;              //020; swapped Character index
-   i16 MagicCaster;           //022; swapped
-   i16 NumTimer;              //024; swapped
-   i16 FirstAvailTimer;       //026; swapped
-   i16 MaxTimers;             //028; swapped
-   i16 ITEM16QueLen;          //030; swapped
-   i32 LastMonsterAttackTime; //032; reversed
-   i32 LastPartyMoveTime;     //036; A timestamp. reversed
-   i16 partyMoveDisableTimer; //040; swapped
-   i16 Word11712;             //042; swapped
-   i16 Word11714;             //044; swapped
-   i16 MaxITEM16;             //046; swapped
-   ui16 TimerSequence;        //048; swapped
-   i8 FILL180[78];            //050;
+   i32 Time;                  // 000;  reversed
+   i32 ranseed;               // 004; reversed
+   ui16 ObjectInHand;         // 008; swapped
+   i16 numcharacter;          // 010; swapped
+   i16 partyx;                // 012; swapped
+   i16 partyy;                // 014; swapped
+   i16 partyfacing;           // 016; swapped
+   i16 partyLevel;            // 018; swapped
+   i16 handChar;              // 020; swapped Character index
+   i16 MagicCaster;           // 022; swapped
+   i16 NumTimer;              // 024; swapped
+   i16 FirstAvailTimer;       // 026; swapped
+   i16 MaxTimers;             // 028; swapped
+   i16 ITEM16QueLen;          // 030; swapped
+   i32 LastMonsterAttackTime; // 032; reversed
+   i32 LastPartyMoveTime;     // 036; A timestamp. reversed
+   i16 partyMoveDisableTimer; // 040; swapped
+   i16 Word11712;             // 042; swapped
+   i16 Word11714;             // 044; swapped
+   i16 MaxITEM16;             // 046; swapped
+   ui16 TimerSequence;        // 048; swapped
+   i8 FILL180[78];            // 050;
 };
 
 struct str1eb18
@@ -166,7 +166,7 @@ void SwapDataIndexMap()
    for(i = 0; i < dataMapLength; i++)
    {
       dataIndexMap[i] = BE16(dataIndexMap[i]);
-   };
+   }
 }
 
 void SwapIndirectTextIndex()
@@ -175,7 +175,7 @@ void SwapIndirectTextIndex()
    for(i = 0; i < d.dungeonDatIndex->NumWordsInTextArray(); i++)
    {
       d.indirectTextIndex[i] = BE32(d.indirectTextIndex[i]);
-   };
+   }
 }
 
 void SwapExtendedFeaturesBlock(EXTENDEDFEATURESBLOCK *
@@ -193,7 +193,8 @@ void SwapExtendedFeaturesBlock(EXTENDEDFEATURESBLOCK *
    pefb->graphicsSignature1 = BE32(pefb->graphicsSignature1);
    pefb->graphicsSignature2 = BE32(pefb->graphicsSignature2);
 #else
-){
+)
+{
 #endif
 }
 
@@ -204,7 +205,7 @@ ui32 FormChecksum(ui8 *buf, i32 num)
    for(i = 0; i < num; i++)
    {
       result = result * ui32(0xbb40e62d) + 11 + buf[i];
-   };
+   }
    return result;
 }
 
@@ -216,28 +217,28 @@ void ReadDSAs(i32 handle, i32 numDSA)
    DSAIndex.Cleanup();
    if(numDSA != 0)
    {
-      RCS(handle); //Discard old checksum and restart.
+      RCS(handle); // Discard old checksum and restart.
       for(i = 0; i < numDSA; i++)
       {
          RCS(&dsaNum);
          if(DSAIndex.GetDSA(dsaNum) != NULL)
          {
             die(0, "Duplicate DSA");
-         };
+         }
          if(dsaNum > 255)
          {
             die(0, "DSA number greater than 255");
-         };
+         }
          DSAIndex.SetDSA(dsaNum, new DSA);
          DSAIndex.GetDSA(dsaNum)->Read();
-      };
+      }
       computedChecksum = RCS(handle);
       READ(handle, 4, (ui8 *)&fileChecksum);
       if(fileChecksum != computedChecksum)
       {
          die(0, "Improper DSA checksum");
-      };
-   };
+      }
+   }
    DSAIndex.IsLoaded(true); // Mark the DSA database 'Loaded' even if none exist.
 }
 
@@ -252,7 +253,7 @@ void ReadGameInfo(i32 handle, i32 size)
       strcpy(gameInfo, "No game information was provided");
       gameInfoSize = strlen(gameInfo) + 1; // Include the trailing nul
       return;
-   };
+   }
    gameInfo = (char *)UI_malloc(size + 1, MALLOC036);
    READ(handle, size, (ui8 *)gameInfo);
    gameInfoSize = size + 1;
@@ -260,7 +261,7 @@ void ReadGameInfo(i32 handle, i32 size)
 }
 
 i32 WriteGameInfo(i32 handle, i32 size)
-{ //Returns size.
+{ // Returns size.
    if(size == 0)
       return 0;
    WRITE((i16)handle, size, (ui8 *)gameInfo);
@@ -275,8 +276,8 @@ void ClearDSALevelIndex()
       for(j = 0; j < 32; j++)
       {
          DSALevelIndex[i][j] = 0xffff;
-      };
-   };
+      }
+   }
 }
 
 void ReadDSALevelIndex(i32 handle)
@@ -288,7 +289,7 @@ void ReadDSALevelIndex(i32 handle)
       if(triple[0] > 63)
          break;
       DSALevelIndex[triple[0]][triple[1]] = triple[2];
-   };
+   }
 }
 
 i32 ReadExtendedFeatures(i32 handle)
@@ -323,7 +324,7 @@ i32 ReadExtendedFeatures(i32 handle)
    {
       LSEEK(startPos, handle, SEEK_SET);
       return 0;
-   };
+   }
    if(strcmp(efb.sentinel, " Extended Features ") != 0)
    {
       unsigned char simple[2];
@@ -342,8 +343,8 @@ i32 ReadExtendedFeatures(i32 handle)
       {
          LSEEK(startPos, handle, SEEK_SET);
          return 0;
-      };
-   };
+      }
+   }
    savechecksum = efb.extendedFeaturesChecksum;
    efb.extendedFeaturesChecksum = 0;
    SwapExtendedFeaturesBlock(&efb);
@@ -352,7 +353,7 @@ i32 ReadExtendedFeatures(i32 handle)
       SwapExtendedFeaturesBlock(&efb);
       LSEEK(startPos, handle, SEEK_SET);
       return 0;
-   };
+   }
    SwapExtendedFeaturesBlock(&efb);
    dataTypeMap = (ui8 *)UI_malloc(efb.dataMapLength, MALLOC037);
    dataIndexMap = (ui16 *)UI_malloc(2 * efb.dataMapLength, MALLOC038);
@@ -360,19 +361,19 @@ i32 ReadExtendedFeatures(i32 handle)
    {
       UI_MessageBox("Cannot Allocate Memory", "Error", MB_OK);
       die(0x4445cc);
-   };
+   }
    ExtendedFeaturesVersion = efb.version;
    if(efb.cellFlagArraySize != 0)
    {
       cellflagArraySize = efb.cellFlagArraySize;
-   };
+   }
    n1 = READ(handle, efb.dataMapLength, dataTypeMap);
    n2 = READ(handle, 2 * efb.dataMapLength, (ui8 *)dataIndexMap);
    if((FormChecksum((ui8 *)dataTypeMap, efb.dataMapLength) != efb.dataTypeMapChecksum) || (FormChecksum((ui8 *)dataIndexMap, 2 * efb.dataMapLength) != efb.dataIndexMapChecksum) || (n1 != efb.dataMapLength) || (n2 != 2 * efb.dataMapLength))
    {
       UI_MessageBox("Extended features damaged", "Error", MB_OK);
       die(0xe3ee17);
-   };
+   }
    spellFilterLocation = efb.spellFilterLocation;
    expectedGraphicSignature1 = efb.graphicsSignature1;
    expectedGraphicSignature2 = efb.graphicsSignature2;
@@ -387,7 +388,7 @@ i32 ReadExtendedFeatures(i32 handle)
    if(efb.flags & EXTENDEDFEATURESBLOCK::LevelDSAInfoPresent)
    {
       ReadDSALevelIndex(handle);
-   };
+   }
    DMRulesDesignOption =
        (efb.flags & EXTENDEDFEATURESBLOCK::DMRules) != 0;
    invisibleMonsters =
@@ -414,7 +415,7 @@ i32 ReadExtendedFeatures(i32 handle)
    if(DefaultDirectXOption)
    {
       usingDirectX = true;
-   };
+   }
    extendedWallDecorations =
        (efb.extendedFlags & EXTENDEDFEATURESBLOCK::ExtendedWallDecorations) != 0;
    overlayActive =
@@ -426,55 +427,55 @@ i32 ReadExtendedFeatures(i32 handle)
                     efb.overlayP2,
                     efb.overlayP3,
                     efb.overlayP4);
-   };
+   }
    endPos = LSEEK(0, handle, SEEK_CUR);
    return endPos - startPos;
-};
+}
 
 void swapBlock1(GAMEBLOCK1 *b)
 { // Swap and reverse byte order in first 512-byte
    // block of savegame file.
    BO(b->RandomGameID);
-   BO(b->Block2Hash);    //428
-   BO(b->ITEM16Hash);    //426
-   BO(b->CharacterHash); //424
-   BO(b->TimersHash);    //422
-   BO(b->TimerQueHash);  //420
+   BO(b->Block2Hash);    // 428
+   BO(b->ITEM16Hash);    // 426
+   BO(b->CharacterHash); // 424
+   BO(b->TimersHash);    // 422
+   BO(b->TimerQueHash);  // 420
 
-   BO(b->Block2Checksum);    //396
-   BO(b->ITEM16Checksum);    //394
-   BO(b->CharacterChecksum); //392
-   BO(b->TimersChecksum);    //390
-   BO(b->TimerQueChecksum);  //388
+   BO(b->Block2Checksum);    // 396
+   BO(b->ITEM16Checksum);    // 394
+   BO(b->CharacterChecksum); // 392
+   BO(b->TimersChecksum);    // 390
+   BO(b->TimerQueChecksum);  // 388
 
-   BO(b->Word22594); //364
-   BO(b->Word22592); //362
+   BO(b->Word22594); // 364
+   BO(b->Word22592); // 362
 }
 
 void swapBlock2(GAMEBLOCK2 *b)
 { // Swap and reverse byte order in second 128-byte
    // block of savegame file.
-   BO(b->Time);                  //228
-   BO(b->ranseed);               //224
-   BO(b->ObjectInHand);          //220
-   BO(b->numcharacter);          //218
-   BO(b->partyx);                //216
-   BO(b->partyy);                //214
-   BO(b->partyfacing);           //212
-   BO(b->partyLevel);            //210
-   BO(b->handChar);              //208
-   BO(b->MagicCaster);           //206
-   BO(b->NumTimer);              //204
-   BO(b->FirstAvailTimer);       //202
-   BO(b->MaxTimers);             //200
-   BO(b->ITEM16QueLen);          //198
-   BO(b->LastMonsterAttackTime); //196
-   BO(b->LastPartyMoveTime);     //192
-   BO(b->partyMoveDisableTimer); //188
-   BO(b->Word11712);             //186
-   BO(b->Word11714);             //184
-   BO(b->MaxITEM16);             //182
-   BO(b->TimerSequence);         //180
+   BO(b->Time);                  // 228
+   BO(b->ranseed);               // 224
+   BO(b->ObjectInHand);          // 220
+   BO(b->numcharacter);          // 218
+   BO(b->partyx);                // 216
+   BO(b->partyy);                // 214
+   BO(b->partyfacing);           // 212
+   BO(b->partyLevel);            // 210
+   BO(b->handChar);              // 208
+   BO(b->MagicCaster);           // 206
+   BO(b->NumTimer);              // 204
+   BO(b->FirstAvailTimer);       // 202
+   BO(b->MaxTimers);             // 200
+   BO(b->ITEM16QueLen);          // 198
+   BO(b->LastMonsterAttackTime); // 196
+   BO(b->LastPartyMoveTime);     // 192
+   BO(b->partyMoveDisableTimer); // 188
+   BO(b->Word11712);             // 186
+   BO(b->Word11714);             // 184
+   BO(b->MaxITEM16);             // 182
+   BO(b->TimerSequence);         // 180
 }
 
 void swapITEM16s()
@@ -483,7 +484,7 @@ void swapITEM16s()
    for(i = 0; i < d.MaxITEM16; i++)
    {
       d.Item16[i].word0 = LE16(d.Item16[i].word0);
-   };
+   }
 }
 
 void swapCharacter(i32 i)
@@ -509,12 +510,12 @@ void swapCharacter(i32 i)
    {
       pc->skills92[j].tempAdjust = LE16(pc->skills92[j].tempAdjust);
       pc->skills92[j].experience = LE32(pc->skills92[j].experience);
-   };
+   }
    for(j = 0; j < 30; j++)
    {
       pp = (i16 *)&pc->possessions[j];
       *pp = LE16(*pp);
-   };
+   }
    pc->load = LE16(pc->load);
    pc->shieldStrength = LE16(pc->shieldStrength);
 }
@@ -554,21 +555,21 @@ void recomputeLoads()
       {
          DEBUGLOAD(d.CH16482 + c, GetObjectWeight(d.CH16482[c].possessions[p]), +1, d.CH16482[c].possessions[p]);
          d.CH16482[c].load = sw(d.CH16482[c].load + GetObjectWeight(d.CH16482[c].Possession(p)));
-      };
-   };
-   //The item in hand gets added elsewhere.
+      }
+   }
+   // The item in hand gets added elsewhere.
 }
 #endif
 
 void swapTimers()
 {
    TIMER_SEARCH timerSearch;
-   //for (i32 i=0; i<d.MaxTimer(); i++)
+   // for (i32 i=0; i<d.MaxTimer(); i++)
    while(timerSearch.FindNextTimer())
    {
       TIMER *pTimer;
       pTimer = timerSearch.TimerAddr();
-      //pTimer->timerTime = LE32(pTimer->timerTime);
+      // pTimer->timerTime = LE32(pTimer->timerTime);
       pTimer->m_time = LE32(pTimer->m_time);
       pTimer->swapTimerSequence();
       switch(pTimer->Function())
@@ -610,8 +611,8 @@ void swapTimers()
          case 78:
             pTimer->swapTimerWord6();
             break;
-      };
-   };
+      }
+   }
 }
 
 void swapLevelDescriptors(i32 numLevel)
@@ -624,7 +625,7 @@ void swapLevelDescriptors(i32 numLevel)
       d.pLevelDescriptors[j].word10 = LE16(d.pLevelDescriptors[j].word10);
       d.pLevelDescriptors[j].word12 = LE16(d.pLevelDescriptors[j].word12);
       d.pLevelDescriptors[j].word14 = LE16(d.pLevelDescriptors[j].word14);
-   };
+   }
 }
 
 // *********************************************************
@@ -643,7 +644,7 @@ i16 WriteDataFile(i16 *pwbuf, i32 length)
    {
       result = WRITE(d.datafileHandle, length, (ui8 *)pwbuf);
       return (I16)(length == result ? 1 : 0);
-   };
+   }
 }
 
 //  TAG01d076
@@ -685,7 +686,7 @@ i16 WriteScrambled(pnt buf,
 }
 
 i16 WriteAndChecksum(ui8 *buf,
-                     i16 *pRunningChecksum, //updated
+                     i16 *pRunningChecksum, // updated
                      i32 numWord)
 {
    dReg D0, D6;
@@ -703,7 +704,7 @@ i16 WriteAndChecksum(ui8 *buf,
    {
       D6W = (UI16)(D6W + *(uA3++));
       //
-   };
+   }
    *pRunningChecksum = (UI16)(*pRunningChecksum + D6W);
    return 1;
 }
@@ -724,40 +725,40 @@ i16 ScrambleAndWrite(i16 *pwbuf)
    {
       D5W = (UI16)(D5W + LE16(*(pwA3++)));
       //    fprintf(a, "D5W = 0x%04x\n", D5W);
-   };
+   }
    // D5 is the sum of the second half of the buffer.
    D7W = 32;
    D6W = 0;
    pwA3 = pwbuf;
    for(;;)
-   { //trash the first 32 * 4 * 2 = 256 bytes.
-      //D0W = 0;//STRandom();
-      *pwA3 = 0; //STRandom();//(i16)STRandom();
+   { // trash the first 32 * 4 * 2 = 256 bytes.
+      // D0W = 0;//STRandom();
+      *pwA3 = 0; // STRandom();//(i16)STRandom();
       D6W = (UI16)(D6W + LE16(*(pwA3++)));
-      //D0W = 0;//STRandom();
-      *pwA3 = 0; //STRandom();//(i16)STRandom();
+      // D0W = 0;//STRandom();
+      *pwA3 = 0; // STRandom();//(i16)STRandom();
       D6W ^= LE16(*(pwA3++));
-      //D0W = 0;//STRandom();
-      *pwA3 = 0; //STRandom();//(i16)STRandom();
+      // D0W = 0;//STRandom();
+      *pwA3 = 0; // STRandom();//(i16)STRandom();
       D6W = (UI16)(D6W - LE16(*(pwA3++)));
       D7W--;
       if(D7W != 0)
       {
-         //D0W = 0;//STRandom();
-         *pwA3 = 0; //STRandom();//(i16)STRandom();
+         // D0W = 0;//STRandom();
+         *pwA3 = 0; // STRandom();//(i16)STRandom();
          D6W ^= LE16(*(pwA3++));
          continue;
-      };
+      }
       *(pwA3++) = LE16((ui16)(D5W ^ D6W));
       break;
-   };
-   //Scramble the 2nd 256 bytes.
+   }
+   // Scramble the 2nd 256 bytes.
    Unscramble((ui8 *)pwA3, LE16(pwbuf[29]), 128); // 128 words = 256 bytes
    D7W = WriteDataFile(pwbuf, 512);
-   //Then unscramble the 2nd 256 bytes again for use.
+   // Then unscramble the 2nd 256 bytes again for use.
    Unscramble((ui8 *)pwA3, LE16(pwbuf[29]), 128);
    return D7W;
-}
+};
 
 ui16 countDSAs()
 {
@@ -768,7 +769,7 @@ ui16 countDSAs()
       if(DSAIndex.GetDSA(i) == NULL)
          continue;
       numDSA++;
-   };
+   }
    return numDSA;
 }
 
@@ -776,14 +777,14 @@ void WriteDSAs(i32 handle)
 {
    i32 i;
    ui32 checksum;
-   WCS(handle); //Discard old checksum and start new.
+   WCS(handle); // Discard old checksum and start new.
    for(i = 0; i < 256; i++)
    {
       if(DSAIndex.GetDSA(i) == NULL)
          continue;
       WCS(&i);
       DSAIndex.GetDSA(i)->Write();
-   };
+   }
    checksum = WCS(handle);
    WRITE((i16)handle, 4, (ui8 *)&checksum);
 }
@@ -804,9 +805,9 @@ void WriteDSALevelIndex(i32 handle)
             triple[1] = (unsigned char)index;
             triple[2] = (unsigned char)DSAindex;
             WRITE((i16)handle, 3, (ui8 *)triple);
-         };
-      };
-   };
+         }
+      }
+   }
    triple[0] = triple[1] = triple[2] = 255;
    WRITE((i16)handle, 3, (ui8 *)triple);
 }
@@ -822,21 +823,21 @@ struct BlockDesc
 // *********************************************************
 // TAG001de4c
 RESTARTABLE _DisplayDiskMenu()
-{ //void
+{ // void
    static dReg D0, D1, D5, D6, D7;
    static aReg A3;
    static DBTYPE dbType;
    static i32 dbNum;
    static i16 *pwA3;
-   //static BlockDesc memBlocks[16];
+   // static BlockDesc memBlocks[16];
    static GAMEBLOCK1 *gb1A2;
    static GAMEBLOCK2 gb2;
 
    static i8 LOCAL_106[50];
    static i8 LOCAL_56[50];
    static i16 LOCAL_6;
-   static i16 LOCAL_4 = 0x0ff0; //Initialize to avoid warning
-   static RN obj_LOCAL_4 = RNeof;
+   static i16 LOCAL_4 = 0x0ff0; // Initialize to avoid warning
+   static RecordName obj_LOCAL_4 = RNeof;
    static i16 LOCAL_2;
    RESTARTMAP
    RESTART(1)
@@ -869,7 +870,7 @@ RESTARTABLE _DisplayDiskMenu()
       STHideCursor(HC56);
       TAG0207cc();
       RETURN;
-   };
+   }
    D0W = 0x0ff0; // Initialize to avoid warning
    D6W = 0x0ff0; // Initialize to avoid warning
    D7W = 0;
@@ -890,7 +891,7 @@ RESTARTABLE _DisplayDiskMenu()
              TranslateLanguage("READY TO SAVE GAME"), // "Put the Game Save Disk in ~"
              TranslateLanguage(d.Pointer22896),       // "Save and Play"
              TranslateLanguage(d.Pointer22900),       // "Save and Quit"
-             //d.Pointer22904, // "Format Floppy"
+             // d.Pointer22904, // "Format Floppy"
              TranslateLanguage(d.Pointer22912), // "Cancel"
              0,
              0,
@@ -912,18 +913,18 @@ RESTARTABLE _DisplayDiskMenu()
          hidingMenu = false;
 #endif
          goto tag01e52c; // free memory and return.
-      };
+      }
       D6W = (I16)((D5W == 1) ? 1 : 0);
       D0L = 0;
       STShowCursor(HC57);
-      SelectSaveGame(_5_, 0, 0, 1); //TAG0204bc
+      SelectSaveGame(_5_, 0, 0, 1); // TAG0204bc
       STHideCursor(HC57);
       D7W = 1;
       //    };
    } while(D7W == 0);
    DoMenu(_7_, NULL, d.Pointer22872, 0, 0, 0, 0, 0, 0, 0); // "Saving Game"
-   UNLINK((char *)d.Pointer22980);                         //TRAP 1 #0x41 "CSBGAMEx.BAK"
-   RENAME(0,                                               //TRAP 1 #0x56
+   UNLINK((char *)d.Pointer22980);                         // TRAP 1 #0x41 "CSBGAMEx.BAK"
+   RENAME(0,                                               // TRAP 1 #0x56
           d.SaveGameFilename,
           d.Pointer22980);
    d.datafileHandle = CREATE(d.SaveGameFilename, // TRAP 1 #0x3c
@@ -934,7 +935,7 @@ RESTARTABLE _DisplayDiskMenu()
       if(encipheredDataFile)
       {
          SETENCIPHERED(d.datafileHandle, encipheredDataFile, 64);
-      };
+      }
       if(simpleEncipher)
       {
          unsigned char simple[2];
@@ -942,7 +943,7 @@ RESTARTABLE _DisplayDiskMenu()
          simple[1] = 0;
          RC4_prepare_key(simple, 1);
          GETFILETABLE(d.datafileHandle)->Enciphered(true);
-      };
+      }
       {
          ASSERT(sizeof(EXTENDEDFEATURESBLOCK) == 512, "extendedFeatures");
          EXTENDEDFEATURESBLOCK efb;
@@ -967,7 +968,7 @@ RESTARTABLE _DisplayDiskMenu()
          if(simpleEncipher)
          {
             efb.flags |= EXTENDEDFEATURESBLOCK::SimpleEncryption;
-         };
+         }
          if(invisibleMonsters)
             efb.extendedFlags |= EXTENDEDFEATURESBLOCK::InvisibleMonsters;
 
@@ -991,7 +992,7 @@ RESTARTABLE _DisplayDiskMenu()
          if(overlayActive)
          {
             efb.extendedFlags |= EXTENDEDFEATURESBLOCK::OverlayActive;
-         };
+         }
          efb.overlayOrdinal = currentOverlay.m_overlayNumber + 1;
          efb.overlayP1 = currentOverlay.m_p1;
          efb.overlayP2 = currentOverlay.m_p2;
@@ -1014,12 +1015,12 @@ RESTARTABLE _DisplayDiskMenu()
          {
             WriteDSAs(d.datafileHandle);
             DSAIndex.WriteTracing();
-         };
+         }
 
          WriteGameInfo(d.datafileHandle, efb.gameInfoSize);
          // *****************************************
          WriteDSALevelIndex(d.datafileHandle);
-      };
+      }
       if(d.EmptyHanded == 0)
       {
          ASSERT(RememberToPutObjectInHand == -1, "objInHand");
@@ -1028,14 +1029,14 @@ RESTARTABLE _DisplayDiskMenu()
          obj_LOCAL_4 = d.objectInHand;
          DEBUGLOAD(d.CH16482 + d.HandChar, D1W, -1, d.objectInHand);
          d.CH16482[d.HandChar].load =
-             sw(d.CH16482[d.HandChar].load - D1W); //owner of cursor
-      };
+             sw(d.CH16482[d.HandChar].load - D1W); // owner of cursor
+      }
       gb2.Time = d.Time;
       gb2.ranseed = d.RandomNumber;
       if(TimerTraceActive)
       {
          fprintf(GETFILE(TraceFile), "Saving d.RandomNumber to savefile = %08x\n", d.RandomNumber);
-      };
+      }
       gb2.numcharacter = d.NumCharacter;
       gb2.partyx = d.partyX;
       gb2.partyy = d.partyY;
@@ -1057,28 +1058,28 @@ RESTARTABLE _DisplayDiskMenu()
       gb2.ObjectInHand = d.objectInHand.ConvertToInteger();
       gb2.MaxITEM16 = d.MaxITEM16;
       ClearMemory((ui8 *)gb2.FILL180, 78);
-      //ClearMemory((pnt)&memBlocks, 96);
-      //    A0 = LOCAL_234;
-      //    pntGear(LOCAL_330) = A0;
-      //memBlocks[0].address = (pnt)&gb2;
-      //    wordGear(LOCAL_330+330-326) = 128;
-      //memBlocks[0].size = 128;
-      //    pntGear(LOCAL_330+330-324) = (pnt)d.Item16;
-      //memBlocks[1].address = (pnt)d.Item16;
-      //    wordGear(LOCAL_330+330-320) = 16 * d.MaxITEM16;
-      //memBlocks[1].size = sw(16 * d.MaxITEM16);
-      //    pntGear(LOCAL_330+330-318) = (pnt)&d.CH16482;
-      //memBlocks[2].address = (pnt)d.CH16482;
-      //    wordGear(LOCAL_330+330-314) = 3328;
-      //memBlocks[2].size = 3328;
-      //    pntGear(LOCAL_330+330-312) = (pnt)d.Timers;
-      //memBlocks[3].address = (pnt)allocateTimers.Timers();
-      //    wordGear(LOCAL_330+330-308) = 10 * d.MaxTimers;
-      //memBlocks[3].size = sw(10 * d.MaxTimer());
-      //    pntGear(LOCAL_330+330-306) = (pnt)d.timerQue;
-      //memBlocks[4].address = (pnt)d.timerQue;
-      //    wordGear(LOCAL_330+330-302) = 2 * d.MaxTimers;
-      //memBlocks[4].size = sw(2 * d.MaxTimers);
+      // ClearMemory((pnt)&memBlocks, 96);
+      //     A0 = LOCAL_234;
+      //     pntGear(LOCAL_330) = A0;
+      // memBlocks[0].address = (pnt)&gb2;
+      //     wordGear(LOCAL_330+330-326) = 128;
+      // memBlocks[0].size = 128;
+      //     pntGear(LOCAL_330+330-324) = (pnt)d.Item16;
+      // memBlocks[1].address = (pnt)d.Item16;
+      //     wordGear(LOCAL_330+330-320) = 16 * d.MaxITEM16;
+      // memBlocks[1].size = sw(16 * d.MaxITEM16);
+      //     pntGear(LOCAL_330+330-318) = (pnt)&d.CH16482;
+      // memBlocks[2].address = (pnt)d.CH16482;
+      //     wordGear(LOCAL_330+330-314) = 3328;
+      // memBlocks[2].size = 3328;
+      //     pntGear(LOCAL_330+330-312) = (pnt)d.Timers;
+      // memBlocks[3].address = (pnt)allocateTimers.Timers();
+      //     wordGear(LOCAL_330+330-308) = 10 * d.MaxTimers;
+      // memBlocks[3].size = sw(10 * d.MaxTimer());
+      //     pntGear(LOCAL_330+330-306) = (pnt)d.timerQue;
+      // memBlocks[4].address = (pnt)d.timerQue;
+      //     wordGear(LOCAL_330+330-302) = 2 * d.MaxTimers;
+      // memBlocks[4].size = sw(2 * d.MaxTimers);
       gb1A2->SaveOption = D6W;
       MemMove((ui8 *)d.Byte22808, (ui8 *)gb1A2->Byte22808, 132);
       gb1A2->RandomGameID = d.RandomGameID;
@@ -1088,26 +1089,26 @@ RESTARTABLE _DisplayDiskMenu()
       gb1A2->Word22592 = d.Word22592;
       //  for (D5W=0; D5W<16; D5W++)
       //  {
-      gb1A2->Block2Hash = 0;                  //STRandom();//(i16)STRandom();
-      gb1A2->ITEM16Hash = 0;                  //STRandom();//(i16)STRandom();
-      gb1A2->CharacterHash = 0;               //STRandom();//(i16)STRandom();
-      gb1A2->TimersHash = 0;                  //STRandom();//(i16)STRandom();
-      gb1A2->TimerQueHash = 0;                //STRandom();//(i16)STRandom();
-      gb1A2->totalMoveCount = totalMoveCount; //STRandom();//(i16)STRandom();
-      //gb1A2->Hash324       = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash326 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash328 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash330 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash332 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash334 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash336 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash338 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash340 = 0; //STRandom();//(i16)STRandom();
-      gb1A2->Hash342 = 0; //STRandom();//(i16)STRandom();
-                          //     wordGear(A2+312+2*D5W) = D0W;
+      gb1A2->Block2Hash = 0;                  // STRandom();//(i16)STRandom();
+      gb1A2->ITEM16Hash = 0;                  // STRandom();//(i16)STRandom();
+      gb1A2->CharacterHash = 0;               // STRandom();//(i16)STRandom();
+      gb1A2->TimersHash = 0;                  // STRandom();//(i16)STRandom();
+      gb1A2->TimerQueHash = 0;                // STRandom();//(i16)STRandom();
+      gb1A2->totalMoveCount = totalMoveCount; // STRandom();//(i16)STRandom();
+      // gb1A2->Hash324       = 0; //STRandom();//(i16)STRandom();
+      gb1A2->Hash326 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash328 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash330 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash332 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash334 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash336 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash338 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash340 = 0; // STRandom();//(i16)STRandom();
+      gb1A2->Hash342 = 0; // STRandom();//(i16)STRandom();
+                          //      wordGear(A2+312+2*D5W) = D0W;
                           //
-                          //  };
-                          //for (D5W=0; D5W<5; D5W++)
+                          //   };
+                          // for (D5W=0; D5W<5; D5W++)
                           //{
       //
       //.........................................................
@@ -1145,15 +1146,15 @@ RESTARTABLE _DisplayDiskMenu()
           gb1A2->TimerQueHash,
           (2 * gameTimers.MaxTimer()) / 2);
       gameTimers.swapTimerQue();
-      //wordGear(gb1A2+344+2*D5W) = D0W;
+      // wordGear(gb1A2+344+2*D5W) = D0W;
       //
-      //};
+      // };
       swapBlock1(gb1A2);
       D0W = ScrambleAndWrite((i16 *)gb1A2);
       swapBlock1(gb1A2);
       if(D0W == 0)
          goto tag01e4f0;
-      //for (D5W=0; D5W<5; D5W++)
+      // for (D5W=0; D5W<5; D5W++)
       //{
       swapBlock2(&gb2);
       D0W = WriteScrambled(
@@ -1209,7 +1210,7 @@ RESTARTABLE _DisplayDiskMenu()
       pwA3 = &LOCAL_6;
 
       {
-         //Write all Global variables to expool.
+         // Write all Global variables to expool.
          i32 i, size;
          ui32 *pRecord;
          for(i = 0; i < numGlobalVariables / 16; i++)
@@ -1218,8 +1219,8 @@ RESTARTABLE _DisplayDiskMenu()
             if(size < 16)
                UI_MessageBox("Error saving global variables", "Warning", MESSAGE_OK);
             memcpy(pRecord, globalVariables + 16 * i, 16 * sizeof(*pRecord));
-         };
-      };
+         }
+      }
       {
          // Write current palette to expool
          int i;
@@ -1234,8 +1235,8 @@ RESTARTABLE _DisplayDiskMenu()
             key = (EDT_Palette << 24) + i;
             expool.Read(key, junk, 16); // Discard the old record
             expool.Write(key, (ui32 *)(palette + 64 * i), 16);
-         };
-      };
+         }
+      }
 
       LOCAL_6 = 0; // initial hash
       d.dungeonDatIndex->Swap();
@@ -1304,12 +1305,12 @@ RESTARTABLE _DisplayDiskMenu()
       if(disableSaves)
       {
          expool.Write((EDT_Database << 24) | (EDBT_DisableSaves << 16), NULL, 0);
-      };
+      }
       for(dbNum = 0; dbNum < 16; dbNum++)
       {
-         D1W = d.dungeonDatIndex->DBSize(dbNum); //Number of entries
+         D1W = d.dungeonDatIndex->DBSize(dbNum); // Number of entries
          D0L = dbEntrySizes[dbNum];
-         //0e462 d0c0                     ADD.W    D0,A0
+         // 0e462 d0c0                     ADD.W    D0,A0
          if(D1W != 0)
          {
             db.swap(dbNum);
@@ -1325,7 +1326,7 @@ RESTARTABLE _DisplayDiskMenu()
          if(D0W == 0)
             goto tag01e4f0;
          //
-      };
+      }
       D0W = WriteAndChecksum(
           (ui8 *)d.cellFlagArray,
           pwA3,
@@ -1346,7 +1347,7 @@ RESTARTABLE _DisplayDiskMenu()
          RecordFile_Record((saveSignature1 >> 16) & 0xffff,
                            saveSignature1 & 0xffff,
                            0x6668);
-      };
+      }
       CLOSE(d.datafileHandle);
       // *****************************************************************
       // The following was an attempt to make it possible to
@@ -1354,26 +1355,26 @@ RESTARTABLE _DisplayDiskMenu()
       // The 'Restore' operation did a 'ProcessMonstersOnLevel'.  So
       // I figured that if I did it during a 'Save' then the results
       // would be identical.
-      TAG00bd40(); //Remove the Active Monster (ITEM16) entries
+      TAG00bd40(); // Remove the Active Monster (ITEM16) entries
       ProcessMonstersOnLevel();
-      SmartDiscard(true); //Initialize Smart Discard.  0x2223
-                          //in the playfile.log also does this
-                          // *****************************************************************
-      if(D6W == 0)        //if ("Save and Quit");
+      SmartDiscard(true); // Initialize Smart Discard.  0x2223
+                          // in the playfile.log also does this
+                          //  *****************************************************************
+      if(D6W == 0)        // if ("Save and Quit");
       {
-         //STShowCursor(HCccc);
-         STShowCursor(HC57); //20130821
+         // STShowCursor(HCccc);
+         STShowCursor(HC57); // 20130821
          ShowCredits(_2_, 0);
-      };
+      }
       if(d.EmptyHanded == 0)
       {
          DEBUGLOAD(d.CH16482 + d.HandChar, LOCAL_4, +1, obj_LOCAL_4);
          d.CH16482[d.HandChar].load =
-             sw(d.CH16482[d.HandChar].load + LOCAL_4); //owner of cursor
-      };
+             sw(d.CH16482[d.HandChar].load + LOCAL_4); // owner of cursor
+      }
       d.CanRestartFromSavegame = 1;
       goto tag01e52c;
-   };
+   }
 tag01e4f0:
    CLOSE(d.datafileHandle);
    DoMenu(_8_,
@@ -1398,10 +1399,10 @@ tag01e52c:
    RETURN;
 }
 
-void CheckMonster(RN obj)
+void CheckMonster(RecordName obj)
 {
    DB4 *pMonster;
-   RN poss;
+   RecordName poss;
    i32 numMonster, monsterSize, monsterType;
    i32 pos1, pos2;
    static bool warning4Issued = false, warning2Issued = false;
@@ -1411,9 +1412,9 @@ void CheckMonster(RN obj)
    monsterSize = d.MonsterDescriptor[monsterType].horizontalSize();
    switch(monsterSize)
    {
-      case 0: //Any number of monsters is OK.
+      case 0: // Any number of monsters is OK.
          break;
-      case 1: //size two.....worms perhaps?
+      case 1: // size two.....worms perhaps?
          if(numMonster > 2)
          {
             if(!warning4Issued)
@@ -1422,15 +1423,15 @@ void CheckMonster(RN obj)
             pMonster->numMonM1(1);
             pMonster->groupIndex(2);
             pMonster->facing(0);
-         };
+         }
          pos1 = pMonster->groupIndex() & 3;
          pos2 = (pMonster->groupIndex() >> 2) & 3;
          if((numMonster == 2) && ((pos1 ^ pos2) != 2))
          {
-            //UI_MessageBox("Size 2 monsters improperly positioned","Fixed...",MESSAGE_OK);
+            // UI_MessageBox("Size 2 monsters improperly positioned","Fixed...",MESSAGE_OK);
             pMonster->groupIndex(2);
             pMonster->facing(0);
-         };
+         }
          break;
       case 2:
          if(numMonster > 1)
@@ -1441,7 +1442,7 @@ void CheckMonster(RN obj)
             pMonster->numMonM1(0);
             pMonster->groupIndex(255);
             pMonster->facing(0);
-         };
+         }
          pos1 = pMonster->groupIndex();
          // It appears that position is not important for size 4 monsters
          if(pos1 != 255)
@@ -1449,24 +1450,24 @@ void CheckMonster(RN obj)
             //  UI_MessageBox("Size 4 monsters improperly positioned","Fixed...",MESSAGE_OK);
             pMonster->groupIndex(255);
             pMonster->facing(0);
-         };
+         }
          break;
       default:
          break;
-   };
+   }
    for(poss = pMonster->possession(); poss != RNeof; poss = FindNextMonster(poss))
    {
       if(poss.dbType() != dbMONSTER)
          continue;
       CheckMonster(poss);
-   };
+   }
 }
 
 void CheckMonsters()
 {
    i32 numLevel, width, height;
    i32 level, x, y;
-   RN obj;
+   RecordName obj;
    numLevel = d.dungeonDatIndex->NumLevel();
    for(level = 0; level < numLevel; level++)
    {
@@ -1482,9 +1483,9 @@ void CheckMonsters()
             {
                CheckMonster(obj);
             };
-         };
-      };
-   };
+         }
+      }
+   }
 }
 
 void CheckCelltypes()
@@ -1516,10 +1517,10 @@ void CheckCelltypes()
                   break;
                default:
                   *pcell = (CELLFLAG)(((*pcell) & 0x1f) | (roomOPEN << 5));
-            };
-         };
-      };
-   };
+            }
+         }
+      }
+   }
 }
 
 void ExtendPortraits()
@@ -1545,8 +1546,8 @@ void ExtendPortraits()
          pActuator->BlockDisables(false);
          pActuator->DisableMessage(0);
          pActuator->Position(0);
-      };
-   };
+      }
+   }
    extendedPortraits = true;
 }
 
@@ -1557,23 +1558,23 @@ static str1eb18 b; // Our local variables
 // *********************************************************
 //          TAG01eb18
 RESTARTABLE _ReadEntireGame()
-{ //i16
+{ // i16
    static dReg D0, D1, D5, D6, D7;
    static dReg saveD0;
    static aReg A3;
    i32 numLevel;
    RESTARTMAP
-   //RESTART(1)
+   // RESTART(1)
    RESTART(2)
    RESTART(3)
    RESTART(4)
    RESTART(5)
    RESTART(6)
    RESTART(7)
-   //RESTART(8)
+   // RESTART(8)
    RESTART(9)
-   //RESTART(10)
-   //RESTART(11)
+   // RESTART(10)
+   // RESTART(11)
    RESTART(12)
    RESTART(13)
    RESTART(14)
@@ -1586,7 +1587,7 @@ RESTARTABLE _ReadEntireGame()
    extendedPortraits = false; // 20150806
    memset(&b, 0, sizeof(b));
    D6L = 0;
-   //SaveRegs(0x0710);
+   // SaveRegs(0x0710);
    D5W = 0;
    d.Word22596 = 2;
    d.Word22598 = 1;
@@ -1597,7 +1598,7 @@ RESTARTABLE _ReadEntireGame()
    if(d.gameState == GAMESTATE_ResumeSavedGame)
       goto tag01ebbe;
    D0W = InsertDisk(0, 1);
-   //D0W = i16Result;
+   // D0W = i16Result;
    if(D0W == 0)
       D0W = 1;
    else
@@ -1611,13 +1612,13 @@ RESTARTABLE _ReadEntireGame()
       sprintf(msg, "Cannot open dungeon file '%s'", dungeonName);
       die(50, msg);
       UI_free(msg);
-   };
+   }
 tag01eb82:
    Signature(d.datafileHandle, &dungeonSignature1, &dungeonSignature2);
    if(encipheredDataFile != NULL)
    {
       SETENCIPHERED(d.datafileHandle, encipheredDataFile, 64);
-   };
+   }
    d.CanRestartFromSavegame = 0;
    d.NumCharacter = 0;
    ASSERT(RememberToPutObjectInHand == -1, "objInHand");
@@ -1625,10 +1626,10 @@ tag01eb82:
    {
       CURSORFILTER_PACKET cfp;
       cfp.type = CURSORFILTER_ReadGame;
-      cfp.object = RN(RNnul).ConvertToInteger();
+      cfp.object = RecordName(RNnul).ConvertToInteger();
       CursorFilter(&cfp);
-   };
-   d.objectInHand = RN(RNnul);
+   }
+   d.objectInHand = RecordName(RNnul);
 
    if(IsPlayFileOpen())
    {
@@ -1640,7 +1641,7 @@ tag01eb82:
          ans = UI_MessageBox("Replay Starting Random Error", "Error", MESSAGE_YESNO);
          if(ans == MESSAGE_IDYES)
             die(0x7bbd);
-      };
+      }
       // d.RandomNumber was set in PlayFile.Play.
    }
    else
@@ -1650,13 +1651,13 @@ tag01eb82:
       MQ.x = (ui16)((d.RandomNumber >> 16) & 0xffff);
       MQ.y = (ui16)(d.RandomNumber & 0xffff);
       RecordFile_Record(&MQ);
-   };
+   }
    D0L = STRandom();
    D0L &= 0xffff;
-   //SaveRegs(0x8000); // D0
+   // SaveRegs(0x8000); // D0
    saveD0 = D0;
    D1L = STRandom();
-   //RestoreRegs(0x0001);// D0
+   // RestoreRegs(0x0001);// D0
    D0 = saveD0;
    /////////
    D0L = D0UW * D1UW;
@@ -1677,9 +1678,9 @@ tag01ebec:
 tag01ec08:
    if(A3 == NULL)
    {
-      //STHideCursor(HC59);
+      // STHideCursor(HC59);
       goto tag01ec6a;
-   };
+   }
 tag01ec12:
    DoMenu(_12_,
           A3,
@@ -1705,7 +1706,7 @@ tag01ec56:
 tag01ec6a:
    D0L = 1;
    STShowCursor(HC33);
-   SelectSaveGame(_9_, 1, 1, 1); //TAG0204bc
+   SelectSaveGame(_9_, 1, 1, 1); // TAG0204bc
    STHideCursor(HC33);
    d.Word22972 = 1;
    D6W = 0;
@@ -1741,15 +1742,15 @@ tag01ece8:
    if(encipheredDataFile)
    {
       SETENCIPHERED(d.datafileHandle, encipheredDataFile, 64);
-   };
+   }
    if(d.Word22972 != 1)
       goto tag01ec12;
    // Read the first 512 bytes from the game file and
    // unscramble it.
    ExtendedFeaturesSize = ReadExtendedFeatures(d.datafileHandle);
-   D0W = ReadUnscrambleBlock((ui8 *)&b.gb1); //TAG01db46
+   D0W = ReadUnscrambleBlock((ui8 *)&b.gb1); // TAG01db46
    if(D0W == 0)
-      goto tag01efee;  //If error
+      goto tag01efee;  // If error
    swapBlock1(&b.gb1); // Swap words/longs as necessary in block 1
    totalMoveCount = b.gb1.totalMoveCount;
    if(d.PartyHasDied == 0)
@@ -1760,7 +1761,7 @@ tag01ece8:
    goto tag01ebec;
 tag01ed54:
    d.RandomGameID = b.gb1.RandomGameID;
-   MemMove((ui8 *)b.gb1.Byte22808, (ui8 *)d.Byte22808, 132); //All zeroes in my CSBGAME2.DAT
+   MemMove((ui8 *)b.gb1.Byte22808, (ui8 *)d.Byte22808, 132); // All zeroes in my CSBGAME2.DAT
    D0W = b.gb1.Byte22596;
    if(D0W == 1)
       goto tag01ed86;
@@ -1781,7 +1782,7 @@ tag01ed86:
    if(TimerTraceActive)
    {
       fprintf(GETFILE(TraceFile), "Setting d.RandomNumber from savefile = %08x\n", d.RandomNumber);
-   };
+   }
    d.NumCharacter = b.gb2.numcharacter;
    d.partyX = b.gb2.partyx;
    d.partyY = b.gb2.partyy;
@@ -1806,20 +1807,20 @@ tag01ed86:
       cfp.object = d.objectInHand.ConvertToInteger();
       cfp.type = CURSORFILTER_ReadGame;
       CursorFilter(&cfp);
-   };
+   }
 
-   //RememberToPutObjectInHand = b.gb2.ObjectInHand;
+   // RememberToPutObjectInHand = b.gb2.ObjectInHand;
    d.MaxITEM16 = b.gb2.MaxITEM16;
    do
    {
-      HandleMouseEvents(_16_, -999887); //initialize
+      HandleMouseEvents(_16_, -999887); // initialize
    } while(intResult & 1);
    D0W = d.PartyHasDied;
    if(D0W == 0)
    {
       gameTimers.InitializeTimers();
       InitializeItem16();
-   };
+   }
    if(d.MaxITEM16 != 0)
    {
       D0W = UnscrambleStream((ui8 *)d.Item16,  // buffer
@@ -1829,7 +1830,7 @@ tag01ed86:
       if(D0W == 0)
          goto tag01efee;
       swapITEM16s();
-   };
+   }
    D0W = UnscrambleStream((ui8 *)d.CH16482, // buffer
                           3328,             // # bytes
                           b.gb1.CharacterHash,
@@ -1839,14 +1840,14 @@ tag01ed86:
    swapCharacterData();
    {
       int timerSize;
-      //timerSize = sequencedTimers?sizeof(TIMER):10;
+      // timerSize = sequencedTimers?sizeof(TIMER):10;
       timerSize = sequencedTimers ? 12 : 10;
       timerSize = extendedTimers ? 16 : timerSize;
       D0W = UnscrambleStream((ui8 *)gameTimers.pTimer(0),             // buffer
                              (ui16)gameTimers.MaxTimer() * timerSize, // # bytes
                              b.gb1.TimersHash,                        // initial hash
                              b.gb1.TimersChecksum);                   // expected checksum
-   };
+   }
    if(D0W == 0)
       goto tag01efee;
    D0W = UnscrambleStream((ui8 *)gameTimers.TimerQueue(),  // buffer
@@ -1874,14 +1875,14 @@ tag01ed86:
                for(j = 0; j < sizeof(TIMER); j++)
                {
                   fprintf(GETFILE(TraceFile), "%02x ", *(pTimer + j) & 0xff);
-               };
+               }
                fprintf(GETFILE(TraceFile), "\n");
-            };
-         };
-      };
+            }
+         }
+      }
 
       gameTimers.ConvertToSequencedTimers();
-   };
+   }
 
    if(GETFILE(TraceFile) != NULL)
    {
@@ -1923,12 +1924,12 @@ tag01eec4:
    {
       i32 i, size;
       ui32 *pRecord;
-      //Remove all current Global Variables.
+      // Remove all current Global Variables.
       if(globalVariables != NULL)
          UI_free(globalVariables);
       numGlobalVariables = 0;
       globalVariables = NULL;
-      //Read all Global variables.
+      // Read all Global variables.
       for(i = 0; i < 999; i++)
       {
          size = expool.Locate((EDT_Database << 24) | (EDBT_GlobalVariables << 16) | i, &pRecord);
@@ -1937,10 +1938,10 @@ tag01eec4:
          numGlobalVariables += 16;
          globalVariables = (ui32 *)UI_realloc(globalVariables, 16 * (i + 1) * sizeof(ui32), MALLOC105);
          memcpy(&globalVariables[16 * i], pRecord, 16 * sizeof(ui32));
-      };
+      }
       // Now we will see if a record of DSA tracing flags exists.
       DSAIndex.ReadTracing();
-   };
+   }
    {
       // Read the palette in effect at time of save.
       int i;
@@ -1960,21 +1961,21 @@ tag01eec4:
          {
             pRecord = NULL;
             break;
-         };
-      };
+         }
+      }
       if(pRecord != NULL)
       {
          memcpy(overlayPaletteRed, palette + 0, 512);
          memcpy(overlayPaletteGreen, palette + 512, 512);
          memcpy(overlayPaletteBlue, palette + 1024, 512);
-      };
-   };
+      }
+   }
    {
       ui32 junk[32];
       disableSaves = false;
       while(expool.Read((EDT_Database << 24) | (EDBT_DisableSaves << 16), junk, 32) >= 0)
          disableSaves = true;
-   };
+   }
    {
       ui32 *pRec;
       if(expool.Locate((EDT_Database << 24) + (EDBT_DeleteDuplicateTimers << 16), &pRec) < 0)
@@ -1984,8 +1985,8 @@ tag01eec4:
       else
       {
          deleteDuplicateTimers = *pRec;
-      };
-   };
+      }
+   }
 
    {
       ui32 *pRec;
@@ -1996,8 +1997,8 @@ tag01eec4:
       else
       {
          EDBT_Debuging_data = *pRec;
-      };
-   };
+      }
+   }
 
    EDBT_CSBGraphicsSignature_data = 0;
    EDBT_GraphicsSignature_data = 0;
@@ -2013,7 +2014,7 @@ tag01eec4:
       else
       {
          EDBT_CSBGraphicsSignature_data = *pRec;
-      };
+      }
 
       if(expool.Locate((EDT_Database << 24) + (EDBT_RuntimeFileSignatures << 16) + 2, &pRec) < 1)
       {
@@ -2022,7 +2023,7 @@ tag01eec4:
       else
       {
          EDBT_CSBversion_data = *pRec;
-      };
+      }
 
       if(expool.Locate((EDT_Database << 24) + (EDBT_RuntimeFileSignatures << 16) + 1, &pRec) < 1)
       {
@@ -2031,8 +2032,8 @@ tag01eec4:
       else
       {
          EDBT_GraphicsSignature_data = *pRec;
-      };
-   };
+      }
+   }
 
    openGraphicsFile(); // Force a graphics.dat signature check
    closeGraphicsFile();
@@ -2046,17 +2047,17 @@ tag01eec4:
    {
       CLOSE(d.datafileHandle);
       goto tag01efee;
-   };
+   }
 #ifdef _DEBUG
-   //An early version made the character load weight wrong.
-   //We will fix them up as we read the saved games.
+   // An early version made the character load weight wrong.
+   // We will fix them up as we read the saved games.
    recomputeLoads();
 #endif
    numLevel = d.dungeonDatIndex->NumLevel();
    if(numLevel > 2)
    {
-      ItemsRemainingOK = true; //Enable Menu "view" "items remaining"
-   };
+      ItemsRemainingOK = true; // Enable Menu "view" "items remaining"
+   }
    CLOSE(d.datafileHandle);
    if(d.gameState == GAMESTATE_ResumeSavedGame)
       goto tag01ef2c;
@@ -2064,7 +2065,7 @@ tag01eec4:
    InitializeItem16();
    do
    {
-      HandleMouseEvents(_15_, -999887); //Cue to initialize
+      HandleMouseEvents(_15_, -999887); // Cue to initialize
    } while(intResult & 1);
    if(D5W == 0)
       goto tag01ef1c;
@@ -2140,17 +2141,16 @@ tag01f036:
    PRINTLINE(d.Pointer22856);
    die(0xbad);
    ;
-   //goto tag01f036;
-   //tag01f046:
-   //RestoreRegs(0x08e0);
+   // goto tag01f036;
+   // tag01f046:
+   // RestoreRegs(0x08e0);
    RETURN_i16(D0W);
 }
 
 // *********************************************************
 //
 // *********************************************************
-void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
-                          i32 level, i32 x, i32 y)
+void ConvertListOfObjects(RecordName *pRN, bool DuplicateOK, i32 level, i32 x, i32 y)
 {
    i32 dbNum, pos, idx;
    i32 i, newDML, duplicate;
@@ -2161,7 +2161,7 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
       {
          UI_MessageBox("Illegal object", "Sorry", MB_OK);
          die(0xeed18);
-      };
+      }
       dbNum = (pRN->ConvertToInteger() >> 10) & 15;
       pos = (pRN->ConvertToInteger() >> 14) & 3;
       idx = pRN->ConvertToInteger() & 0x3ff;
@@ -2172,11 +2172,11 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
          UI_MessageBox(msg, "Sorry", MB_OK);
          *pRN = RNeof;
          return;
-      };
+      }
       pDB = db.GetCommonAddress(DBTYPE(dbNum), idx);
       duplicate = -1;
       for(i = 1; i < dataMapLength; i++)
-      { //Search to see if it is already present
+      { // Search to see if it is already present
          if((dataTypeMap[i] & 15) != dbNum)
             continue;
          if(dataIndexMap[i] != idx)
@@ -2190,8 +2190,8 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
          {
             UI_MessageBox("Duplicated Object", "Sorry", MB_OK);
             die(0xccdde);
-         };
-      };
+         }
+      }
       if(duplicate >= 0)
       {
          pRN->ConstructFromInteger(duplicate);
@@ -2207,13 +2207,13 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
             dataTypeMap[0] = 0;
             dataIndexMap[0] = 0;
             dataMapLength = 1;
-         };
+         }
          dataTypeMap[dataMapLength] = (ui8)((pos << 4) | dbNum);
          dataIndexMap[dataMapLength] = (ui16)idx;
          dataMapLength++;
          pRN->ConstructFromInteger(dataMapLength - 1);
-      };
-      if(duplicate == -1) //Don't convert objects twice.
+      }
+      if(duplicate == -1) // Don't convert objects twice.
       {
          switch(dbNum)
          {
@@ -2223,8 +2223,8 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
                if(pChest->contents() != RNeof)
                {
                   ConvertListOfObjects(pChest->pContents(), false, level, x, y);
-               };
-            };
+               }
+            }
             break;
             case dbMONSTER: {
                DB4 *pMonster;
@@ -2232,8 +2232,8 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
                if(pMonster->possession() != RNeof)
                {
                   ConvertListOfObjects(pMonster->pPossession(), false, level, x, y);
-               };
-            };
+               }
+            }
             break;
             case dbMISSILE: {
                DB14 *pMissile;
@@ -2241,22 +2241,22 @@ void ConvertListOfObjects(RN *pRN, bool DuplicateOK,
                if((pMissile->flyingObject() != RNeof) && !pMissile->flyingObject().IsMagicSpell())
                {
                   ConvertListOfObjects(pMissile->pFlyingObject(), true, level, x, y);
-               };
-            };
+               }
+            }
             break;
             case dbSCROLL:
-               //Nothing to do.  It has index of Text Entry.
+               // Nothing to do.  It has index of Text Entry.
                break;
-         };
-      };
+         }
+      }
       pRN = &(pDB->m_link);
-   };
+   }
 }
 
 void ConvertTimers()
 {
    TIMER_SEARCH timerSearch;
-   //for (i32 i=0; i<d.MaxTimer(); i++)
+   // for (i32 i=0; i<d.MaxTimer(); i++)
    while(timerSearch.FindNextTimer())
    {
       TIMER *pTimer;
@@ -2275,8 +2275,8 @@ void ConvertTimers()
          case 61:
             ConvertListOfObjects(pTimer->pTimerObj8(), false, 0, -3, 0);
             break;
-      };
-   };
+      }
+   }
 }
 
 void ConvertCharacters()
@@ -2288,13 +2288,13 @@ void ConvertCharacters()
       {
          if(d.CH16482[i].Possession(j) != RNnul)
          {
-            RN temp;
+            RecordName temp;
             temp = d.CH16482[i].Possession(j);
             ConvertListOfObjects(&temp, false, 0, -4, 0);
             d.CH16482[i].SetPossession(j, temp, true);
-         };
-      };
-   };
+         }
+      }
+   }
 }
 
 i32 readOldScrollDatabase(i16 *pCheckSum)
@@ -2309,22 +2309,22 @@ i32 readOldScrollDatabase(i16 *pCheckSum)
    entrySize = sizeof(DB7);
    numEnt = d.dungeonDatIndex->DBSize(dbSCROLL);
    if(numEnt == 0)
-      return 1; //OK
+      return 1; // OK
    db.Allocate(dbSCROLL, numEnt);
    pDB = db.GetCommonAddress(DBTYPE(dbSCROLL), 0);
    status = FetchDataBytes((ui8 *)pDB, pCheckSum, (ui16)oldEntrySize * numEnt);
    if(status == 0)
       return 0;
-   //Now make the entries the correct size.
+   // Now make the entries the correct size.
    for(i = numEnt - 1; i >= 0; i--)
    {
       pOld = ((ui8 *)pDB) + oldEntrySize * i;
-      *(ui16 *)pOld = LE16(*(ui16 *)pOld);             //The link
-      *(ui16 *)(pOld + 2) = LE16(*(ui16 *)(pOld + 2)); //The text index and open flag.
+      *(ui16 *)pOld = LE16(*(ui16 *)pOld);             // The link
+      *(ui16 *)(pOld + 2) = LE16(*(ui16 *)(pOld + 2)); // The text index and open flag.
       pNew = ((ui8 *)pDB) + entrySize * i;
       memmove(pNew, pOld, 4);
-   };
-   return 1; //OK
+   }
+   return 1; // OK
 }
 
 i32 AllocateIndirectIndex(DBTYPE dbType, i32 dbIndex)
@@ -2340,9 +2340,9 @@ i32 AllocateIndirectIndex(DBTYPE dbType, i32 dbIndex)
          if(emptyIndexEntry < 0)
          {
             emptyIndexEntry = i;
-         };
+         }
          continue;
-      };
+      }
       if((dataTypeMap[i] & 15) != dbType)
          continue;
       pDBC = db.GetCommonAddress(dbType, dataIndexMap[i]);
@@ -2350,21 +2350,21 @@ i32 AllocateIndirectIndex(DBTYPE dbType, i32 dbIndex)
       {
          emptyIndexEntry = i;
          break;
-      };
-   };
+      }
+   }
    if(emptyIndexEntry == -1)
    {
       if(dataMapLength > 0xff00 - 100)
       {
          return -1;
-      };
+      }
       newDML = 32 * (dataMapLength / 32) + 33;
       dataIndexMap = (ui16 *)UI_realloc(dataIndexMap, 2 * newDML, MALLOC053);
       dataTypeMap = (ui8 *)UI_realloc(dataTypeMap, newDML, MALLOC054);
       emptyIndexEntry = dataMapLength;
       dataMapLength++;
       dataIndexMap[emptyIndexEntry] = 0xffff;
-   };
+   }
    dataIndexMap[emptyIndexEntry] = (ui16)dbIndex;
    dataTypeMap[emptyIndexEntry] = (ui8)dbType;
    return emptyIndexEntry;
@@ -2372,7 +2372,7 @@ i32 AllocateIndirectIndex(DBTYPE dbType, i32 dbIndex)
 
 void convertScrolls()
 {
-   RN RNtext;
+   RecordName RNtext;
    i32 numEnt;
    i32 i;
    i32 openFlag;
@@ -2383,14 +2383,14 @@ void convertScrolls()
    for(i = 0; i < numEnt; i++)
    {
       pScroll = db.GetCommonAddress(dbSCROLL, i)->CastToDB7();
-      //The link is OK.
+      // The link is OK.
       pWord = (ui16 *)pScroll;
       indirectIndex = AllocateIndirectIndex(dbTEXT, pWord[1] & 0x3ff);
       openFlag = pWord[1] >> 10;
       RNtext.ConstructFromInteger(indirectIndex);
       pScroll->text(RNtext);
       pScroll->open(openFlag == 0);
-   };
+   }
 }
 
 i32 readNewScrollDatabase(i16 *pCheckSum)
@@ -2411,18 +2411,18 @@ i32 readNewScrollDatabase(i16 *pCheckSum)
       if(status == 0)
          return 0;
       db.swap(dbSCROLL); // database
-   };
-   return 1; //OK
+   }
+   return 1; // OK
 }
 
 i32 readScrollDatabase(i16 *pCheckSum)
 {
-   //If extendedFeatures Version is less than 'B' then
-   //we are going to read the old version of scrolls
-   //database and convert to the new version.
-   //The old version had a 10-bit index into the
-   //text database.  Tne new version has an RN reference
-   //to the text.
+   // If extendedFeatures Version is less than 'B' then
+   // we are going to read the old version of scrolls
+   // database and convert to the new version.
+   // The old version had a 10-bit index into the
+   // text database.  Tne new version has an RecordName reference
+   // to the text.
    if(ExtendedFeaturesVersion < 'B')
       return readOldScrollDatabase(pCheckSum);
    else
@@ -2463,14 +2463,14 @@ i32 ConvertToIndirectText(ui16 *text)
                        MESSAGE_IDOK);
          pDB2->index(0);
          continue;
-      };
+      }
       auto len = ComputeTextLength(text + oldIndex);
-      //Add one entry to m_indirectTextIndex;
+      // Add one entry to m_indirectTextIndex;
       auto newIndex = d.indirectTextIndex.size();
       d.indirectTextIndex.push_back(d.compressedText.size());
       d.compressedText.insert(d.compressedText.end(), text + oldIndex, text + oldIndex + len);
       pDB2->index(newIndex);
-   };
+   }
    d.dungeonDatIndex->NumWordsInTextArray((ui16)d.indirectTextIndex.size());
    return 1;
 }
@@ -2489,21 +2489,21 @@ void MakeBigActuators()
    destination += numEnt * newSize;
    for(i = 0; i < numEnt; i++)
    {
-      //Insert two zero bytes.
+      // Insert two zero bytes.
       *(--destination) = 0;
       *(--destination) = 0;
-      //copy oldSize bytes;
+      // copy oldSize bytes;
       for(j = 0; j < oldSize; j++)
       {
          *(--destination) = *(--source);
-      };
-   };
-   //Now try to fix the parameters
+      }
+   }
+   // Now try to fix the parameters
    for(i = 0; i < numEnt; i++)
    {
       pActuator = (DB3 *)db.GetCommonAddress(dbACTUATOR, i);
       pActuator->MakeBig();
-   };
+   }
 }
 
 // *********************************************************
@@ -2561,9 +2561,9 @@ i16 ReadDatabases()
          if(D0L != filesize)
             return 0;
          ExpandData(A3, d.inStreamNext, LE32(LoadLong(LOCAL_20 + 2)));
-         TAG021800(filesize); //Release file buffer memory
-      };
-   };
+         TAG021800(filesize); // Release file buffer memory
+      }
+   }
    if(IsRecordFileRecording())
    {
       if(
@@ -2578,26 +2578,26 @@ i16 ReadDatabases()
       }
       else
          RecordFile_Close();
-   };
+   }
 
    if(d.PartyHasDied == 0)
    {
       d.dungeonDatIndex = (DUNGEONDATINDEX *)allocateMemory(44, 1);
-   };
+   }
    D0W = FetchDataBytes((ui8 *)d.dungeonDatIndex, &CheckSum, 44);
-   d.dungeonDatIndex->Swap(); //swapDungeonDatIndex();
+   d.dungeonDatIndex->Swap(); // swapDungeonDatIndex();
    if(D0W == 0)
       return 0;
    if(d.gameState != GAMESTATE_ResumeSavedGame)
    {
-      //D6W = D0W = d.dungeonDatIndex->Word8();
+      // D6W = D0W = d.dungeonDatIndex->Word8();
       d.partyX = d.dungeonDatIndex->StartingPartyX();
-      //D0W = sw(D6W >> 5);
-      //D6W = D0W;
+      // D0W = sw(D6W >> 5);
+      // D6W = D0W;
       d.partyY = d.dungeonDatIndex->StartingPartyY();
       d.partyFacing = d.dungeonDatIndex->StartingPartyFacing();
       d.partyLevel = 0;
-   };
+   }
    numLevel = d.dungeonDatIndex->NumLevel();
    if(cellflagArraySize == 0)
    {
@@ -2606,13 +2606,13 @@ i16 ReadDatabases()
    else
    {
       d.dungeonDatIndex->LegacyCellFlagArraySize(0);
-   };
+   }
    D0W = d.PartyHasDied;
    if(D0W == 0)
    {
       d.pLevelDescriptors =
           (LEVELDESC *)allocateMemory(16 * numLevel, 1);
-   };
+   }
    D0W = FetchDataBytes((ui8 *)d.pLevelDescriptors, &CheckSum, 16 * numLevel);
    if(D0W == 0)
       return 0;
@@ -2623,20 +2623,20 @@ i16 ReadDatabases()
    if(D0W == 0)
    {
       d.objectLevelIndex = (ui16 *)allocateMemory(2 * numLevel, 1);
-   };
+   }
    D4W = 0;
    for(D5W = D4W; D5W < numLevel; D5W++)
    {
       d.objectLevelIndex[D5W] = D4W;
       D0W = d.pLevelDescriptors[D5W].LastColumn();
       D4W = sw(D4W + D0W + 1);
-   };
+   }
    d.numColumnPointers = D4W;
    D5W = d.dungeonDatIndex->ObjectListLength();
    if(d.gameState != GAMESTATE_ResumeSavedGame)
    {
       d.dungeonDatIndex->ObjectListLength(uw(d.dungeonDatIndex->ObjectListLength() + 300));
-   };
+   }
    if(d.PartyHasDied == 0)
    {
       g_objectListIndexSize = (D4W << 1) & 0xffff;
@@ -2651,15 +2651,15 @@ i16 ReadDatabases()
       if(g_objectListIndexSize < ((D4W << 1) & 0xffff))
       {
          memSizeError |= 1;
-      };
+      }
       if(d.objectList.size() < d.dungeonDatIndex->ObjectListLength())
       {
          memSizeError |= 2;
-      };
+      }
       if(d.indirectTextIndex.size() < (d.dungeonDatIndex->NumWordsInTextArray() & 0xffffU))
       {
          memSizeError |= 4;
-      };
+      }
       if(memSizeError != 0)
       {
          UI_MessageBox("Something is very wrong.  The size\n"
@@ -2670,8 +2670,8 @@ i16 ReadDatabases()
                        "Error",
                        MESSAGE_OK);
          die(0x445c);
-      };
-   };
+      }
+   }
    D0W = FetchDataBytes((ui8 *)d.objectListIndex, &CheckSum, (ui16)D4W * 2);
    if(D0W == 0)
       return 0;
@@ -2684,9 +2684,9 @@ i16 ReadDatabases()
    {
       for(D4W = 0; D4W < 300; D4W++)
       {
-         d.objectList[D5W++] = RN(RNnul);
-      };
-   };
+         d.objectList[D5W++] = RecordName(RNnul);
+      }
+   }
 
    std::unique_ptr<ui16[]> pTextArray;
    if(!indirectText)
@@ -2696,25 +2696,25 @@ i16 ReadDatabases()
       if(D0W == 0)
          return 0;
    }
-   else //if m_indirectText
-   {    //nothing is swapped!
-      //fetch indirecttext(NumWordsInTextArray);
+   else // if m_indirectText
+   {    // nothing is swapped!
+      // fetch indirecttext(NumWordsInTextArray);
       D0W = FetchDataBytes((ui8 *)d.indirectTextIndex.data(), &CheckSum, d.dungeonDatIndex->NumWordsInTextArray() * 4);
       SwapIndirectTextIndex();
       if(D0W == 0)
          return 0;
-      //fetch sizeof compressedText;
+      // fetch sizeof compressedText;
       d.compressedText.clear();
       i32 sizeOfCompressedText = 0;
       D0W = FetchDataBytes((ui8 *)&sizeOfCompressedText, &CheckSum, 4);
       sizeOfCompressedText = BE32(sizeOfCompressedText);
       if(D0W == 0)
          return 0;
-      //fetch compressedText;
+      // fetch compressedText;
       if(sizeOfCompressedText > 1000000)
       {
          die(0x4ccce, "Excessive compressed text");
-      };
+      }
       d.compressedText.resize(sizeOfCompressedText);
       D0W = FetchDataBytes(
           (ui8 *)&d.compressedText[0],
@@ -2722,15 +2722,15 @@ i16 ReadDatabases()
           sizeOfCompressedText * 2);
       if(D0W == 0)
          return 0;
-   };
+   }
    if(d.gameState != GAMESTATE_ResumeSavedGame)
    {
       gameTimers.Allocate(100);
       gameTimers.InitializeTimers();
-   };
+   }
    for(D6W = 0; D6W < 16; D6W++)
    {
-      //D5W = D6W;
+      // D5W = D6W;
 
       D5W = d.dungeonDatIndex->DBSize(D6W); // number of entries
       if(d.gameState != GAMESTATE_ResumeSavedGame)
@@ -2739,43 +2739,43 @@ i16 ReadDatabases()
          A0 = d.Byte7302 + D6W;
          D3W = *((ui8 *)A0);
          D0W = sw(D0W + D3W);
-         //D0W = sw(Smaller(D6W==15 ? 768 : 1024, D0W));
+         // D0W = sw(Smaller(D6W==15 ? 768 : 1024, D0W));
          d.dungeonDatIndex->DBSize(D6W, D0W);
-      };
+      }
       if(D6W == dbSCROLL)
       {
          if(readScrollDatabase(&CheckSum) == 0)
             return 0;
          continue;
-      };
+      }
       D4L = dbEntrySizes[D6W];
       if((D6W == dbACTUATOR) & !bigActuators)
       {
          D4W -= 2;
-      };
+      }
       // Always allocate!!  If it is already allocated then
       // it will get released and reallocated to the
       // correct size!  This was a bad bug that made
       // some saved games unloadable.
-      //if (d.Word22584 == 0)
+      // if (d.Word22584 == 0)
       {
-         //D0L = d.dungeonDatIndex[D6W+6] * D4W;
-         //D0L &= 0xffff;
-         //if (D0L != 0) A0 = allocateMemory(D0L,1);
-         //else A0 = NULL;
-         //d.misc1052eight[D6W] = (UNKNOWN *)A0;
+         // D0L = d.dungeonDatIndex[D6W+6] * D4W;
+         // D0L &= 0xffff;
+         // if (D0L != 0) A0 = allocateMemory(D0L,1);
+         // else A0 = NULL;
+         // d.misc1052eight[D6W] = (UNKNOWN *)A0;
          db.Allocate(D6W, d.dungeonDatIndex->DBSize(D6W));
          /*
       if (d.dungeonDatIndex[D6W+6] != 0)
       {
-        d.misc10528[D6W] = db.GetCommonAddress(RN(0,D6W,0));
-      }
+        d.misc10528[D6W] = db.GetCommonAddress(RecordName(0,D6W,0));
+}
       else
       {
         d.misc10528[D6W] = NULL;
-      };
+}
       */
-      };
+      }
       if(d.dungeonDatIndex->DBSize(D6W) != 0)
       {
          DBA3 = db.GetCommonAddress(DBTYPE(D6W), 0);
@@ -2787,14 +2787,14 @@ i16 ReadDatabases()
             MakeBigActuators();
          }
          db.swap(D6W); // database
-      };
+      }
       if(d.gameState != GAMESTATE_ResumeSavedGame)
       {
          if((D6W == dbMONSTER) || (D6W >= dbMISSILE))
          {
             D0W = d.dungeonDatIndex->DBSize(D6W);
             gameTimers.Allocate(sw(gameTimers.MaxTimer() + D0W));
-         };
+         }
          /*
       All the enclosed code is to clear the extra
       entries that we allocated but did not initialize
@@ -2819,20 +2819,20 @@ i16 ReadDatabases()
         //D1 <<= 1;
         pwA3 += D1L;
 
-      };
+}
       */
-      };
+      }
 
-   }; //for
+   }; // for
    if(!indirectText)
    {
       if(ConvertToIndirectText(pTextArray.get()) == 0)
          return 0;
-   };
+   }
    if(d.PartyHasDied == 0)
    {
       d.cellFlagArray = (CELLFLAG *)allocateMemory(cellflagArraySize, 1);
-   };
+   }
    D0W = FetchDataBytes((ui8 *)d.cellFlagArray, &CheckSum, cellflagArraySize);
    if(D0W == 0)
       return 0;
@@ -2852,11 +2852,11 @@ i16 ReadDatabases()
       for(i32 level = 0; level < numLevel; level++)
       {
          d.pppdPointer10450[level] = ppdA2;
-         //pntGear(A0) = A2;
+         // pntGear(A0) = A2;
          pdD0 = d.cellFlagArray;
-         //pA0 = &d.pLevelDescriptors[level];
-         //D3L = pA0->cellOffset;
-         //D3H1 = 0;
+         // pA0 = &d.pLevelDescriptors[level];
+         // D3L = pA0->cellOffset;
+         // D3H1 = 0;
          if(level == 0)
          {
             celloffset = d.pLevelDescriptors[0].cellOffset;
@@ -2864,9 +2864,9 @@ i16 ReadDatabases()
          else
          {
             celloffset += (d.pLevelDescriptors[level].cellOffset - d.pLevelDescriptors[level - 1].cellOffset) & 0xffff;
-         };
+         }
          pdD0 = pdD0 + celloffset; // Add Byte offset
-         //pdD0 = (CELLFLAG *)((i32)pdD0 + D3L); // Add Byte offset
+         // pdD0 = (CELLFLAG *)((i32)pdD0 + D3L); // Add Byte offset
          LOCAL_4 = pdD0;
          *ppdA2 = pdD0;
          ppdA2++;
@@ -2879,19 +2879,19 @@ i16 ReadDatabases()
             D1W++;
             pdD0 = LOCAL_4;
             D1L &= 0xffff;
-            pdD0 = pdD0 + D1L; //add byte offset
-            //pdD0 = (DUDAD16 *)((i32)pdD0+D1L); //add byte offset
+            pdD0 = pdD0 + D1L; // add byte offset
+            // pdD0 = (DUDAD16 *)((i32)pdD0+D1L); //add byte offset
             LOCAL_4 = pdD0;
             *ppdA2 = pdD0;
             ppdA2++;
          }; // for column
-      };    /// for level
-   };
+      }; /// for level
+   }
    if(d.inStreamBuffered != 0)
    {
       d.inStreamBuffered = 0;
       TAG021800(LE32(LoadLong(LOCAL_20 + 2)));
-   };
+   }
 
    if(ExtendedFeaturesVersion == '@')
    {
@@ -2900,11 +2900,11 @@ i16 ReadDatabases()
       // We need to expand the database to the 'linear'
       // model.
       // We need to search the dungeon and convert all
-      // objects of class RN to the new model.
+      // objects of class RecordName to the new model.
       // Should be fun.
       i32 level, x, y;
       CELLFLAG cf, *columnPointerCF;
-      RN *columnPointerRN;
+      RecordName *columnPointerRN;
       for(level = 0; level < d.dungeonDatIndex->NumLevel(); level++)
       {
          for(x = 0; x <= d.pLevelDescriptors[level].LastColumn(); x++)
@@ -2917,38 +2917,38 @@ i16 ReadDatabases()
                if((cf & 0x10) == 0)
                   continue;
                ConvertListOfObjects(columnPointerRN, false, level, x + d.pLevelDescriptors[level].offsetX, y + d.pLevelDescriptors[level].offsetY);
-               //And sub-lists, too. Chest/Monster/scroll/missile
+               // And sub-lists, too. Chest/Monster/scroll/missile
                columnPointerRN++;
-            };
-         };
-      };
+            }
+         }
+      }
       if(gameTimers.pTimer(0) != NULL)
          ConvertTimers();
       ConvertCharacters();
-   };
+   }
    if(RememberToPutObjectInHand != -1)
    {
       die(0x40e);
-   };
+   }
    if((ExtendedFeaturesVersion == '@') && (d.objectInHand != RNnul))
    {
-      //CURSORFILTER_PACKET cfp;
-      //cfp.type = CURSORFILTER_Unknown;
-      //cfp.object = d.objectInHand.ConvertToInteger();
-      //CursorFilter(&cfp);
+      // CURSORFILTER_PACKET cfp;
+      // cfp.type = CURSORFILTER_Unknown;
+      // cfp.object = d.objectInHand.ConvertToInteger();
+      // CursorFilter(&cfp);
 
       ConvertListOfObjects(&d.objectInHand, false, 0, -5, 0);
-   };
+   }
    if(ExtendedFeaturesVersion == '@')
    {
       ExtendedFeaturesVersion = 'A';
-   };
+   }
    RememberToPutObjectInHand = -1;
    if(ExtendedFeaturesVersion < 'B')
    {
       convertScrolls();
       ExtendedFeaturesVersion = 'B';
-   };
+   }
    expool.Setup();
    return 1;
 }

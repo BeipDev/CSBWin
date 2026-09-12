@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 /*
 ===========================================================
 15 April 2001 Matti   SHADOW WARRIOR DOOR
@@ -21,7 +20,7 @@ the game goes too fast.
 
 ===========================================================
 16 April 2001 Matti  PRISON DOOR FADE
-When fading between the prison doors and the 
+When fading between the prison doors and the
 credits screen the right portion of the image seems
 to fade it more slowly.
 

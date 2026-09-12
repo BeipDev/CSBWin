@@ -5,30 +5,28 @@
 #include "CSB.h"
 
 #include <string.h>
-//#include <TextUtils.h>
+// #include <TextUtils.h>
 
 #if 0
 
 
 using UBYTE=uint8_t;
 
+#define A0B(x) ((unsigned char *)A0)[x]
+#define A0W(x) ((unsigned short *)(((unsigned char *)A0) + x))[0]
+#define A0L(x) ((unsigned long *)(((unsigned char *)A0) + x))[0]
 
-#define	A0B(x)	( (unsigned char*)A0)[x]
-#define	A0W(x)	((unsigned short*)(((unsigned char*)A0)+x))[0]
-#define	A0L(x)	((unsigned long*)(((unsigned char*)A0)+x))[0]
+#define A1B(x) ((unsigned char *)A1)[x]
+#define A1W(x) ((unsigned short *)(((unsigned char *)A1) + x))[0]
+#define A1L(x) ((unsigned long *)(((unsigned char *)A1) + x))[0]
 
-#define	A1B(x)	( (unsigned char*)A1)[x]
-#define	A1W(x)	((unsigned short*)(((unsigned char*)A1)+x))[0]
-#define	A1L(x)	((unsigned long*)(((unsigned char*)A1)+x))[0]
+#define A5B(x) ((unsigned char *)A5)[x]
+#define A5W(x) ((unsigned short *)(((unsigned char *)A5) + x))[0]
+#define A5L(x) ((unsigned long *)(((unsigned char *)A5) + x))[0]
 
-
-#define	A5B(x)	( (unsigned char*)A5)[x]
-#define	A5W(x)	((unsigned short*)(((unsigned char*)A5)+x))[0]
-#define	A5L(x)	((unsigned long*)(((unsigned char*)A5)+x))[0]
-
-#define	A6B(x)	( (unsigned char*)A6)[x]
-#define	A6W(x)	((unsigned short*)(((unsigned char*)A6)+x))[0]
-#define	A6L(x)	((unsigned long*)(((unsigned char*)A6)+x))[0]
+#define A6B(x) ((unsigned char *)A6)[x]
+#define A6W(x) ((unsigned short *)(((unsigned char *)A6) + x))[0]
+#define A6L(x) ((unsigned long *)(((unsigned char *)A6) + x))[0]
 
 
 static uint8_t 	sectors3_3 [1536] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -113,7 +111,7 @@ static	uint8_t	bootsector[512] = {0x60,0x38,0x4C,0x6F,0x61,0x64,0x65,0x72,0x00,0
 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x24,0x7D};
 
-struct bpb 
+struct bpb
 {
         WORD    recsiz;         // sector size in bytes //
         WORD    clsiz;          // cluster size in sectors //
@@ -203,7 +201,7 @@ void A16LDCode();
 static UWORD getiword(UBYTE *addr)
 {
   UWORD value;
-  value = (((UWORD)addr[1])<<8) + addr[0]; 
+  value = (((UWORD)addr[1])<<8) + addr[0];
   return value;
 }
 
@@ -212,12 +210,12 @@ static LONG flop_getbpb(WORD dev)
   struct bs *b;
   LONG tmp;
   WORD err;
-  
+
   if(dev < 0 || dev > 1) return 0;
-  
+
   /* read bootsector */
   b = (struct bs *)bootsector;
-  
+
   flop_bpb[dev].recsiz = getiword(b->bps);
   flop_bpb[dev].clsiz = b->spc;
   flop_bpb[dev].clsizb = flop_bpb[dev].clsiz * flop_bpb[dev].recsiz;
@@ -233,19 +231,19 @@ static LONG flop_getbpb(WORD dev)
    * TODO: understand what to do with reserved or hidden sectors.
    */
 
-  flop_bpb[dev].fatrec = 1 + flop_bpb[dev].fsiz; 
-  flop_bpb[dev].datrec = flop_bpb[dev].fatrec + flop_bpb[dev].fsiz 
+  flop_bpb[dev].fatrec = 1 + flop_bpb[dev].fsiz;
+  flop_bpb[dev].datrec = flop_bpb[dev].fatrec + flop_bpb[dev].fsiz
                          + flop_bpb[dev].rdlen;
   flop_bpb[dev].numcl = (getiword(b->sec) - flop_bpb[dev].datrec) / b->spc;
   flop_bpb[dev].b_flags = 0;   // assume floppies are always in FAT12 //
-  
+
   // additional geometry info //
   finfo[dev].sides = getiword(b->sides);
   finfo[dev].spt = getiword(b->spt);
   finfo[dev].serial[0] = b->serial[0];
   finfo[dev].serial[1] = b->serial[1];
   finfo[dev].serial[2] = b->serial[2];
-  
+
   return (LONG) &flop_bpb[dev];
 }
 
@@ -265,19 +263,19 @@ static short RWABS(short dev, short sector, short count, long addr, short flag, 
 	count = count;
 	addr = addr;
 	flag = flag;
-	
+
 	if(sector == 3 && count == 3)
 	{
 		memmove((void*)addr,sectors3_3,1536);
-	}
-	return 0;
 }
+	return 0;
+};
 
-static i8 	SWOOSHScreen[320*200/2]; 
-static i16 FFFF8240[16] = {	0x777, 0x700, 0x070, 0x770, 0x007, 0x707, 0x077, 0x555, 
+static i8 	SWOOSHScreen[320*200/2];
+static i16 FFFF8240[16] = {	0x777, 0x700, 0x070, 0x770, 0x007, 0x707, 0x077, 0x555,
 									0x333, 0x733, 0x373, 0x773, 0x337, 0x737, 0x377, 0x000};
-									
-									
+
+
 void swoosh_bootsector();
 extern void UpdateScreenArea(
                       i8  *STScreen,
@@ -295,11 +293,11 @@ void VSYNC()
 	UpdateScreenArea(SWOOSHScreen,0,0,320,200,FFFF8240,TRUE,&ignore);
 }
 
-                      
+
 void swoosh()
 {
 	i32	ignore;
-	
+
 	UpdateScreenArea(SWOOSHScreen,0,0,320,200,FFFF8240,TRUE,&ignore);
 
 	swoosh_bootsector();
@@ -352,7 +350,7 @@ _0DD78A30:
  	A0W(0) = D1W;
  	D1W -= 0x111;
  	if(D0W-->=0) goto _0DD78A30;
- 	
+
 
 //            0DD78A50   MOVEA.L    #$FFFF8240,A0                           | 207C FFFF 8240
 //            0DD78A56   MOVEQ      #$0F,D0                                 | 700F
@@ -366,9 +364,9 @@ _0DD78A58:
 
   	A0W(0) = 0; A0+=2;
  	if(D0W-->=0) goto _0DD78A58;
- 	
- 	
-//            0DD78A5E   MOVE.W     *-$0050,$00000482          ; 0DD78A0E   | 33FA FFAE 0000	
+
+
+//            0DD78A5E   MOVE.W     *-$0050,$00000482          ; 0DD78A0E   | 33FA FFAE 0000
 //            0DD78A66   MOVE.W     $00000446,-(A7)                         | 3F39 0000 0446
 //            0DD78A6C   MOVE.W     #$0007,-(A7)                            | 3F3C 0007
 //            0DD78A70   TRAP       #$D                                     | 4E4D
@@ -377,16 +375,16 @@ _0DD78A58:
 //            0DD78A76   BEQ        *+$00F8                    ; 0DD78B6E   | 6700 00F6
 //
 //  		  reading bios parameter block. we already have it in memory :-)
- 	
+
  	D0L = flop_getbpb(0);
 	if(!D0L) goto _0DD78B6E;
-			 			
+
 //            0DD78A7A   MOVEA.L    D0,A5                                   | 2A40
 //            0DD78A7C   LEA        *-$0062,A0                 ; 0DD78A1A   | 41FA FF9C
 //            0DD78A80   TST.L      (A0)                                    | 4A90
 //            0DD78A82   BNE.S      *+$0008                    ; 0DD78A8A   | 6606
 //            0DD78A84   MOVE.L     $00000432,(A0)                          | 20B9 0000 0432
- 	A5 = D0L; 
+ 	A5 = D0L;
 	A0 = (long)A1A;
 	if(A0L(0)!=0)	goto _0DD78A8A;
 	A0L(0) = _432;
@@ -460,7 +458,7 @@ _0DD78AE4:
 	D1B = A0B(D0W);
 	if(A1B(D0W) != D1B) goto _0DD78AD8;
 	if(D0W-->=0) goto _0DD78AE4;
-			
+
 //            0DD78AF2   MOVEQ      #$00,D7                                 | 7E00
 //            0DD78AF4   MOVE.B     $001B(A0),D7                            | 1E28 001B
 //            0DD78AF8   LSL.W      #$8,D7                                  | E14F
@@ -475,7 +473,7 @@ _0DD78AE4:
 	A6 = (long)A1A[0];
 	A3 = (long)A16[0];
 	D4L = 0;
-	
+
 _0DD78B08:
 //            0DD78B08   CMPI.W     #$0FF0,D7                               | 0C47 0FF0
 //            0DD78B0C   BGE.S      *+$0054                    ; 0DD78B60   | 6C52
@@ -567,11 +565,11 @@ _0DD78B68:
 //			  0DD78B6C   RTS                                                | 4E75
 A16LDCode();
 
-_0DD78B6E:	  //DebugStr("\pST Code hanged here!");   
+_0DD78B6E:	  //DebugStr("\pST Code hanged here!");
             /*0DD78B6E   BRA.S      *+$0000                    ; 0DD78B6E   | 60FE
-            
+
               code here converted to subroutine _0DD78B70
-            
+
             0DD78B8C   ORI.B      #$00,D0                                 | 0000 0000
             0DD78B90   ORI.B      #$00,D0                                 | 0000 0000
             0DD78B94   ORI.B      #$00,D0                                 | 0000 0000
@@ -602,7 +600,7 @@ _0DD78B6E:	  //DebugStr("\pST Code hanged here!");
 }
 
 i32 _0DD78B70(i16 d6, i16 d4, i32 a3)
-{            
+{
 //			0DD78B70   MOVE.W     $00000446,-(A7)                         | 3F39 0000 0446
 //            0DD78B76   MOVE.W     D6,-(A7)                                | 3F06
 //            0DD78B78   MOVE.W     D4,-(A7)                                | 3F04

@@ -9,105 +9,129 @@
 
 struct LQENTRY
 {
-  LQENTRY *m_pNext{};
-  std::string m_line;
+   LQENTRY *m_pNext{};
+   std::string m_line;
 };
-
 
 struct LINE_QUEUE
 {
-  LQENTRY *GetHeadPosition() {return m_pFirst; }
-  const char *GetNext(LQENTRY* &pos) { LQENTRY* curr=pos; pos=curr->m_pNext; return curr->m_line.c_str(); }
-  void clear()
-  {
-    while (m_pFirst != NULL)
-    {
-      LQENTRY *first = m_pFirst;
-      m_pFirst = m_pFirst->m_pNext;
-      delete first;
-    }
-  }
+   LQENTRY *GetHeadPosition() { return m_pFirst; }
+   const char *GetNext(LQENTRY *&pos)
+   {
+      LQENTRY *curr = pos;
+      pos = curr->m_pNext;
+      return curr->m_line.c_str();
+   }
+   void clear()
+   {
+      while(m_pFirst != NULL)
+      {
+         LQENTRY *first = m_pFirst;
+         m_pFirst = m_pFirst->m_pNext;
+         delete first;
+      }
+   }
 
-  void push_back(const char *line)
-  {
-    LQENTRY *newEnt, *last;
-    newEnt = new LQENTRY();
-    newEnt->m_line=line;
-    last = m_pFirst;
-    if (last == NULL)
-      m_pFirst = newEnt;
-    else
-    {
-      while (last->m_pNext != NULL)
-        last = last->m_pNext;
-      last->m_pNext = newEnt;
-    }
-  }
+   void push_back(const char *line)
+   {
+      LQENTRY *newEnt, *last;
+      newEnt = new LQENTRY();
+      newEnt->m_line = line;
+      last = m_pFirst;
+      if(last == NULL)
+         m_pFirst = newEnt;
+      else
+      {
+         while(last->m_pNext != NULL)
+            last = last->m_pNext;
+         last->m_pNext = newEnt;
+      }
+   }
 
 private:
-  LQENTRY *m_pFirst{};
+   LQENTRY *m_pFirst{};
 };
 #endif
-
 
 #define MAXLINEQUEUE 10
 
 class RECORDFILE
 {
 private:
-  i16  m_fileNum;
-  bool m_isQueueingLines;
+   i16 m_fileNum;
+   bool m_isQueueingLines;
 #ifdef MSVC_QUEUE
-  std::list<std::string> m_lineQueue;
+   std::list<std::string> m_lineQueue;
 #else
-  LINE_QUEUE m_lineQueue;
+   LINE_QUEUE m_lineQueue;
 #endif
-  bool m_graphicSignature;
-  bool m_CSBgraphicSignature;
-  bool m_dungeonSignature;
-  bool m_versionSignature;
+   bool m_graphicSignature;
+   bool m_CSBgraphicSignature;
+   bool m_dungeonSignature;
+   bool m_versionSignature;
+
 public:
-  RECORDFILE() {m_fileNum = -1;m_isQueueingLines = false; m_lineQueue.clear();
-                    m_graphicSignature=false;
-                    m_dungeonSignature=false;
-                    m_versionSignature=false;};
-  ~RECORDFILE() {if (m_fileNum >= 0) CLOSE(m_fileNum);};
-  bool IsOpen() {return m_fileNum >= 0;};
-  bool IsRecording()
-  {
-    return (m_fileNum >= 0) || m_isQueueingLines;
-  };
-  void Open();
-  void PreOpen();
-  void Close();
-  void Record(MouseQueueEnt *happening);
-  void Record(i32 x, i32 y, i32 func);
-  void Record(const char* line);
-  void Comment(const char* comment);
-  void CycleRandom(i32 n);
-  void Signature(ui32 sig, ui32 type);
+   RECORDFILE()
+   {
+      m_fileNum = -1;
+      m_isQueueingLines = false;
+      m_lineQueue.clear();
+      m_graphicSignature = false;
+      m_dungeonSignature = false;
+      m_versionSignature = false;
+   };
+   ~RECORDFILE()
+   {
+      if(m_fileNum >= 0)
+         CLOSE(m_fileNum);
+   };
+   bool IsOpen() { return m_fileNum >= 0; };
+   bool IsRecording()
+   {
+      return (m_fileNum >= 0) || m_isQueueingLines;
+   };
+   void Open();
+   void PreOpen();
+   void Close();
+   void Record(MouseQueueEnt *happening);
+   void Record(i32 x, i32 y, i32 func);
+   void Record(const char *line);
+   void Comment(const char *comment);
+   void CycleRandom(i32 n);
+   void Signature(ui32 sig, ui32 type);
 };
 
-//extern RECORDFILE RecordFile;
+// extern RECORDFILE RecordFile;
 
 class PLAYFILE
 {
 private:
-  i32 m_time, m_x, m_y, m_num, m_oldTime, m_oldCallCount;
-  ui32 m_ran;
-  bool m_eofEncountered, m_forceClose;
-  i16 m_file;
+   i32 m_time, m_x, m_y, m_num, m_oldTime, m_oldCallCount;
+   ui32 m_ran;
+   bool m_eofEncountered, m_forceClose;
+   i16 m_file;
+
 public:
-  PLAYFILE() {m_file=-1; m_time=-1;m_eofEncountered=false;m_forceClose=false;};
-  ~PLAYFILE() {if (m_file >= 0) CLOSE(m_file);};
-  bool IsOpen();
-  void Open();
-  void Close();
-  bool Play(MouseQueueEnt *);
-  void Backspace(MouseQueueEnt *);
-  void ReadEOF(); //Force file close at EOF without
-                      //advancing d.Time.
-  bool IsEOF() {return m_eofEncountered;};
+   PLAYFILE()
+   {
+      m_file = -1;
+      m_time = -1;
+      m_eofEncountered = false;
+      m_forceClose = false;
+   };
+   ~PLAYFILE()
+   {
+      if(m_file >= 0)
+         CLOSE(m_file);
+   };
+   bool IsOpen();
+   void Open();
+   void Close();
+   bool Play(MouseQueueEnt *);
+   void Backspace(MouseQueueEnt *);
+   void ReadEOF(); // Force file close at EOF without
+                   // advancing d.Time.
+   bool IsEOF() { return m_eofEncountered; };
 };
 
-//extern PLAYFILE PlayFile;
+// extern PLAYFILE PlayFile;
