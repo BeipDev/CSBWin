@@ -466,7 +466,7 @@ ui32 Long938[4] = {
 
 void reverseBMP(ui32 *bmp, i32 n)
 {
-   ASSERT(((int)bmp & 3) == 0, "bmp");
+   ASSERT(((uintptr_t)bmp & 3) == 0, "bmp");
    for(i32 i = 0; i < n; i++)
       bmp[i] = LE32(bmp[i]);
 }

@@ -2152,9 +2152,6 @@ tag01f036:
 // *********************************************************
 void ConvertListOfObjects(RecordName *pRN, bool DuplicateOK, i32 level, i32 x, i32 y)
 {
-   i32 dbNum, pos, idx;
-   i32 i, newDML, duplicate;
-   DBCOMMON *pDB;
    while(*pRN != RNeof)
    {
       if((*pRN == RNnul) || pRN->IsMagicSpell())
@@ -2162,9 +2159,9 @@ void ConvertListOfObjects(RecordName *pRN, bool DuplicateOK, i32 level, i32 x, i
          UI_MessageBox("Illegal object", "Sorry", MB_OK);
          die(0xeed18);
       }
-      dbNum = (pRN->ConvertToInteger() >> 10) & 15;
-      pos = (pRN->ConvertToInteger() >> 14) & 3;
-      idx = pRN->ConvertToInteger() & 0x3ff;
+      i32 dbNum = (pRN->ConvertToInteger() >> 10) & 15;
+      i32 pos = (pRN->ConvertToInteger() >> 14) & 3;
+      i32 idx = pRN->ConvertToInteger() & 0x3ff;
       if(idx >= db.NumEntry(dbNum))
       {
          char msg[80];
@@ -2173,10 +2170,11 @@ void ConvertListOfObjects(RecordName *pRN, bool DuplicateOK, i32 level, i32 x, i
          *pRN = RNeof;
          return;
       }
-      pDB = db.GetCommonAddress(DBTYPE(dbNum), idx);
-      duplicate = -1;
-      for(i = 1; i < dataMapLength; i++)
-      { // Search to see if it is already present
+      DBCOMMON *pDB = db.GetCommonAddress(DBTYPE(dbNum), idx);
+      i32 duplicate = -1;
+      for(i32 i = 1; i < dataMapLength; i++)
+      {  
+         // Search to see if it is already present
          if((dataTypeMap[i] & 15) != dbNum)
             continue;
          if(dataIndexMap[i] != idx)
@@ -2198,7 +2196,7 @@ void ConvertListOfObjects(RecordName *pRN, bool DuplicateOK, i32 level, i32 x, i
       }
       else
       {
-         newDML = 32 * (dataMapLength / 32) + 33;
+         i32 newDML = 32 * (dataMapLength / 32) + 33;
          dataTypeMap = (ui8 *)UI_realloc(dataTypeMap, newDML, MALLOC051);
          dataIndexMap = (ui16 *)UI_realloc(dataIndexMap, 2 * newDML, MALLOC052);
          if(dataMapLength == 0)
@@ -2249,7 +2247,7 @@ void ConvertListOfObjects(RecordName *pRN, bool DuplicateOK, i32 level, i32 x, i
                break;
          }
       }
-      pRN = &(pDB->m_link);
+      pRN = &pDB->m_link;
    }
 }
 
@@ -2842,7 +2840,7 @@ i16 ReadDatabases()
       return 0;
    if(d.PartyHasDied == 0)
    {
-      D0L = 4 * (d.numColumnPointers + numLevel);
+      D0L = sizeof(void*) * (d.numColumnPointers + numLevel);
       // D7W is number of index pointers at the
       //  front of d.10450.
       d.pppdPointer10450 = (CELLFLAG ***)allocateMemory(D0L, 1);

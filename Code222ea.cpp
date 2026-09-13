@@ -313,7 +313,7 @@ void LoadNeededGraphics(i16 *P1, const i32 Count)
       d.iAvailableGraphicMemory -= D4L;
    }
    A2 = (aReg)d.Pointer23310;
-   ASSERT(((int)A2 & 3) == 0, "A2");
+   ASSERT(((intptr_t)A2 & 3) == 0, "A2");
    A3 = A2 - 2;
    while(A3 > d.Pointer23314)
    {
@@ -331,7 +331,7 @@ void LoadNeededGraphics(i16 *P1, const i32 Count)
          if(A2 != A3 + 2)
          {
             MemMove((ui8 *)A3 + 2, (ui8 *)A2, D4W);
-            ASSERT(((int)A2 & 3) == 0, "A2");
+            ASSERT(((intptr_t)A2 & 3) == 0, "A2");
             d.ppUnExpandedGraphics[D5W] = A2;
          }
       }
@@ -374,7 +374,7 @@ void LoadNeededGraphics(i16 *P1, const i32 Count)
          {
             ReadGraphic(D5W, (ui8 *)A2);
          }
-         ASSERT(((int)A2 & 3) == 0, "A2");
+         ASSERT(((intptr_t)A2 & 3) == 0, "A2");
          d.ppUnExpandedGraphics[D5W] = A2;
       }
       //
