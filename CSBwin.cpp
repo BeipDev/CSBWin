@@ -448,72 +448,6 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                trace = -1;
                DestroyWindow(hWnd);
                break;
-            case IDC_Normal:
-               MTRACE("IDC_Normal\n");
-               csbMessage.type = UIM_SETOPTION;
-               csbMessage.p1 = OPT_NORMAL;
-               csbMessage.p2 = 2; // 2-(screenSize==1); //new value
-               if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-               {
-                  PostQuitMessage(0);
-                  break;
-               }
-               break;
-            case IDC_Double:
-               MTRACE("IDC_Double\n");
-               csbMessage.type = UIM_SETOPTION;
-               csbMessage.p1 = OPT_DOUBLE;
-               csbMessage.p2 = 2; // 2-(screenSize==2); //new value
-               if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-               {
-                  PostQuitMessage(0);
-                  break;
-               }
-               break;
-            case IDC_Triple:
-               MTRACE("IDC_Triple\n");
-               csbMessage.type = UIM_SETOPTION;
-               csbMessage.p1 = OPT_TRIPLE;
-               csbMessage.p2 = 2; // 2-(screenSize==3); //new value
-               if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-               {
-                  PostQuitMessage(0);
-                  break;
-               }
-               break;
-            case IDC_Quadruple:
-               MTRACE("IDC_Quadruple\n");
-               csbMessage.type = UIM_SETOPTION;
-               csbMessage.p1 = OPT_QUADRUPLE;
-               csbMessage.p2 = 2; // 2-(screenSize==4); //new value
-               if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-               {
-                  PostQuitMessage(0);
-                  break;
-               }
-               break;
-            case IDC_Quintuple:
-               MTRACE("IDC_Quintuple\n");
-               csbMessage.type = UIM_SETOPTION;
-               csbMessage.p1 = OPT_QUINTUPLE;
-               csbMessage.p2 = 2; // 2-(screenSize==4); //new value
-               if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-               {
-                  PostQuitMessage(0);
-                  break;
-               }
-               break;
-            case IDC_Sextuple:
-               MTRACE("IDC_SecTuple\n");
-               csbMessage.type = UIM_SETOPTION;
-               csbMessage.p1 = OPT_SEXTUPLE;
-               csbMessage.p2 = 2; // 2-(screenSize==4); //new value
-               if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-               {
-                  PostQuitMessage(0);
-                  break;
-               }
-               break;
             case IDC_QuickPlay:
                MTRACE("IDC_QuickPlay\n");
                if(!PlayfileIsOpen())
@@ -1144,54 +1078,6 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case 1: // Misc menu
             {
                i32 flag;
-               if(screenSize == 1)
-                  flag = MF_CHECKED;
-               else
-                  flag = MF_UNCHECKED;
-               CheckMenuItem((HMENU)wParam,
-                             IDC_Normal,
-                             MF_BYCOMMAND | flag);
-
-               if(screenSize == 2)
-                  flag = MF_CHECKED;
-               else
-                  flag = MF_UNCHECKED;
-               CheckMenuItem((HMENU)wParam,
-                             IDC_Double,
-                             MF_BYCOMMAND | flag);
-
-               if(screenSize == 3)
-                  flag = MF_CHECKED;
-               else
-                  flag = MF_UNCHECKED;
-               CheckMenuItem((HMENU)wParam,
-                             IDC_Triple,
-                             MF_BYCOMMAND | flag);
-
-               if(screenSize == 4)
-                  flag = MF_CHECKED;
-               else
-                  flag = MF_UNCHECKED;
-               CheckMenuItem((HMENU)wParam,
-                             IDC_Quadruple,
-                             MF_BYCOMMAND | flag);
-
-               if(screenSize == 5)
-                  flag = MF_CHECKED;
-               else
-                  flag = MF_UNCHECKED;
-               CheckMenuItem((HMENU)wParam,
-                             IDC_Quintuple,
-                             MF_BYCOMMAND | flag);
-
-               if(screenSize == 6)
-                  flag = MF_CHECKED;
-               else
-                  flag = MF_UNCHECKED;
-               CheckMenuItem((HMENU)wParam,
-                             IDC_Sextuple,
-                             MF_BYCOMMAND | flag);
-
                if(DM_rules)
                   flag = MF_CHECKED;
                else

@@ -908,45 +908,6 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
                   DM_rules = !DM_rules;
                   RecordFile_Record(DM_rules ? "#DMRules\n" : "#NoDMRules\n");
                   break;
-               case OPT_NORMAL:
-                  UI_ClearScreen();
-                  screenSize = 1;
-                  break;
-               case OPT_DOUBLE:
-                  UI_ClearScreen();
-                  if(msg->p2 == 1)
-                     screenSize = 1;
-                  else
-                     screenSize = 2;
-                  break;
-               case OPT_TRIPLE:
-                  UI_ClearScreen();
-                  if(msg->p2 == 1)
-                     screenSize = 1;
-                  else
-                     screenSize = 3;
-                  break;
-               case OPT_QUADRUPLE:
-                  UI_ClearScreen();
-                  if(msg->p2 == 1)
-                     screenSize = 1;
-                  else
-                     screenSize = 4;
-                  break;
-               case OPT_QUINTUPLE:
-                  UI_ClearScreen();
-                  if(msg->p2 == 1)
-                     screenSize = 1;
-                  else
-                     screenSize = 5;
-                  break;
-               case OPT_SEXTUPLE:
-                  UI_ClearScreen();
-                  if(msg->p2 == 1)
-                     screenSize = 1;
-                  else
-                     screenSize = 6;
-                  break;
                case OPT_RECORD:
                   if(msg->p2 == 1)
                   {

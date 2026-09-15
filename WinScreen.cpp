@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 
 // #ifdef _MSVC_INTEL // Windows screen handling
@@ -19,8 +18,6 @@
 extern CntPtrTo<ID2D1Factory> g_pID2D1Factory;
 extern CntPtrTo<ID2D1HwndRenderTarget> g_pID2DRenderTarget;
 extern CntPtrTo<ID2D1Bitmap> g_pID2DBitmap;
-
-HBITMAP g_bmpOffscreen;
 
 #ifdef _LINUX
 #pragma pack(1)
@@ -296,10 +293,11 @@ constexpr std::array<ui32, 256> unpack = BuildUnpackTable();
 // Takes about a millisecond on Raspberry Pi.
 void UnpackScreen(ui8 *src, ui8 *dst)
 {
-   ui32 *piDest = (ui32 *)dst;
    if(screenAlreadyUnpacked)
       return;
    screenAlreadyUnpacked = true;
+
+   ui32 *piDest = (ui32 *)dst;
    for(int i = 0; i < 320 * 200 / 16; i++, src += 8, piDest += 4)
    {
       ui32 r = (unpack[src[0]] << 0) | (unpack[src[2]] << 1) | (unpack[src[4]] << 2) | (unpack[src[6]] << 3);
@@ -310,16 +308,6 @@ void UnpackScreen(ui8 *src, ui8 *dst)
       piDest[2] = r & 0x0f0f0f0f;
       piDest[3] = (r >> 4) & 0x0f0f0f0f;
    }
-}
-
-void BLT1(ui8 *src,      // Raw 8-bit pixels
-          ui32 *dst,     // Destination if 16-bit result pixels
-          i32 num,       // Width
-          ui32 *palette, // Final resulting colors of graphic plus overlay
-          ui8 *overlay)  // Overlay pixels
-{
-   for(; num > 0; num--)
-      *(dst++) = palette[(*(overlay++) << 4) + *(src++)];
 }
 
 int updateScreenAreaEnterCount = 0;
@@ -336,32 +324,20 @@ int UpdateScreenArea(ui8 *STScreen,
                      i16 *palette,
                      bool paletteChanged,
                      ui8 *pOldScreen,
-                     i32 size,
                      bool useOverlay)
 {
-   ui32 *pBitmap = g_bitmap + x0 + y0 * 320;
-
    bool overlayChanged = false;
    i32 firstNibble[7];
    i32 firstOverlay[7];
    i32 segWidth[7];
-   ui8 *pPixels;
-   i32 line, segment, xgj, xoj, ygj, currentGraphicLine, lastGraphicLine;
+   i32 xgj, xoj, ygj, currentGraphicLine, lastGraphicLine;
    updateScreenAreaEnterCount++;
    overlayChanged = useOverlay && currentOverlay.m_change;
    currentOverlay.m_change = false;
-   if(!paletteChanged && !overlayChanged && !jitterChanged)
+   if(!paletteChanged && !overlayChanged && !jitterChanged && !HasAreaChanged(STScreen, x0, y0, width, height,pOldScreen))
    {
-      if(!HasAreaChanged(STScreen,
-                         x0,
-                         y0,
-                         width,
-                         height,
-                         pOldScreen))
-      {
-         updateScreenAreaLeaveCount++;
-         return 0;
-      }
+      updateScreenAreaLeaveCount++;
+      return 0;
    }
    UnpackScreen(physbase(), fourBitPixels);
    jitterChanged = false;
@@ -496,81 +472,35 @@ int UpdateScreenArea(ui8 *STScreen,
       }
    }
 
-   for(line = 0; line < height; line++, currentGraphicLine++)
+   ui32 *pBitmap = g_bitmap + x0 + y0 * 320;
+
+   for(i32 line = 0; line < height; line++, currentGraphicLine++)
    {
-      i32 currentPixel;
+      ui8 *pPixels;
       if((currentGraphicLine < 0) || (currentGraphicLine > lastGraphicLine))
-      {
-         {
-            pPixels = black;
-         }
-         //      memset (nibbles,0,width);
-      }
+         pPixels = black;
       else
-      {
-         // Setup parameters for testing newest
-         {
-            pPixels = fourBitPixels + 320 * (y0 + currentGraphicLine) + x0;
-         }
-         // pFirstGroup = (char *)STScreen + 160*(y0+currentGraphicLine) + LineStart;
-         // numPixel = width;
-         // skipPixel = x0 & 15;
-         // pNibbles = nibbles;
-         // if (skipPixel != 0)
-         //{
-         //   n = 16 - skipPixel;
-         //   if (n > numPixel) n = numPixel;
-         //   Unpack(pFirstGroup, pNibbles, skipPixel, n);
-         //   pNibbles += n;
-         //   numPixel -= n;
-         //   pFirstGroup += 8;
-         // };
-         // while (numPixel > 0)
-         //{
-         //   n = 16;
-         //   if (n > numPixel) n = numPixel;
-         //   Unpack(pFirstGroup, pNibbles, 0, n);
-         //   pNibbles += n;
-         //   numPixel -= n;
-         //   pFirstGroup += 8;
-         // };
-      }
+         pPixels = fourBitPixels + 320 * (y0 + currentGraphicLine) + x0;
 
-      currentPixel = 0;
+      i32 currentPixel = 0;
 
-      for(segment = 0; segment < 7; segment++)
+      for(i32 segment = 0; segment < 7; segment++)
       {
-         unsigned char *pNibbles;
-         ui8 *pOverlay;
          if(segWidth[segment] == 0)
             continue;
-         // pNibbles = (firstNibble[segment] < 0) ? black : nibbles + firstNibble[segment];
-         pNibbles = (firstNibble[segment] < 0) ? black : pPixels + firstNibble[segment];
-         pOverlay = (useOverlay && overlayActive) ? currentOverlay.m_overlay + 224 * (135 - line) + firstOverlay[segment] : black;
 
-         BLT1(pNibbles, // Raw 8-bit pixel data
-              (ui32 *)pBitmap + 1 * (320 * line + currentPixel),
-              segWidth[segment],
-              currentOverlay.m_table,
-              pOverlay);
+         const ui8 *src = (firstNibble[segment] < 0) ? black : pPixels + firstNibble[segment];
+         ui8 *pOverlay = (useOverlay && overlayActive) ? currentOverlay.m_overlay + 224 * (135 - line) + firstOverlay[segment] : black;
+         ui32 *dst = pBitmap + 1 * (320 * line + currentPixel);
+         int num = segWidth[segment];
+         const auto *palette = currentOverlay.m_table;
+
+         for(; num > 0; num--)
+            *(dst++) = palette[(*(pOverlay++) << 4) + *(src++)];
 
          currentPixel += segWidth[segment];
       }
    }
-#ifdef BLUR
-   if(size == 4)
-   {
-      int line, x;
-      for(line = 0; line < height - 1; line++)
-      {
-         for(x = 0; x < width - 1; x++)
-         {
-            BLS4(bitmap + 4 * 320 * 4 * line + 4 * x);
-         }
-      }
-   }
-#endif
-
    updateScreenAreaLeaveCount++;
    return 1;
 }
@@ -657,41 +587,6 @@ void DumpWindow(FILE *f)
 }
 #endif
 
-/*
-void DumpImages()
-{
-  static ui64 prevTime = 0;
-  static int count = 0;
-  ui64 curTime;
-  curTime = UI_GetSystemTime();
-  if (curTime > prevTime)
-  {
-    //for (;;)
-    {
-      int FH;
-      char name[100];
-      sprintf(name,"ScreenDumps.bin");
-      if (prevTime == 0)
-      {
-        prevTime = curTime;
-        FH = _open(name, _O_WRONLY|_O_CREAT|_O_TRUNC|O_SEQUENTIAL|_O_BINARY,_S_IWRITE);
-}
-      else
-      {
-        FH = _open(name, _O_WRONLY|_O_APPEND|O_SEQUENTIAL|_O_BINARY);
-        //append stops working at 2**32 bytes!!!!
-        _lseeki64(FH,32118I64 * count,SEEK_SET);
-}
-      prevTime += 167;
-      DumpWindow(FH);
-      count++;
-      _close(FH);
-}
-}
-}
-
-*/
-
 ui8 prevScreen[32000];
 
 void display()
@@ -739,19 +634,17 @@ void display()
       areaChangedCount = 0;
       if(!virtualFullscreen)
       {
-         i32 size = 1;
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
                               0,
                               0x21,
                               0xe0,
                               0xa9 - 0x21,
-                              0 * size,
-                              0x21 * size,
+                              0,
+                              0x21,
                               palette2,
                               pc2,
                               prevScreen,
-                              size,
                               videoMode == VM_ADVENTURE);
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
@@ -759,12 +652,11 @@ void display()
                               0xa9,
                               320,
                               0xc8 - 0xa9,
-                              0 * size,
-                              0xa9 * size,
+                              0,
+                              0xa9,
                               palette1,
                               pc1,
                               prevScreen,
-                              size,
                               false);
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
@@ -772,12 +664,11 @@ void display()
                               0,
                               320,
                               0x21,
-                              0 * size,
-                              0 * size,
+                              0,
+                              0,
                               palette1,
                               pc1,
                               prevScreen,
-                              size,
                               false);
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
@@ -785,42 +676,22 @@ void display()
                               0x21,
                               0x140 - 0xe0,
                               0xa9 - 0x21,
-                              0xe0 * size,
-                              0x21 * size,
+                              0xe0,
+                              0x21,
                               palette2,
                               pc2,
                               prevScreen,
-                              size,
                               false);
 
-#ifdef USE_DIBS
-         dc.StretchBlt(g_rcClient, dcBitmap, g_rcAtari, SRCCOPY);
-#else
-#if 0
-         struct RGB16
+         if(areaChangedCount)
          {
-            WORD b : 5;
-            WORD g : 5;
-            WORD r : 5;
-            WORD unused : 1;
-         };
+            g_pID2DRenderTarget->BeginDraw();
+            auto rect = D2D1_RECT_U{0, 0, uint32_t(g_rcAtari.right), uint32_t(g_rcAtari.bottom)};
+            g_pID2DBitmap->CopyFromMemory(&rect, g_bitmap, sizeof(DWORD) * g_rcAtari.right);
 
-         DWORD pixels[320 * 200];
-         const RGB16 *pSrc = reinterpret_cast<const RGB16 *>(g_bitmap);
-         for(unsigned i = 0; i < 320 * 200; i++)
-         {
-            auto pixel = pSrc[i];
-            pixels[i] = (pixel.r << (3 + 16)) | (pixel.g << (3 + 8)) | (pixel.b << (3));
+            g_pID2DRenderTarget->DrawBitmap(g_pID2DBitmap, D2D1_RECT_F{float(g_rcClient.left), float(g_rcClient.top), float(g_rcClient.right), float(g_rcClient.bottom)}, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+            g_pID2DRenderTarget->EndDraw();
          }
-#endif
-
-         g_pID2DRenderTarget->BeginDraw();
-         auto rect = D2D1_RECT_U{0, 0, uint32_t(g_rcAtari.right), uint32_t(g_rcAtari.bottom)};
-         g_pID2DBitmap->CopyFromMemory(&rect, g_bitmap, sizeof(DWORD) * g_rcAtari.right);
-
-         g_pID2DRenderTarget->DrawBitmap(g_pID2DBitmap, D2D1_RECT_F{float(g_rcClient.left), float(g_rcClient.top), float(g_rcClient.right), float(g_rcClient.bottom)}, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
-         g_pID2DRenderTarget->EndDraw();
-#endif
       }
       else
       {

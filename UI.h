@@ -64,12 +64,6 @@ enum STYPE // status return from CSBUI()
 
 enum OPTIONS
 {
-   OPT_NORMAL,
-   OPT_DOUBLE,
-   OPT_TRIPLE,
-   OPT_QUADRUPLE,
-   OPT_QUINTUPLE,
-   OPT_SEXTUPLE,
    OPT_RECORD,
    OPT_PLAYBACK,
    OPT_QUICKPLAY,

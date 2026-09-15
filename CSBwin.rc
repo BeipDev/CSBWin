@@ -47,12 +47,6 @@ BEGIN
     END
     POPUP "&Misc"
     BEGIN
-        MENUITEM "Size x &1",                   IDC_Normal
-        MENUITEM "Size x &2",                   IDC_Double
-        MENUITEM "Size x &3",                   IDC_Triple
-        MENUITEM "Size x &4",                   IDC_Quadruple
-        MENUITEM "Size x &5",                   IDC_Quintuple
-        MENUITEM "Size x &6",                   IDC_Sextuple
         MENUITEM "4x3 Aspect Ratio",            ID_4X3ASPECTRATIO, CHECKED
         MENUITEM SEPARATOR
         MENUITEM "&Record",                     IDC_Record
