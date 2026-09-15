@@ -2072,7 +2072,7 @@ tag01eec4:
    FadeToPalette(_5_, &d.Palette11914);
    wvbl(_2_);
    ClearMemory(d.LogicalScreenBase, 32000);
-   FadeToPalette(_3_, &d.Palette11978);
+   FadeToPalette(_3_, &d.PalettePortraits);
 tag01ef1c:
    InsertDisk(0, 1);
    goto tag01efe4;
@@ -2119,7 +2119,7 @@ tag01efe4:
    D0W = 1;
    RETURN_i16(D0W);
 tag01efee:
-   FadeToPalette(_4_, &d.Palette11978);
+   FadeToPalette(_4_, &d.PalettePortraits);
    D0W = d.PartyHasDied;
    if(D0W == 0)
       goto tag01f036;

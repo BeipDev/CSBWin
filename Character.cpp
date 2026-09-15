@@ -4461,9 +4461,9 @@ RESTARTABLE _FeedCharacter()
       {
          for(i = 0; i < 2; i++)
          {
-            TAG0013e4(objNI_Special_h, 56, 46);
+            DrawEatingFrame(objNI_Special_Chewing2, 56, 46);
             VBLDelay(_2_, 8); // Animation delay.  Chewing
-            TAG0013e4(objNI_Special_g, 56, 46);
+            DrawEatingFrame(objNI_Special_Chewing1, 56, 46);
             VBLDelay(_1_, 8); // Animation delay.  Chewing
                               //
          }

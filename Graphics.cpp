@@ -5,12 +5,9 @@
 
 #include <stdio.h>
 
-// #include "Objects.h"
 #include "Dispatch.h"
 #include "CSB.h"
 #include "Data.h"
-
-// extern CDC *OnDrawDC;
 
 void info(char *, unsigned int);
 void CleanupAltMonCache();
@@ -41,53 +38,23 @@ extern FILE *GrphDbg;
 
 class SCREEN
 {
-private:
-   ui8 *m_physScreenBase;
-   ui8 *m_logScreenBase;
-   ui8 *m_physAllocated; // The buffer we allocated
-   ui8 *m_logAllocated;  // The buffer we allocated
 public:
-   SCREEN();
-   ~SCREEN();
    ui8 *physbase();
    ui8 *logbase();
    void physbase(ui8 *newphys);
    void logbase(ui8 *newlog);
+
+private:
+   ui8 *m_physScreenBase{};
+   ui8 *m_logScreenBase{};
+   ui8 m_physAllocated[32000];
+   ui8 m_logAllocated[32000];
 };
-
-SCREEN::SCREEN()
-{
-   m_physAllocated = NULL;
-   m_logAllocated = NULL;
-   m_physScreenBase = NULL;
-   m_logScreenBase = NULL;
-}
-
-SCREEN::~SCREEN()
-{
-   if(m_physAllocated != NULL)
-      UI_free(m_physAllocated);
-   m_physScreenBase = NULL;
-   m_physAllocated = NULL;
-   if(m_logAllocated)
-      UI_free(m_logAllocated);
-   m_logScreenBase = NULL;
-   m_logAllocated = NULL;
-}
 
 ui8 *SCREEN::physbase()
 {
-   if(m_physScreenBase == NULL)
-   {
-      if(m_physAllocated == NULL)
-         m_physAllocated = (ui8 *)UI_malloc(32000, MALLOC026);
-      if(m_physAllocated == NULL)
-      {
-         UI_MessageBox("Cannot allocate memory", NULL, MESSAGE_OK);
-         die(0x5fd1);
-      }
+   if(!m_physScreenBase)
       m_physScreenBase = m_physAllocated;
-   }
    return m_physScreenBase;
 }
 
@@ -98,17 +65,8 @@ void SCREEN::physbase(ui8 *newphys)
 
 ui8 *SCREEN::logbase()
 {
-   if(m_logScreenBase == NULL)
-   {
-      if(m_logAllocated == NULL)
-         m_logAllocated = (ui8 *)UI_malloc(32000, MALLOC027);
-      if(m_logAllocated == NULL)
-      {
-         UI_MessageBox("Cannot allocate memory", NULL, MESSAGE_OK);
-         die(0x6fd3);
-      }
+   if(!m_logScreenBase)
       m_logScreenBase = m_logAllocated;
-   }
    return m_logScreenBase;
 }
 
@@ -138,9 +96,9 @@ i16 globalPalette[16] = { // RGB top-to-bottom
 
 void setscreen(ui8 *log, ui8 *phys, i16 /*res*/)
 {
-   if((i32)phys != -1)
+   if((intptr_t)phys != -1)
       screen.physbase(phys);
-   if((i32)log != -1)
+   if((intptr_t)log != -1)
       screen.logbase(log);
 }
 
@@ -157,287 +115,117 @@ ui8 *logbase()
 void SetDLogicalBase(ui8 *b)
 {
    d.LogicalScreenBase = b;
-   if(d.Pointer12926 == NULL)
-      d.Pointer12926 =
-          (pnt)UI_malloc(768, MALLOC028);
 }
-
-/*
-void VerifyGraphicFreeList()
-{
-  ITEMQ *pCur, *pNext;
-  pCur = d.pgUnused;
-  if (pCur != NULL)
-  {
-    ASSERT(pCur->pgPrev() == NULL,"pCur");
-}
-  while (pCur != NULL)
-  {
-    pNext=pCur->pgNext();
-    if (pNext != NULL)
-    {
-      ASSERT(pNext->pgPrev() == pCur,"pNext");
-      ASSERT(pNext->size <= pCur->size,"pNext");
-      ASSERT(pNext != pCur,"pNext");
-}
-    pCur = pNext;
-}
-}
- */
 
 // *********************************************************
 //
 // *********************************************************
-void TAG0013e4(OBJ_NAME_INDEX P1, i32 xPixel, i32 yPixel)
+void DrawEatingFrame(OBJ_NAME_INDEX P1, i32 xPixel, i32 yPixel)
 {
    RectPos rectpos;
-   ui8 *pnt_4;
-   //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-   pnt_4 = (ui8 *)allocateMemory(128, 0);
    rectpos.w.x1 = sw(xPixel);
-   rectpos.w.x2 = (i16)(rectpos.w.x1 + 15);
+   rectpos.w.x2 = rectpos.w.x1 + 15;
    rectpos.w.y1 = sw(yPixel);
-   rectpos.w.y2 = (i16)(rectpos.w.y1 + 15);
-   GetIconGraphic(P1, pnt_4);
-   BLT2Screen(pnt_4, &rectpos, 8, -1);
-   FreeTempMemory(128);
+   rectpos.w.y2 = rectpos.w.y1 + 15;
+   ui8 icon[128];
+   GetIconGraphic(P1, icon);
+   BLT2Screen(icon, &rectpos, 8, -1);
 }
+
+enum class GlyphBlitMode
+{
+   WithinWord = 0,
+   SplitLeft = 8,  // Draw the left side of a glyph split across a 16-bit screen-word boundary.
+   SplitRight = 18 // Draw the right side of a glyph split across a 16-bit screen-word boundary.
+};
 
 // Internal function to make TextOut easier to read
 //   TAG0016d8
-void BltOneChar(dReg &D2,
-                dReg &D3,
-                // dReg& D4,
-                dReg &D5,
-                aReg &A2,
-                aReg A3,
-                i32 A3inc,
-                i32 jA0,
-                i32 jA1)
+void BltOneChar(i16 mask,
+                i32 sub_position,
+                GlyphBlitMode blitMode,
+                const ui8 *glyphData,
+                ui8 *destRow,
+                i32 dest_stride,
+                i32 color,
+                i32 background_color)
 {
-   dReg D0, D1, D6, D7;
-   i32 lineCounter;
-   for(lineCounter = 0; lineCounter < 6; lineCounter++)
+   for(int y = 0; y < 6; y++)
    {
-      longGear((ui8 *)A3 + 0) &= LE32(D2L);
-      longGear((ui8 *)A3 + 4) &= LE32(D2L);
-      D0L = (UI8)(*A2);
-      switch(D5W)
+      ui16 bits = *glyphData;
+      switch(blitMode)
       {
-         case 0:
-            D0W <<= 11 - D3W;
-            break;
-         case 8:
-            D0UW >>= D3W - 11;
-            break;
-         case 18:
-            D0W <<= 27 - D3W;
-            break;
-         default: NotImplemented(0x16fc);
+         case GlyphBlitMode::WithinWord: bits <<= 11 - sub_position; break;
+         case GlyphBlitMode::SplitLeft: bits >>= sub_position - 11; break;
+         case GlyphBlitMode::SplitRight: bits <<= 27 - sub_position; break;
       }
-      // D1W = D0W;
-      // SWAP(D1);
-      // D1W = D0W;
-      D1H2 = D0H2;
-      D1H1 = D0H2;
-      SWAP(D0);
-      D6L = 0;
-      D7L = 0;
-      switch(jA0 & 0xffff)
+
+      ui16 bg_bits = ~(bits | mask);
+      for(int plane = 0; plane < 4; plane++)
       {
-         case 1: D6L = D0L; break;
-         case 2: D6W = D1W; break;
-         case 3: D6L = D1L; break;
-         case 4: D7L = D0L; break;
-         case 5:
-            D6L = D0L;
-            D7L = D0L;
-            break;
-         case 6:
-            D6W = D1W;
-            D7L = D0L;
-            break;
-         case 7:
-            D6L = D1L;
-            D7L = D0L;
-            break;
-         case 8: D7W = D1W; break;
-         case 9:
-            D6L = D0L;
-            D7W = D1W;
-            break;
-         case 10:
-            D6W = D1W;
-            D7W = D1W;
-            break;
-         case 11:
-            D6L = D1L;
-            D7W = D1W;
-            break;
-         case 12: D7L = D1L; break;
-         case 13:
-            D6L = D0L;
-            D7L = D1L;
-            break;
-         case 14:
-            D6W = D1W;
-            D7L = D1L;
-            break;
-         case 15:
-            D6L = D1L;
-            D7L = D1L;
-            break;
-         case 0: break;
-         default: NotImplemented(0x1756);
+         ui16 planeBits = 0;
+         if(color & (1 << plane))
+            planeBits |= bits;
+         if(background_color & (1 << plane))
+            planeBits |= bg_bits;
+         wordGear(destRow + plane * 2) = wordGear(destRow + plane * 2) & LE16(mask) | LE16(planeBits);
       }
-      D0L |= D2L;
-      D0L ^= 0xffffffff;
-      D0W = 0;
-      D1L |= D2L;
-      D1L ^= 0xffffffff;
-      switch(jA1 & 0xffff)
-      {
-         case 1: D6L |= D0L; break;
-         case 2: D6W |= D1W; break;
-         case 3: D6L |= D1L; break;
-         case 4: D7L |= D0L; break;
-         case 5:
-            D6L |= D0L;
-            D7L |= D0L;
-            break;
-         case 6:
-            D6W |= D1W;
-            D7L |= D0L;
-            break;
-         case 7:
-            D6L |= D1L;
-            D7L |= D0L;
-            break;
-         case 8: D7W |= D1W; break;
-         case 9:
-            D6L |= D0L;
-            D7W |= D1W;
-            break;
-         case 10:
-            D6W |= D1W;
-            D7W |= D1W;
-            break;
-         case 11:
-            D6L |= D1L;
-            D7W |= D1W;
-            break;
-         case 12: D7L |= D1L; break;
-         case 13:
-            D6L |= D0L;
-            D7L |= D1L;
-            break;
-         case 14:
-            D6W |= D1W;
-            D7L |= D1L;
-            break;
-         case 15:
-            D6L |= D1L;
-            D7L |= D1L;
-            break;
-         case 0: break;
-         default: NotImplemented(0x17ae);
-      }
-      longGear((ui8 *)A3 + 0) |= LE32(D6L);
-      longGear((ui8 *)A3 + 4) |= LE32(D7L);
-      A2 += 128;
-      A3 += A3inc;
+
+      glyphData += 128;
+      destRow += dest_stride;
    }
-   A2 -= 128;
-   A3 -= A3inc;
 }
 
 //   TAG00154c
 void TextOut_OneLine(ui8 *dest,
-                     i32 destWidth,
-                     i32 x,
-                     i32 y,
+                     i32 dest_stride,
+                     i32 x, i32 y,
                      i32 color,
-                     i32 P6,
+                     i32 backgroundColor,
                      const char *text,
-                     i32 maxLineLength,
+                     i32 max_chars,
                      bool translate)
 {
-   dReg D2, D3, D4, D5, D6, D7;
-   i32 saveD2;
-   const char *A0;
-   aReg A2, A3, saveA2, saveA3;
-   i32 jA0, jA1;
-   i32 numCharactersDisplayed;
    if(translate)
-   {
       text = TranslateLanguage(text);
-   }
-   A2 = NULL;
-   //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-   A3 = (aReg)dest;
-   D7W = (i16)x;
-   D6W = (i16)y;
-   // D5W = P5;
-   D4W = (i16)P6;
-   A0 = text;
-   if(*A0 == 0)
+
+   if(!*text)
       return;
 
-   A3 += (D6W - 4) * destWidth;
-   A3 += (D7UW & 0xfff0) >> 1; // UWed
-   D3W = (i16)(D7W & 15);
-   jA0 = color; // 16 colors
-   jA1 = D4W;
-   numCharactersDisplayed = 0;
-tag001660:
-   for(;;)
-   {
-      do
-      {
-         if(numCharactersDisplayed == maxLineLength)
-            return;
-         numCharactersDisplayed++;
-         D2L = 0;
-         D2B = *text;
-         if(D2W == 0)
-            return;
-         text++;
-         A2 = d.Pointer12926 + D2W;
-         if(D3W > 11)
-            goto tag0016a0;
-         // D4L = 6;
-         D2L = 0x07ff07ff;
-         D2UL >>= D3W; // ULed
-         D2H1 = D2W;
-         D5L = 0;
-         BltOneChar(D2, D3, D5, A2, A3, destWidth, jA0, jA1);
-         D3W += 6;
-      } while(D3W < 16);
-      D3W &= 1;
-      A3 += 8;
-   }
-tag0016a0:
-   // D4L = 6;
-   saveA3 = A3 + 8;
-   saveA2 = A2;
-   D2L = LE32(d.Long1812[D3W - 12]);
-   // D2L = longGear((pnt)&d.Pointer1860+D3W);
-   // saveD2L = longGear((pnt)&d.Word1876+D3W);
-   saveD2 = LE32(d.Long1828[D3W - 12]);
-   A2 = saveA2;
-   D5L = 8;
-   BltOneChar(D2, D3, D5, A2, A3, destWidth, jA0, jA1);
-   D2L = saveD2;
-   A2 = saveA2;
-   A3 = saveA3;
-   ;
-   // D4L = 6;
-   D5L = 18;
-   BltOneChar(D2, D3, D5, A2, A3, destWidth, jA0, jA1);
+   dest += (y - 4) * dest_stride;
+   dest += (x & 0xfff0) >> 1; // X shift to nearest 16-bit screen word (we divide by two as 4bpp halves the byte count)
+   i32 sub_position = x & 15; // X shift within a 16-bit screen word
 
-   A3 = saveA3;
-   D3W -= 10;
-   goto tag001660;
+   for(i32 char_index = 0; char_index < max_chars; char_index++)
+   {
+      ui8 code_point = *text++;
+      if(code_point == 0)
+         return;
+
+      auto glyph_data = d.FontAtlas+code_point;
+      if(sub_position <= 11)
+      {
+         i16 mask = 0x07ff07ff >> sub_position;
+         BltOneChar(mask, sub_position, GlyphBlitMode::WithinWord, glyph_data, dest, dest_stride, color, backgroundColor);
+         sub_position += 6;
+         if(sub_position >= 16) // We moved to the next screen word
+         {
+            sub_position -= 16;
+            dest += 8; // 8 bytes = Next chunk of 16 4bpp pixels
+         }
+         continue;
+      }
+
+      const i32 splitIndex = sub_position - 12;
+      const i16 leftMask = LE16(d.splitGlyphLeftMasks[splitIndex]);
+      BltOneChar(leftMask, sub_position, GlyphBlitMode::SplitLeft, glyph_data, dest, dest_stride, color, backgroundColor);
+
+      const i16 rightMask = LE16(d.splitGlyphRightMasks[splitIndex]);
+      dest += 8; // 8 bytes = Next chunk of 16 4bpp pixels
+      BltOneChar(rightMask, sub_position, GlyphBlitMode::SplitRight, glyph_data, dest, dest_stride, color, backgroundColor);
+
+      sub_position += 6 - 16; // Move over by one glyph (6 pixels) and subtract 16 pixels since we moved to the next screen word
+   }
 }
 
 // TAG008498
@@ -1458,74 +1246,11 @@ ui16 data009032[] =
     {
         0x0000, 0x8000, 0xc000, 0xe000, 0xf000, 0xf800, 0xfc00, 0xfe00, 0xff00, 0xff80, 0xffc0, 0xffe0, 0xfff0, 0xfff8, 0xfffc, 0xfffe, 0xffff};
 
-void tagja0(i32 ja0, pnt A1, dReg D0)
+void WriteColor(i32 color, ui16* dest, ui16 mask)
 {
-   switch(ja0)
-   {
-      case 0: break;
-      case 1:
-         wordGear(A1 + 0) |= LE16(D0W);
-         break;
-      case 2:
-         wordGear(A1 + 2) |= LE16(D0W);
-         break;
-      case 3:
-         wordGear(A1 + 2) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         break;
-      case 4:
-         wordGear(A1 + 4) |= LE16(D0W);
-         break;
-      case 5:
-         wordGear(A1 + 4) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         break;
-      case 6:
-         wordGear(A1 + 2) |= LE16(D0W);
-         wordGear(A1 + 4) |= LE16(D0W);
-         break;
-      case 7:
-         wordGear(A1 + 2) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         wordGear(A1 + 4) |= LE16(D0W);
-         break;
-      case 8:
-         wordGear(A1 + 6) |= LE16(D0W);
-         break;
-      case 9:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         break;
-      case 10:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 2) |= LE16(D0W);
-         break;
-      case 11:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 2) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         break;
-      case 12:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 4) |= LE16(D0W);
-         break;
-      case 13:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 4) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         break;
-      case 14:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 4) |= LE16(D0W);
-         wordGear(A1 + 2) |= LE16(D0W);
-         break;
-      case 15:
-         wordGear(A1 + 6) |= LE16(D0W);
-         wordGear(A1 + 4) |= LE16(D0W);
-         wordGear(A1 + 0) |= LE16(D0W);
-         wordGear(A1 + 2) |= LE16(D0W);
-         break;
-   }
+   for(int i=0;i<4;i++)
+      if(color & (1 << i))
+         dest[i] |= LE16(mask);
 }
 
 //   TAG008e60
@@ -1607,7 +1332,7 @@ tag008f6e:
    D7W ^= 0xffff;          // Trail replace
    D0W = (i16)(D1W & D7W); // Lead replace
    D7W ^= 0xffff;          // Trail keep
-   tagja0(ja0, A1, D0);
+   WriteColor(ja0, (ui16*)A1, D0W);
    A1 += 8;
    if(D2W >= 0) // #full groups
    {
@@ -1620,7 +1345,7 @@ tag008f6e:
             wordGear(A1 + 2) &= LE16(D7W);
             wordGear(A1 + 4) &= LE16(D7W);
             wordGear(A1 + 6) &= LE16(D7W);
-            tagja0(ja0, A1, D0);
+            WriteColor(ja0, (ui16*)A1, D0W);
             A1 += 8;
          } while((--D2W) >= 0);
       }
@@ -1632,7 +1357,7 @@ tag008f6e:
       D7W ^= 0xffff; // trailing replace
       D0W = (i16)(D5W & D7W);
       D7W ^= 0xffff;
-      tagja0(ja0, A1, D0);
+      WriteColor(ja0, (ui16*)A1, D0W);
       A1 += 8;
    }
    A1 += D7H1;
@@ -3033,7 +2758,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
    ui32 red100[16], green100[16], blue100[16];
    i32 i, I, overlayPaletteEntry, RED, GREEN, BLUE;
    i32 transparency, opaqueness;
-   i16 *pTable;
+   ui32 *pTable;
    transparency = useOverlay ? m_p2 : 100;
    opaqueness = 100 - transparency;
    if(useOverlay)
@@ -3042,8 +2767,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
       {
          for(i = 0; i < 16; i++)
          { // Unpack the rgb values and multiply by 100-transparency.
-            overlayPaletteEntry =
-                ((atariPalette[i] & 0x700) >> 2) | ((atariPalette[i] & 0x070) >> 1) | ((atariPalette[i] & 0x007) >> 0); // One of 512 entries
+            overlayPaletteEntry = ((atariPalette[i] & 0x700) >> 2) | ((atariPalette[i] & 0x070) >> 1) | ((atariPalette[i] & 0x007) >> 0); // One of 512 entries
             red[i] = overlayPaletteRed[overlayPaletteEntry] * transparency;
             green[i] = overlayPaletteGreen[overlayPaletteEntry] * transparency;
             blue[i] = overlayPaletteBlue[overlayPaletteEntry] * transparency;
@@ -3063,14 +2787,10 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
                // BLUE  = ((m_overlayPalette[I] >>  0) & 0xff) * opaqueness;
                for(i = 0; i < 16; i++, pTable++)
                {
-#ifdef RGB555
-                  *pTable = (i16)(((red100[i]) / 800) << 10 | ((green100[i]) / 800) << 5 | ((blue100[i]) / 800) << 0);
-#endif
-#ifdef RGB655
-                  *pTable = (i16)(((red100[i]) / 800) << 11    // 10
-                                  | ((green100[i]) / 800) << 6 // 5
-                                  | ((blue100[i]) / 800) << 0);
-#endif
+                  ui8 r8 = (red100[i]) / 100;
+                  ui8 g8 = (green100[i]) / 100;
+                  ui8 b8 = (blue100[i]) / 100;
+                  *pTable = (i32)((r8 << 16) | (g8 << 8) | (b8 << 0));
                }
             }
             else
@@ -3080,14 +2800,10 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
                BLUE = ((m_overlayPalette[I] >> 0) & 0xff) * opaqueness;
                for(i = 0; i < 16; i++, pTable++)
                {
-#ifdef RGB555
-                  *pTable = (i16)(((red[i] + RED) / 800) << 10 | ((green[i] + GREEN) / 800) << 5 | ((blue[i] + BLUE) / 800) << 0);
-#endif
-#ifdef RGB655
-                  *pTable = (i16)(((red[i] + RED) / 800) << 11      // 10
-                                  | ((green[i] + GREEN) / 800) << 6 // 5
-                                  | ((blue[i] + BLUE) / 800) << 0);
-#endif
+                  ui8 r8 = (red[i] + RED) / 100;
+                  ui8 g8 = (green[i] + GREEN) / 100;
+                  ui8 b8 = (blue[i] + BLUE) / 100;
+                  *pTable = (i32)((r8 << 16) | (g8 << 8) | (b8 << 0));
                }
             }
          }
@@ -3102,12 +2818,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
             RED = overlayPaletteRed[overlayPaletteEntry];
             GREEN = overlayPaletteGreen[overlayPaletteEntry];
             BLUE = overlayPaletteBlue[overlayPaletteEntry];
-#ifdef RGB555
-            m_table[i] = (i16)(((RED & 0xf8) << 7) | ((GREEN & 0xf8) << 2) | ((BLUE & 0xf8) >> 3));
-#endif
-#ifdef RGB655
-            m_table[i] = (i16)(((RED & 0xf8) << 8) | ((GREEN & 0xf8) << 3) | ((BLUE & 0xf8) >> 3));
-#endif
+            m_table[i] = (i32)((RED << 16) | (GREEN << 8) | (BLUE << 0));
          }
       }
    }
@@ -3119,17 +2830,14 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
          RED = (atariPalette[i] >> 8) & 0x7;
          GREEN = (atariPalette[i] >> 4) & 0x7;
          BLUE = (atariPalette[i] >> 0) & 0x7;
-#ifdef RGB555
-         m_table[i] = (i16)((RED << 12) | (GREEN << 7) | (BLUE << 2));
-         m_table[i] |= (m_table[i] & 0x6318) >> 3;
-#else
-#ifdef RGB655
-         m_table[i] = (i16)((RED << 13) | (GREEN << 8) | (BLUE << 2));
-         m_table[i] |= (m_table[i] & 0xc318) >> 3;
-#else
-         You must define some sort of RGB format !!
-#endif
-#endif
+
+         // Scale 3-bit Atari color (0-7) to 8-bit (0-255) by replicating bits
+         ui8 r8 = (RED << 5) | (RED << 2) | (RED >> 1);
+         ui8 g8 = (GREEN << 5) | (GREEN << 2) | (GREEN >> 1);
+         ui8 b8 = (BLUE << 5) | (BLUE << 2) | (BLUE >> 1);
+
+         // Pack into 24-bit RGB (0x00RRGGBB)
+         m_table[i] = (i32)((r8 << 16) | (g8 << 8) | (b8 << 0));
       }
    }
 }

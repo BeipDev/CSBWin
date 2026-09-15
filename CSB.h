@@ -239,7 +239,7 @@ struct OVERLAYDATA
    i32 m_overlayNumber;
    ui8 m_overlay[136 * 224];
    ui32 m_overlayPalette[256];
-   i16 m_table[4096];
+   ui32 m_table[4096];
    i32 m_p1, m_p2, m_p3, m_p4;
    bool m_change;
    OVERLAYDATA();
@@ -3150,7 +3150,7 @@ OBJ_NAME_INDEX GetBasicObjectType(RecordName); // TAG00114c
 void DrawNameOfHeldObject(RecordName);      // TAG0012a0
 void ClearHeldObjectName();                 // TAG00133e
 void GetIconGraphic(OBJ_NAME_INDEX, ui8 *); // TAG00135c
-void TAG0013e4(OBJ_NAME_INDEX, i32, i32);
+void DrawEatingFrame(OBJ_NAME_INDEX, i32, i32);
 void DrawItem(i32 squareNumber, OBJ_NAME_INDEX objectNameIndex); // TAG00144e
 OBJ_NAME_INDEX ObjectAtLocation(i32 bodyLocation);               // TAG001534
 //   TAG00154c
@@ -3159,7 +3159,7 @@ void TextOut_OneLine(ui8 *dest,
                      i32 x,
                      i32 y,
                      i32 color,
-                     i32 P6,
+                     i32 backgroundColor,
                      const char *text,
                      i32 maxLineLength,
                      bool translate);
@@ -3193,7 +3193,7 @@ void TextOutToScreen(i32 column,
                      i32,
                      const char *pnt,
                      bool translate = false); // TAG001c42
-void TAG001c6e();
+void InitScrollingText();
 //      001ce8 = TRAP 14
 //      001cf8 = TRAP 1
 void StartSound(ui8 *P1, i32 P2, i32 highVolume); // TAG001d16

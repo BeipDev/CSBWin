@@ -150,22 +150,22 @@ RESTARTABLE _ShowCredits(const i32 P1) //()
    closeGraphicsFile();
    if(d.DynamicPaletteSwitching)
    {
-      MemMove((ui8 *)&d.Palette11978, (ui8 *)&LOCAL_78, 32);
+      MemMove((ui8 *)&d.PalettePortraits, (ui8 *)&LOCAL_78, 32);
       for(D6W = 0; D6W <= 7; D6W++)
       {
          wvbl(_2_);
          for(D7W = 0; D7W < 16; D7W++)
          {
-            D0W = Darken(d.Palette11946.color[D7W]);
-            d.Palette11946.color[D7W] = D0W;
-            D0W = Darken(d.Palette11978.color[D7W]);
-            d.Palette11978.color[D7W] = D0W;
+            D0W = Darken(d.PaletteViewport.color[D7W]);
+            d.PaletteViewport.color[D7W] = D0W;
+            D0W = Darken(d.PalettePortraits.color[D7W]);
+            d.PalettePortraits.color[D7W] = D0W;
             //
          }
          //
       }
       wvbl(_3_);
-      MemMove((ui8 *)&LOCAL_78, (ui8 *)&d.Palette11978, 32);
+      MemMove((ui8 *)&LOCAL_78, (ui8 *)&d.PalettePortraits, 32);
    }
    else
    {
@@ -292,7 +292,7 @@ RESTARTABLE _ShowCredits(const i32 P1) //()
             FadeToPalette(_10_, &LOCAL_110);
             ClearMemory(d.LogicalScreenBase, 32000);
             FadeToPalette(_11_, &d.Palette552[0]);
-            MemMove((ui8 *)&d.Palette552[0], (ui8 *)&d.Palette11946, 32);
+            MemMove((ui8 *)&d.Palette552[0], (ui8 *)&d.PaletteViewport, 32);
             d.gameState = GAMESTATE_ResumeSavedGame;
             if(recording)
             {

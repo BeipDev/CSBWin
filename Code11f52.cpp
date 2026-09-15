@@ -62,54 +62,44 @@ void DrawNameOfHeldObject(RecordName object)
    {
       pName = d.ObjectNames[objNID6];
    }
-   DrawText(
-       d.LogicalScreenBase,
-       160,
-       0xe9,
-       0x25,
-       4,
-       0,
-       pName,
-       14);
+   DrawText(d.LogicalScreenBase, 160, 0xe9, 0x25, 4, 0, pName, 14);
 }
 
 // *********************************************************
 //
 // *********************************************************
 //   TAG00135c
-void GetIconGraphic(OBJ_NAME_INDEX iconNum, ui8 *dest)
+void GetIconGraphic(OBJ_NAME_INDEX iconNum, ui8 *dest_bytes)
 {
-   dReg D0, D1, D6, D7;
-   OBJ_NAME_INDEX objNID7;
-   aReg A2, A3;
-   //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-   objNID7 = iconNum;
-   A3 = (aReg)dest;
-   for(D6W = 0; D6W < 7; D6W++)
-   {
-      D0W = d.Word612[D6W]; //(0,32,64,96,128,160,192)
-      if(D0W > objNID7)
-         break;
-      //
-   }
-   A2 = (pnt)GetBasicGraphicAddress((--D6W) + 42);
-   D7W = sw(objNID7 - d.Word612[D6W]);
-   D0W = (I16)(D7W & 0xff0);
-   D0W = sw(D0W << 5); // Won't fit!
-   D1W = (I16)((D7W & 15) << 1);
-   D0W = sw(D0W + D1W);
-   D0L = (D0L & 0xffff) << 2;
-   A2 += D0L;
+   // Icon graphics are organized in a 128-byte-stride memory layout:
+   // - Icons are grouped into 7 sets (Word612 marks group boundaries)
+   // - Each set contains up to 32 icons in a 16x2 grid
+   // - Each icon is 16x16 pixels (8 bytes x 16 rows in ST format)
 
-   for(D6W = 0; D6W < 16; D6W++)
+   // Find which group this icon belongs to
+   int group_index = 0;
+   while(group_index < 6 && d.Word612[group_index + 1] <= iconNum)
+      group_index++;
+
+   // Get the base address of the graphic data for this group
+   ui32 *src = (ui32 *)GetBasicGraphicAddress(group_index + 42);
+   ui32 *dest = (ui32 *)dest_bytes;
+
+   // Calculate position within the group
+   i16 offset = iconNum - d.Word612[group_index];
+
+   // Calculate byte offset into the graphic data
+   // 16x2 grid: icons are arranged in 2 horizontal rows of 16 icons each
+   src += (offset/16)*32*16 + (offset%16)*2;
+
+   for(int row = 0; row < 16; row++)
    {
-      longGear((ui8 *)A3) = longGear((ui8 *)A2);
-      A2 += 4;
-      A3 += 4;
-      longGear((ui8 *)A3) = longGear((ui8 *)A2);
-      A3 += 4;
-      A2 += 124;
-      //
+      // Copy 16 pixels (8 bytes) of the icon
+      *dest++ = src[0];
+      *dest++ = src[1];
+
+      // Move to next row (skip to next 128-byte stride)
+      src += 32;
    }
 }
 

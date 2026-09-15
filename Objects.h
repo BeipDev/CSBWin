@@ -645,8 +645,8 @@ enum OBJ_NAME_INDEX
    objNI_Special_d,     // ca 202
    objNI_Special_e,     // cb 203
    objNI_Special_f,     // cc 204
-   objNI_Special_g,     // cd 205
-   objNI_Special_h,     // ce 206
+   objNI_Special_Chewing1,     // cd 205
+   objNI_Special_Chewing2,     // ce 206
    objNI_Special_i,     // cf 207
    objNI_Special_j,     // d0 208
    objNI_Special_k,     // d1

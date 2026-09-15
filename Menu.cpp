@@ -474,7 +474,7 @@ RESTARTABLE _DoMenu(
    }
    if(FadeOldScreen != 0)
    {
-      FadeToPalette(_3_, &d.Palette11978);
+      FadeToPalette(_3_, &d.PalettePortraits);
    }
    d.Word11684 = 1;
    RETURN;

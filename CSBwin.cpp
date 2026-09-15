@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include "UI.h"
 #include "dispatch.h"
-// #include "objects.h"
 #include "CSB.h"
 #include "data.h"
 
@@ -150,7 +149,6 @@ i32 WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE /*hPrevInstance*/,
                    LPSTR /*lpCmdLine*/,
                    int nCmdShow)
-// #endif
 {
    D2D1_FACTORY_OPTIONS d2dOptions;
 #if defined(_DEBUG)
@@ -277,41 +275,20 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
    WNDCLASSEXA wcex;
 
    ProcessCommandLine();
-   //  if (!fullscreenRequested)
-   {
-      wcex.cbSize = sizeof(WNDCLASSEX);
+   wcex.cbSize = sizeof(WNDCLASSEX);
 
-      wcex.style = CS_HREDRAW | CS_VREDRAW;
-      wcex.lpfnWndProc = (WNDPROC)WndProc;
-      wcex.cbClsExtra = 0;
-      wcex.cbWndExtra = 0;
-      wcex.hInstance = hInstance;
-      wcex.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_CSBWIN);
-      wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-      wcex.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
-      wcex.lpszMenuName = (LPCSTR)IDC_CSBWIN;
-      wcex.lpszClassName = szWindowClass;
-      wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
-   }
-#if 0
-  else
-  {
+   wcex.style = CS_HREDRAW | CS_VREDRAW;
+   wcex.lpfnWndProc = (WNDPROC)WndProc;
+   wcex.cbClsExtra = 0;
+   wcex.cbWndExtra = 0;
+   wcex.hInstance = hInstance;
+   wcex.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_CSBWIN);
+   wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+   wcex.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
+   wcex.lpszMenuName = (LPCSTR)IDC_CSBWIN;
+   wcex.lpszClassName = szWindowClass;
+   wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
 
-	  wcex.cbSize = sizeof(WNDCLASSEX);
-
-  	wcex.style			= 0;
-  	wcex.lpfnWndProc	= (WNDPROC)WndProc;
-  	wcex.cbClsExtra		= 0;
-  	wcex.cbWndExtra		= 0;
-  	wcex.hInstance		= hInstance;
-  	wcex.hIcon			= LoadIcon(hInstance, (LPCTSTR)IDI_CSBWIN);
-  	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-  	wcex.hbrBackground	= hBrush;
-  	wcex.lpszMenuName	= NULL;
-  	wcex.lpszClassName	= szWindowClass;
-  	wcex.hIconSm		= LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
-}
-#endif
    return RegisterClassExA(&wcex);
 }
 

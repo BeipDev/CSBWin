@@ -1065,7 +1065,7 @@ void vblInterrupt() // TAG000c3a
          {
             d.Word11778 = 0;
             A0 = (pnt)&d.Palette552[d.CurrentPalette]; // palette address
-            memmove(&d.Palette11946, A0, 32);          // set current palette
+            memmove(&d.PaletteViewport, A0, 32);          // set current palette
          }
          A0 = (aReg)d.pViewportBMP;
          A1 = (aReg)d.LogicalScreenBase + 5280;
@@ -1814,32 +1814,15 @@ void PrintLinefeed()
 //   TAG001c42
 void TextOutToScreen(i32 xPixel, i32 yPixel, i32 color, i32 P4, const char *P5, bool translate)
 {
-   //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-   TextOut_OneLine(d.LogicalScreenBase,
-                   160,
-                   xPixel,
-                   yPixel,
-                   color,
-                   P4,
-                   P5,
-                   999,
-                   translate);
+   TextOut_OneLine(d.LogicalScreenBase, 160, xPixel, yPixel, color, P4, P5, 999, translate);
 }
 
-void TAG001c6e()
+void InitScrollingText()
 {
-   dReg D7;
-   // i16 saveD7 = D7W;
-   //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    scrollingText.SetPrintPosition(0, 0);
-   d.newTextLine = allocateMemory(1120, 1);
-   d.Pointer12926 = (pnt)allocateMemory(768, 1);
-   ReadAndExpandGraphic(0x822d, (ui8 *)d.Pointer12926, 0, 0, 768);
-   for(D7W = 0; D7W < 4; D7W++)
-   {
-      d.TextTimeout[D7W] = -1;
-   }
-   // D7W = saveD7;
+   ReadAndExpandGraphic(0x822d, d.FontAtlas, 0, 0, 128*6);
+   for(int i = 0; i < 4; i++)
+      d.TextTimeout[i] = -1;
 }
 
 /*
@@ -2996,7 +2979,7 @@ void MarkViewportUpdated(i16 MultiplePalettes)
    else
    {
       // if ((MultiplePalettes==0) && (d.Word11740!=0))
-      //   memmove((pnt)palette,(pnt)&d.Palette11978,32);
+      //   memmove((pnt)palette,(pnt)&d.PalettePortraits,32);
       d.Word11740 = MultiplePalettes;
    }
    d.ViewportUpdated = 1; // Force VBL to copy Viewport to Screen
@@ -10909,7 +10892,7 @@ RESTARTABLE _TAG021028()
    if(d.gameState == GAMESTATE_ResumeSavedGame)
    {
       // ClearMemory(d.LogicalScreenBase, 32000);
-      // FadeToPalette(&d.Palette11978);
+      // FadeToPalette(&d.PalettePortraits);
       for(;;)
       {
          DoMenu(_6_,
@@ -11022,22 +11005,22 @@ RESTARTABLE _GameSetup(i32 showPrisonDoor)
    ReadFloorAndCeilingBitmaps(0);
    ReadWallBitmaps(0);
    HopefullyNotNeeded(0x669d);
-   TAG001c6e();
+   InitScrollingText();
    TAG0010ae();
    // D0 = GetAbsFuncAddr(276); // TAG00dd78(276);
    // D0 = TAG00306c;
    d.pFunc23232 = TAG00306c;
    // D0 = TAG00dd78(&DetachItem16)
    d.pFunc23236 = DetachItem16;
-   //  MemMove((pnt)palette,(pnt)&d.Palette11946, 32);
-   //  MemMove((pnt)palette,(pnt)&d.Palette11978, 32);
+   //  MemMove((pnt)palette,(pnt)&d.PaletteViewport, 32);
+   //  MemMove((pnt)palette,(pnt)&d.PalettePortraits, 32);
    TAG0023b0();
    TAG000ec6(); // In supervisor mode
    jdisint(5);  // TRAP 14 (#26,#5);
    // TAG0020ca();
    wvbl(_2_);
-   MemMove((ui8 *)d.Palette552, (ui8 *)&d.Palette11946, 32); // Initialize palette
-   MemMove((ui8 *)d.Palette552, (ui8 *)&d.Palette11978, 32); // Initialize palette
+   MemMove((ui8 *)d.Palette552, (ui8 *)&d.PaletteViewport, 32); // Initialize palette
+   MemMove((ui8 *)d.Palette552, (ui8 *)&d.PalettePortraits, 32); // Initialize palette
    if(showPrisonDoor == 1)
    {
       TAG01f746(_3_);
@@ -11922,7 +11905,7 @@ RESTARTABLE _AskWhatToDo()
    ReadFloorAndCeilingBitmaps(0);
    ReadWallBitmaps(0);
    HopefullyNotNeeded(0x7486);
-   TAG001c6e();
+   InitScrollingText();
    /*
      TAG0010ae();
        //D0 = GetAbsFuncAddr(276); // TAG00dd78(276);
@@ -11930,19 +11913,19 @@ RESTARTABLE _AskWhatToDo()
      d.pFunc23232 = TAG00306c;
        //D0 = TAG00dd78(&DetachItem16)
      d.pFunc23236 = DetachItem16;
-     //  MemMove((pnt)palette,(pnt)&d.Palette11946, 32);
-     //  MemMove((pnt)palette,(pnt)&d.Palette11978, 32);
+     //  MemMove((pnt)palette,(pnt)&d.PaletteViewport, 32);
+     //  MemMove((pnt)palette,(pnt)&d.PalettePortraits, 32);
      TAG0023b0();
      TAG000ec6(); // In supervisor mode
      jdisint(5);  // TRAP 14 (#26,#5);
      TAG0020ca();
      wvbl(_2_);
-     MemMove((pnt)d.Palette552, (pnt)&d.Palette11946, 32); // Initialize palette
-     MemMove((pnt)d.Palette552, (pnt)&d.Palette11978, 32); // Initialize palette
+     MemMove((pnt)d.Palette552, (pnt)&d.PaletteViewport, 32); // Initialize palette
+     MemMove((pnt)d.Palette552, (pnt)&d.PalettePortraits, 32); // Initialize palette
      TAG01f746(_3_);
      */
    setscreen(d.LogicalScreenBase, d.LogicalScreenBase, 0);
-   MemMove((ui8 *)d.Palette552, (ui8 *)&d.Palette11978, 32); // Initialize palette
+   MemMove((ui8 *)d.Palette552, (ui8 *)&d.PalettePortraits, 32); // Initialize palette
 #ifdef TARGET_OS_MAC
    MacShowCursor();
 #endif

@@ -2044,7 +2044,7 @@ void DumpPalettes(FILE *f)
 {
    i32 special, i;
    char palettename[30];
-   DumpPalette(f, &d.Palette11978, "Palette11978");
+   DumpPalette(f, &d.PalettePortraits, "PalettePortraits");
    for(i = 0; i < 6; i++)
    {
       sprintf(palettename, "viewport palette number %d", i);

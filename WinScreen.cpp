@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 
-// #include "Objects.h"
 #include "Dispatch.h"
 #include "CSB.h"
 #include "Data.h"
@@ -20,8 +19,6 @@
 extern CntPtrTo<ID2D1Factory> g_pID2D1Factory;
 extern CntPtrTo<ID2D1HwndRenderTarget> g_pID2DRenderTarget;
 extern CntPtrTo<ID2D1Bitmap> g_pID2DBitmap;
-
-// #define USE_DIBS
 
 HBITMAP g_bmpOffscreen;
 
@@ -86,11 +83,10 @@ ui32 STBLTCount = 0;
 
 i32 screenSize = 2;
 i16 palette16[16];
-i16 g_bitmap[320 * 200];
+ui32 g_bitmap[320 * 200];
 i16 counter;
 i16 bitSkip;
 i32 dstLineLen;
-BITMAPINFO bitmapInfo;
 i16 palette1[16];
 i16 palette2[16];
 i16 oldPalette1[16];
@@ -258,30 +254,6 @@ bool HasAreaChanged(ui8 *STScreen,
    }
    return false;
 }
-/*
-void createPalette32(i16 *palette)
-{ // Create 32-bit color palette from the ST 9-bit palette
-  for (i32 i=0; i<16; i++)
-  {
-    ASSERT(palette[i]<=0x777);
-    palette32[i]  = (((palette[i]>>8) & 7)*0xff/0x7)<<16;
-    palette32[i] |= (((palette[i]>>4) & 7)*0xff/0x7)<< 8;
-    palette32[i] |= (((palette[i]>>0) & 7)*0xff/0x7)<< 0;
-}
-}
-*/
-
-void createPalette16(i16 *palette)
-{ // Create 16-bit color palette from the ST 9-bit palette
-   for(i32 i = 0; i < 16; i++)
-   {
-      ASSERT(palette[i] <= 0x777, "palette");
-      palette16[i] = 0;
-      palette16[i] |= (((palette[i] >> 8) & 7) * 0x1f / 0x7) << 10; // red
-      palette16[i] |= (((palette[i] >> 4) & 7) * 0x1f / 0x7) << 5;  // green
-      palette16[i] |= (((palette[i] >> 0) & 7) * 0x1f / 0x7) << 0;  // blue
-   }
-}
 
 bool ForcedScreenDraw = false;
 
@@ -341,25 +313,20 @@ void UnpackScreen(ui8 *src, ui8 *dst)
 }
 
 void BLT1(ui8 *src,      // Raw 8-bit pixels
-          ui16 *dst,     // Destination if 16-bit result pixels
+          ui32 *dst,     // Destination if 16-bit result pixels
           i32 num,       // Width
-          ui16 *palette, // Final resulting colors of graphic plus overlay
+          ui32 *palette, // Final resulting colors of graphic plus overlay
           ui8 *overlay)  // Overlay pixels
 {
-   ui16 color;
    for(; num > 0; num--)
-   {
-      color = palette[(*(overlay++) << 4) + *(src++)];
-      *(dst++) = color;
-   }
+      *(dst++) = palette[(*(overlay++) << 4) + *(src++)];
 }
 
 int updateScreenAreaEnterCount = 0;
 int updateScreenAreaLeaveCount = 0;
 
 // Returns 1 if screen area changed.
-int UpdateScreenArea(HDC hdc,
-                     ui8 *STScreen,
+int UpdateScreenArea(ui8 *STScreen,
                      i32 x0,
                      i32 y0,
                      i32 width,
@@ -372,11 +339,7 @@ int UpdateScreenArea(HDC hdc,
                      i32 size,
                      bool useOverlay)
 {
-#ifndef USE_DIBS
-   i16 *pBitmap = g_bitmap + x0 + y0 * 320;
-#else
-   i16 *pBitmap = g_bitmap;
-#endif
+   ui32 *pBitmap = g_bitmap + x0 + y0 * 320;
 
    bool overlayChanged = false;
    i32 firstNibble[7];
@@ -586,9 +549,9 @@ int UpdateScreenArea(HDC hdc,
          pOverlay = (useOverlay && overlayActive) ? currentOverlay.m_overlay + 224 * (135 - line) + firstOverlay[segment] : black;
 
          BLT1(pNibbles, // Raw 8-bit pixel data
-              (ui16 *)pBitmap + 1 * (320 * line + currentPixel),
+              (ui32 *)pBitmap + 1 * (320 * line + currentPixel),
               segWidth[segment],
-              (ui16 *)currentOverlay.m_table,
+              currentOverlay.m_table,
               pOverlay);
 
          currentPixel += segWidth[segment];
@@ -606,21 +569,6 @@ int UpdateScreenArea(HDC hdc,
          }
       }
    }
-#endif
-
-#ifdef USE_DIBS
-   bitmapInfo.bmiHeader.biSize = 0x28;
-   bitmapInfo.bmiHeader.biWidth = 320;
-   bitmapInfo.bmiHeader.biHeight = -height;
-   bitmapInfo.bmiHeader.biPlanes = 1;
-   bitmapInfo.bmiHeader.biBitCount = 16;
-   bitmapInfo.bmiHeader.biCompression = BI_RGB;
-   bitmapInfo.bmiHeader.biSizeImage = 0;
-   bitmapInfo.bmiHeader.biXPelsPerMeter = 0;
-   bitmapInfo.bmiHeader.biYPelsPerMeter = 0;
-   bitmapInfo.bmiHeader.biClrUsed = 0;
-   bitmapInfo.bmiHeader.biClrImportant = 0;
-   SetDIBitsToDevice(hdc, dstX, dstY, width, height, 0, 0, 0, height, (char *)g_bitmap, &bitmapInfo, DIB_RGB_COLORS);
 #endif
 
    updateScreenAreaLeaveCount++;
@@ -702,7 +650,7 @@ void DumpWindow(FILE *f)
    bmfh.bfOffBits = sizeof(BITMAPFILEHEADER) + bmih.biSize + sizeof(colors);
    fwrite(&bmfh, 1, sizeof(BITMAPFILEHEADER), f);
    fwrite(&bmih, 1, sizeof(BITMAPINFOHEADER), f);
-   MakeBMPPalette(colors, d.DynamicPaletteSwitching ? &d.Palette11946 : (PALETTE *)&globalPalette);
+   MakeBMPPalette(colors, d.DynamicPaletteSwitching ? &d.PaletteViewport : (PALETTE *)&globalPalette);
    fwrite(colors, 1, sizeof(colors), f);
    MakeBMPBitmap((ui16 *)physbase(), bitmapA);
    fwrite(bitmapA, 1, sizeof(bitmapA), f);
@@ -746,7 +694,6 @@ void DumpImages()
 
 ui8 prevScreen[32000];
 
-bool pc1, pc2;
 void display()
 {
    static i32 numDisplay = 0;
@@ -776,39 +723,25 @@ void display()
       return;
    if(d.DynamicPaletteSwitching)
    {
-      memcpy(palette1, &d.Palette11978, 32);
-      memcpy(palette2, &d.Palette11946, 32);
-      memcpy(globalPalette, &d.Palette11978, 32);
+      memcpy(palette1, &d.PalettePortraits, 32);
+      memcpy(palette2, &d.PaletteViewport, 32);
+      memcpy(globalPalette, &d.PalettePortraits, 32);
    }
    else
    {
       memcpy(palette1, globalPalette, 32);
       memcpy(palette2, globalPalette, 32);
    }
-   pc1 = HasPaletteChanged(palette1, oldPalette1);
-   pc2 = HasPaletteChanged(palette2, oldPalette2);
-   pc1 = pc1 || ForcedScreenDraw;
-   pc2 = pc2 || ForcedScreenDraw;
+   bool pc1 = ForcedScreenDraw || HasPaletteChanged(palette1, oldPalette1);
+   bool pc2 = ForcedScreenDraw || HasPaletteChanged(palette2, oldPalette2);
    ForcedScreenDraw = false;
    {
       areaChangedCount = 0;
       if(!virtualFullscreen)
       {
-#ifdef USE_DIBS
-         if(!g_bmpOffscreen)
-            g_bmpOffscreen = CreateCompatibleBitmap(GetDC(hWnd), 320, 200);
-
-         WindowDC dc(&Window(hWnd));
-         BitmapDC dcBitmap(g_bmpOffscreen, dc);
-         HDC hdc = dcBitmap.hDC();
-#else
-         HDC hdc{};
-#endif
-
          i32 size = 1;
          areaChangedCount +=
-             UpdateScreenArea(hdc,        // Viewport
-                              physbase(), // STScreen,
+             UpdateScreenArea(physbase(), // STScreen,
                               0,
                               0x21,
                               0xe0,
@@ -821,8 +754,7 @@ void display()
                               size,
                               videoMode == VM_ADVENTURE);
          areaChangedCount +=
-             UpdateScreenArea(hdc,        // Text scrolling area
-                              physbase(), // STScreen,
+             UpdateScreenArea(physbase(), // STScreen,
                               0,
                               0xa9,
                               320,
@@ -835,8 +767,7 @@ void display()
                               size,
                               false);
          areaChangedCount +=
-             UpdateScreenArea(hdc,        // portrait area
-                              physbase(), // STScreen,
+             UpdateScreenArea(physbase(), // STScreen,
                               0,
                               0,
                               320,
@@ -849,8 +780,7 @@ void display()
                               size,
                               false);
          areaChangedCount +=
-             UpdateScreenArea(hdc,        // spells,weapons,moves
-                              physbase(), // STScreen,
+             UpdateScreenArea(physbase(), // STScreen,
                               0xe0,
                               0x21,
                               0x140 - 0xe0,
@@ -866,6 +796,7 @@ void display()
 #ifdef USE_DIBS
          dc.StretchBlt(g_rcClient, dcBitmap, g_rcAtari, SRCCOPY);
 #else
+#if 0
          struct RGB16
          {
             WORD b : 5;
@@ -881,10 +812,11 @@ void display()
             auto pixel = pSrc[i];
             pixels[i] = (pixel.r << (3 + 16)) | (pixel.g << (3 + 8)) | (pixel.b << (3));
          }
+#endif
 
          g_pID2DRenderTarget->BeginDraw();
          auto rect = D2D1_RECT_U{0, 0, uint32_t(g_rcAtari.right), uint32_t(g_rcAtari.bottom)};
-         g_pID2DBitmap->CopyFromMemory(&rect, pixels, sizeof(DWORD) * g_rcAtari.right);
+         g_pID2DBitmap->CopyFromMemory(&rect, g_bitmap, sizeof(DWORD) * g_rcAtari.right);
 
          g_pID2DRenderTarget->DrawBitmap(g_pID2DBitmap, D2D1_RECT_F{float(g_rcClient.left), float(g_rcClient.top), float(g_rcClient.right), float(g_rcClient.bottom)}, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
          g_pID2DRenderTarget->EndDraw();

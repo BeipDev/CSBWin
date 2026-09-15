@@ -403,8 +403,8 @@ public:
    pnt Pointer16778{};
    i16 *pwPointer16774{};          // Points to d.Word918 initially
    const char *Pointer16770[17]{}; //"Novice", "Master", etc
-   pnt Pointer12926{};
-   ui8 *newTextLine{};                        // 12922
+   ui8 FontAtlas[128*6]; // Arranged as a 128x6 font atlas
+   ui8 newTextLine[160*7];                    // 7 Scanlines of pixels
                                               //  This line contains the text bitmap to
                                               //  be scrolled into the bottom of the
                                               //  screen. 12916 is set to 0 to get the
@@ -846,8 +846,8 @@ public:
    // FILL(12913,12786)
    i16 VBLInterruptActive{}; // Word11990; // used in vertical blank handler
    i16 unused11988{};        // Word11988; // used in vertical blank handler
-   PALETTE Palette11978{};
-   PALETTE Palette11946{}; // Current palette???
+   PALETTE PalettePortraits{};
+   PALETTE PaletteViewport{}; // Current palette???
    PALETTE Palette11914{}; // Used as palette
    FILL(11882, 11850)
    i8 Byte11850{};
@@ -877,9 +877,9 @@ public:
    i16 DynamicPaletteSwitching{}; // 11738;
                                   //  During the adventuring state we change the
                                   //  palette twice during each vertical scan.  The
-                                  //  portraits get Palette11978, the viewport and
-                                  //  buttons get Palette11946, and the text gets
-                                  //  Palette11978 again.
+                                  //  portraits get PalettePortraits, the viewport and
+                                  //  buttons get PaletteViewport, and the text gets
+                                  //  PalettePortraits again.
    i16 clockTick{};               // 11736;// Every 'Speed' vbls.
                                   //  Also set by player actions .
    FILL(11734, 11732)
@@ -1375,8 +1375,8 @@ public:
    //           // Start of graphic 0x232
    // ***********************************************************************
    i8 Byte1830[2]{};
-   i32 Long1828[4]{};      // masks for text !not reversed!
-   i32 Long1812[4]{};      // masks for text !not reversed!
+   i32 splitGlyphRightMasks[4]{}; // masks for right side of a glyph split across a 16-bit boundary
+   i32 splitGlyphLeftMasks[4]{};  // masks for left side of a glyph split across a 16-bit boundary
    RectPos wRectPos1796{}; // swapped when read       ...
    RectPos wRectPos1788{}; // swapped when read      ...
    RectPos wRectPos1780{}; // swapped when read      ...
