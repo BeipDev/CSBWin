@@ -76,7 +76,7 @@ void SCREEN::logbase(ui8 *newlog)
 }
 
 SCREEN screen;
-i16 globalPalette[16] = { // RGB top-to-bottom
+PALETTE globalPalette = { // RGB top-to-bottom
     0x777,
     0x700,
     0x070,
@@ -1473,7 +1473,7 @@ RESTARTABLE _FadeToPalette(const PALETTE *P1) // TAG01f04e
    RESTARTMAP
    RESTART(1)
    END_RESTARTMAP
-   pPalette = (i16 *)globalPalette;
+   pPalette = globalPalette.color;
    // Set supervisor mode
    for(D4W = 0; D4W < 8; D4W++)
    {
@@ -2752,7 +2752,7 @@ void OVERLAYDATA::Cleanup()
    m_overlayNumber = -1;
 }
 
-void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
+void OVERLAYDATA::CreateOverlayTable(const PALETTE &atariPalette, bool useOverlay)
 {
    ui32 red[16], green[16], blue[16];
    ui32 red100[16], green100[16], blue100[16];
@@ -2767,7 +2767,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
       {
          for(i = 0; i < 16; i++)
          { // Unpack the rgb values and multiply by 100-transparency.
-            overlayPaletteEntry = ((atariPalette[i] & 0x700) >> 2) | ((atariPalette[i] & 0x070) >> 1) | ((atariPalette[i] & 0x007) >> 0); // One of 512 entries
+            overlayPaletteEntry = ((atariPalette.color[i] & 0x700) >> 2) | ((atariPalette.color[i] & 0x070) >> 1) | ((atariPalette.color[i] & 0x007) >> 0); // One of 512 entries
             red[i] = overlayPaletteRed[overlayPaletteEntry] * transparency;
             green[i] = overlayPaletteGreen[overlayPaletteEntry] * transparency;
             blue[i] = overlayPaletteBlue[overlayPaletteEntry] * transparency;
@@ -2813,8 +2813,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
         // only 16 entries (one for each of the possible 16 Atari colors).
          for(i = 0; i < 16; i++)
          {
-            overlayPaletteEntry =
-                ((atariPalette[i] & 0x700) >> 2) | ((atariPalette[i] & 0x070) >> 1) | ((atariPalette[i] & 0x007) >> 0); // One of 512 entries
+            overlayPaletteEntry = ((atariPalette.color[i] & 0x700) >> 2) | ((atariPalette.color[i] & 0x070) >> 1) | ((atariPalette.color[i] & 0x007) >> 0); // One of 512 entries
             RED = overlayPaletteRed[overlayPaletteEntry];
             GREEN = overlayPaletteGreen[overlayPaletteEntry];
             BLUE = overlayPaletteBlue[overlayPaletteEntry];
@@ -2827,9 +2826,9 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
       // use straight atari palette
       for(i = 0; i < 16; i++)
       {
-         RED = (atariPalette[i] >> 8) & 0x7;
-         GREEN = (atariPalette[i] >> 4) & 0x7;
-         BLUE = (atariPalette[i] >> 0) & 0x7;
+         RED = (atariPalette.color[i] >> 8) & 0x7;
+         GREEN = (atariPalette.color[i] >> 4) & 0x7;
+         BLUE = (atariPalette.color[i] >> 0) & 0x7;
 
          // Scale 3-bit Atari color (0-7) to 8-bit (0-255) by replicating bits
          ui8 r8 = (RED << 5) | (RED << 2) | (RED >> 1);

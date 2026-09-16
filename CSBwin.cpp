@@ -16,6 +16,7 @@
 bool GetVideoRectangle(i32, RECT *);
 void FreeIfNonNULL(void **pointer);
 void DumpImages();
+void SetBorderlessFullscreen(bool enable);
 
 i32 trace = -1;
 CSB_UI_MESSAGE csbMessage;
@@ -78,6 +79,12 @@ i32 WindowX = 0;
 i32 WindowY = 0;
 bool fullscreenRequested = false;
 extern bool virtualFullscreen;
+extern void ForceScreenDraw();
+
+bool g_borderlessFullscreen = false;
+DWORD g_windowedStyle = 0;
+WINDOWPLACEMENT g_windowedPlacement{sizeof(WINDOWPLACEMENT)};
+HMENU g_windowedMenu = NULL;
 
 i32 line = 0;
 
@@ -292,6 +299,54 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
    return RegisterClassExA(&wcex);
 }
 
+void SetBorderlessFullscreen(bool enable)
+{
+   if(hWnd == NULL)
+      return;
+   if(g_borderlessFullscreen == enable)
+      return;
+
+   if(enable)
+   {
+      g_windowedPlacement.length = sizeof(g_windowedPlacement);
+      GetWindowPlacement(hWnd, &g_windowedPlacement);
+      g_windowedStyle = DWORD(GetWindowLongPtr(hWnd, GWL_STYLE));
+      g_windowedMenu = GetMenu(hWnd);
+
+      g_borderlessFullscreen = true;
+
+      SetMenu(hWnd, NULL);
+      SetWindowLongPtr(hWnd, GWL_STYLE, (g_windowedStyle & ~WS_OVERLAPPEDWINDOW) | WS_POPUP);
+
+      MONITORINFO mi;
+      mi.cbSize = sizeof(mi);
+      GetMonitorInfo(MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST), &mi);
+      SetWindowPos(hWnd,
+                   HWND_TOP,
+                   mi.rcMonitor.left,
+                   mi.rcMonitor.top,
+                   mi.rcMonitor.right - mi.rcMonitor.left,
+                   mi.rcMonitor.bottom - mi.rcMonitor.top,
+                   SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+      DrawMenuBar(hWnd);
+      ForceScreenDraw();
+      InvalidateRect(hWnd, NULL, true);
+   }
+   else
+   {
+      g_borderlessFullscreen = false;
+
+      SetWindowLongPtr(hWnd, GWL_STYLE, g_windowedStyle);
+      SetMenu(hWnd, g_windowedMenu);
+      SetWindowPlacement(hWnd, &g_windowedPlacement);
+      SetWindowPos(hWnd, NULL, 0, 0, 0,0,
+                   SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+      DrawMenuBar(hWnd);
+      ForceScreenDraw();
+      InvalidateRect(hWnd, NULL, true);
+   }
+}
+
 //
 //   FUNCTION: InitInstance(HANDLE, i32)
 //
@@ -304,8 +359,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, i32 nCmdShow)
 {
-   // HWND hWnd;
-
    hInst = hInstance; // Store instance handle in our global variable
 
    RECT rc{0, 0, WindowWidth, WindowWidth * 240 / 320};
@@ -319,7 +372,8 @@ BOOL InitInstance(HINSTANCE hInstance, i32 nCmdShow)
    }
 
    ShowWindow(hWnd, nCmdShow);
-   //   UpdateWindow(hWnd);
+   if(fullscreenRequested)
+      SetBorderlessFullscreen(true);
    SetTimer(hWnd, 1, 10, NULL);
    return TRUE;
 }
@@ -776,6 +830,7 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
+#if 0
             if((!virtualFullscreen) && (screenSize == 1) || (virtualFullscreen && (videoSegSize[4] != 0)))
             {
                line++;
@@ -866,6 +921,7 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                   TextOutA(hdc, X, Y, msg, strlen(msg));
                }
             }
+#endif
             ::EndPaint(hWnd, &ps);
             csbMessage.type = UIM_PAINT;
             if(CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -941,7 +997,7 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             hwndProperties.hwnd = hWnd;
             hwndProperties.pixelSize.width = 1;
             hwndProperties.pixelSize.height = 1;
-            hwndProperties.presentOptions = D2D1_PRESENT_OPTIONS_IMMEDIATELY; // D2D1_PRESENT_OPTIONS_NONE;
+            hwndProperties.presentOptions = D2D1_PRESENT_OPTIONS_NONE;
 
             g_pID2D1Factory1->CreateHwndRenderTarget(&properties, &hwndProperties, g_pID2DRenderTarget.Address());
             g_pID2DRenderTarget->SetDpi(96, 96);
@@ -1015,6 +1071,11 @@ LRESULT CALLBACK WndProc(HWND _hWnd, UINT message, WPARAM wParam, LPARAM lParam)
          return DefWindowProc(hWnd, message, wParam, lParam);
       case WM_KEYDOWN:
          MTRACE("WM_KEYDOWN\n");
+         if(wParam == VK_F11)
+         {
+            SetBorderlessFullscreen(!g_borderlessFullscreen);
+            return 0;
+         }
          csbMessage.type = UIM_KEYDOWN;
          csbMessage.p1 = wParam;                // virtual key
          csbMessage.p2 = (lParam >> 16) & 0xff; // scancode

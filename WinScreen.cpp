@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-// #ifdef _MSVC_INTEL // Windows screen handling
-
 #include "UI.h"
 
 #include <stdio.h>
@@ -9,7 +7,7 @@
 #include "Dispatch.h"
 #include "CSB.h"
 #include "Data.h"
-#ifdef _MSCV_INTEL
+#ifdef _MSVC_INTEL
 #include <io.h>
 #include <FCNTL.h>
 #include <SYS\STAT.h>
@@ -62,10 +60,8 @@ struct BITMAPINFO
 #pragma pack()
 #endif
 
-extern i32 WindowX;
-extern i32 WindowY;
 extern i32 VBLMultiplier;
-extern i16 globalPalette[16];
+extern PALETTE globalPalette;
 extern bool fullscreenRequested;
 bool virtualFullscreen = false;
 extern bool overlayActive;
@@ -74,26 +70,17 @@ extern i32 xOverlayJitter;
 extern i32 yGraphicJitter;
 extern bool jitterChanged;
 extern ui32 dumpWindow;
-extern HWND hWnd;
-// extern CDC *OnDrawDC;
 ui32 STBLTCount = 0;
 
-i32 screenSize = 2;
-i16 palette16[16];
+i32 screenSize = 1;
 ui32 g_bitmap[320 * 200];
-i16 counter;
-i16 bitSkip;
-i32 dstLineLen;
-i16 palette1[16];
-i16 palette2[16];
-i16 oldPalette1[16];
-i16 oldPalette2[16];
+PALETTE palette1;
+PALETTE palette2;
+PALETTE oldPalette1;
+PALETTE oldPalette2;
 ui8 black[320]; // All zeros for one line of overlay
 ui8 fourBitPixels[320 * 200];
 bool screenAlreadyUnpacked;
-
-pnt logbase();
-bool screenInconsistent = true;
 
 RECT g_rcClient{0, 0, 1, 1}; // The rect that the DM screen is mapped to in the window
 
@@ -107,14 +94,14 @@ void SwapTextZOrder()
    return;
 }
 
-bool HasPaletteChanged(i16 *palette, i16 *oldpalette)
+bool HasPaletteChanged(PALETTE &palette, PALETTE &oldpalette)
 {
    bool change = false;
    for(i32 i = 0; i < 16; i++)
    {
-      if(oldpalette[i] != palette[i])
+      if(oldpalette.color[i] != palette.color[i])
       {
-         oldpalette[i] = palette[i];
+         oldpalette.color[i] = palette.color[i];
          change = true;
       }
    }
@@ -315,13 +302,10 @@ int updateScreenAreaLeaveCount = 0;
 
 // Returns 1 if screen area changed.
 int UpdateScreenArea(ui8 *STScreen,
-                     i32 x0,
-                     i32 y0,
-                     i32 width,
-                     i32 height,
-                     i32 dstX,
-                     i32 dstY,
-                     i16 *palette,
+                     i32 x0, i32 y0,
+                     i32 width, i32 height,
+                     i32 dstX, i32 dstY,
+                     const PALETTE &palette,
                      bool paletteChanged,
                      ui8 *pOldScreen,
                      bool useOverlay)
@@ -556,37 +540,6 @@ void MakeBMPBitmap(ui16 *src, ui8 *dst)
    }
 }
 
-#ifdef _MSVC_INTEL
-void DumpWindow(FILE *f)
-{
-   BITMAPFILEHEADER bmfh;
-   BITMAPINFOHEADER bmih;
-   RGBQUAD colors[16];
-   ui8 bitmapA[320 * 200 / 2];
-   memset(&bmfh, 0, sizeof(bmfh));
-   memset(&bmih, 0, sizeof(bmih));
-   bmih.biSize = sizeof(bmih);
-   bmih.biWidth = 320;
-   bmih.biHeight = 200;
-   bmih.biPlanes = 1;
-   bmih.biBitCount = 4;
-   bmih.biCompression = BI_RGB;
-   bmih.biSizeImage = 0;
-   bmih.biClrUsed = 16;
-   bmih.biClrImportant = 16;
-   *((ui8 *)&bmfh + 0) = 'B';
-   *((ui8 *)&bmfh + 1) = 'M';
-   bmfh.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(bmih) + 320 * 200 / 2;
-   bmfh.bfOffBits = sizeof(BITMAPFILEHEADER) + bmih.biSize + sizeof(colors);
-   fwrite(&bmfh, 1, sizeof(BITMAPFILEHEADER), f);
-   fwrite(&bmih, 1, sizeof(BITMAPINFOHEADER), f);
-   MakeBMPPalette(colors, d.DynamicPaletteSwitching ? &d.PaletteViewport : (PALETTE *)&globalPalette);
-   fwrite(colors, 1, sizeof(colors), f);
-   MakeBMPBitmap((ui16 *)physbase(), bitmapA);
-   fwrite(bitmapA, 1, sizeof(bitmapA), f);
-}
-#endif
-
 ui8 prevScreen[32000];
 
 void display()
@@ -600,32 +553,20 @@ void display()
       memset(black, 0, 320);
       initialized = true;
    }
-#ifdef _MSCV_INTEL
-   if(dumpWindow == 1)
-   {
-      dumpWindow = 0;
-      int FH;
-      FH = _open("window.bmp", _O_WRONLY | _O_CREAT | O_SEQUENTIAL | _O_BINARY, _S_IWRITE);
-      if(FH != -1)
-      {
-         DumpWindow(FH);
-         _close(FH);
-      }
-   }
-#endif
+
    numDisplay++;
    if((VBLMultiplier != 1) && ((d.Time & 0xf) != 0) && (VBLMultiplier != 99))
       return;
    if(d.DynamicPaletteSwitching)
    {
-      memcpy(palette1, &d.PalettePortraits, 32);
-      memcpy(palette2, &d.PaletteViewport, 32);
-      memcpy(globalPalette, &d.PalettePortraits, 32);
+      palette1=d.PalettePortraits;
+      palette2=d.PaletteViewport;
+      globalPalette=d.PalettePortraits;
    }
    else
    {
-      memcpy(palette1, globalPalette, 32);
-      memcpy(palette2, globalPalette, 32);
+      palette1=globalPalette;
+      palette2=globalPalette;
    }
    bool pc1 = ForcedScreenDraw || HasPaletteChanged(palette1, oldPalette1);
    bool pc2 = ForcedScreenDraw || HasPaletteChanged(palette2, oldPalette2);
@@ -636,48 +577,36 @@ void display()
       {
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
-                              0,
-                              0x21,
-                              0xe0,
-                              0xa9 - 0x21,
-                              0,
-                              0x21,
+                              0, 0x21,
+                              0xe0, 0xa9 - 0x21,
+                              0, 0x21,
                               palette2,
                               pc2,
                               prevScreen,
                               videoMode == VM_ADVENTURE);
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
-                              0,
-                              0xa9,
-                              320,
-                              0xc8 - 0xa9,
-                              0,
-                              0xa9,
+                              0, 0xa9,
+                              320, 0xc8 - 0xa9,
+                              0, 0xa9,
                               palette1,
                               pc1,
                               prevScreen,
                               false);
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
-                              0,
-                              0,
-                              320,
-                              0x21,
-                              0,
-                              0,
+                              0, 0,
+                              320, 0x21,
+                              0, 0,
                               palette1,
                               pc1,
                               prevScreen,
                               false);
          areaChangedCount +=
              UpdateScreenArea(physbase(), // STScreen,
-                              0xe0,
-                              0x21,
-                              0x140 - 0xe0,
-                              0xa9 - 0x21,
-                              0xe0,
-                              0x21,
+                              0xe0, 0x21,
+                              0x140 - 0xe0, 0xa9 - 0x21,
+                              0xe0, 0x21,
                               palette2,
                               pc2,
                               prevScreen,

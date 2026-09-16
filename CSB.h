@@ -48,6 +48,11 @@ enum COLOR
    COLOR_13 = 13
 };
 
+struct PALETTE
+{
+   i16 color[16];
+};
+
 enum MALLOCID
 {
    MALLOC001 = 1,
@@ -246,7 +251,7 @@ struct OVERLAYDATA
    ~OVERLAYDATA();
    bool ReadOverlay(i32 overlayNumber);
    void Mirror();
-   void CreateOverlayTable(i16 *palettte, bool useOverlay);
+   void CreateOverlayTable(const PALETTE &palettte, bool useOverlay);
    void Cleanup();
 };
 extern OVERLAYDATA currentOverlay;
@@ -2631,11 +2636,6 @@ public:
 };
 
 // typedef DUDAD16 *pCONTENTS;
-
-struct PALETTE
-{
-   i16 color[16];
-};
 
 union dReg
 {

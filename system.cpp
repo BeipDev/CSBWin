@@ -134,7 +134,7 @@ ICOUNTS::ICOUNTS()
 
 ICOUNTS InstrumentationCounts;
 
-extern i16 globalPalette[];
+extern PALETTE globalPalette;
 
 i32 Smaller(i32 x, i32 y)
 {
@@ -351,7 +351,7 @@ i16 Timer(pnt /*p*/, i16 /*d*/)
 void setpalette(PALETTE *newPalette)
 {
    i16 *pPalette;
-   pPalette = (i16 *)globalPalette;
+   pPalette = globalPalette.color;
    for(i32 i = 0; i < 16; i++)
    {
       pPalette[i] = newPalette->color[i];

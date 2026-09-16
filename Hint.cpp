@@ -544,7 +544,7 @@ const char *pointer8858[6] = {
 
 extern ui32 VBLCount;
 extern i32 NumberFloppyDrives;
-extern i16 globalPalette[];
+extern PALETTE globalPalette;
 
 i16 dumpFile = -1;
 
@@ -4469,7 +4469,7 @@ void TAG005ae8_9(i16 P1, PALETTEPKT *nP2)
    }
    if(pktA0->pw2 == NULL)
    {
-      pw_6 = globalPalette;
+      pw_6 = globalPalette.color;
    }
    else
    {
@@ -4477,7 +4477,7 @@ void TAG005ae8_9(i16 P1, PALETTEPKT *nP2)
    }
    if(pktA0->pPalette6 == NULL)
    {
-      pktA0->pPalette6 = (PALETTE *)globalPalette;
+      pktA0->pPalette6 = &globalPalette;
    }
    SetSupervisorMode();
    for(w_2 = 0; w_2 < 16; w_2++)
@@ -4597,11 +4597,11 @@ RESTARTABLE _FadePalette(PALETTE *P1,
    SetSupervisorMode();
    if(P1 == NULL)
    {
-      P2 = globalPalette;
+      P2 = globalPalette.color;
    }
    if(P2 == NULL)
    {
-      P2 = globalPalette;
+      P2 = globalPalette.color;
    }
    for(D7L = 0; D7W < 16; D7W++)
    {
